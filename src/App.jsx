@@ -1,17 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./Components/Navbar.jsx";
+
 import Footer from "./Components/Footer.jsx";
 import Acceuil from "./Pages/Acceuil.jsx";
 import Connexion from "./Pages/Connexion.jsx";
-import Participervote from "./Pages/Participer à un vote.jsx";
+import Participervote from "./Pages/ParticiperVote.jsx";
 import Sinscrire from "./Pages/Sinscrire.jsx";
-import CréerUnVote from "./Pages/Créer un vote.jsx";
+import CréerUnVote from "./Pages/CreerVote.jsx";
 
 export default function App() {
   return (
     <Router>
       <div className="flex min-h-screen flex-col">
-        <Navbar />
         <main className="container mx-auto flex-1 px-4 py-6">
           <Routes>
             <Route path="/" element={<Acceuil />} />

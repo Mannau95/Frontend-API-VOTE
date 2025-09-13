@@ -1,10 +1,11 @@
 import React from "react";
-
 import { Link } from "react-router-dom";
+import Navbar from "../Components/Navbar.jsx";
 
 function Acceuil() {
   return (
     <div>
+      <Navbar />
       <div className="   items-center justify-between  flex flex-wrap gap-4 p-20">
         <span>
           <p className="font-bold text-2xl text-red-400 ">
