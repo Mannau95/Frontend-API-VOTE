@@ -10,8 +10,8 @@ import CréerUnVote from "./Pages/CreerVote.jsx";
 export default function App() {
   return (
     <Router>
-      <div className="flex min-h-screen flex-col">
-        <main className="container mx-auto flex-1 px-4 py-6">
+      <div className="min-h-screen text-black bg-white p-0 m-0 w-full">
+        <main className=" m-0 flex-1 ">
           <Routes>
             <Route path="/" element={<Acceuil />} />
             <Route path="/Connexion" element={<Connexion />} />
