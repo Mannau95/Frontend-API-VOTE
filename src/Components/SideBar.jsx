@@ -1,23 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink,} from "react-router-dom";
 
-const TableauDeBord = () => {
+export default function SideBar({ paths }) {
   return (
     <div className="w-64 h-screen bg-gray-100 p-6 border-r fixed top-0 left-0 flex flex-col justify-between">
       <div>
         <ul className="space-y-4">
-          <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <h3 to="/dashboard">Tableau de bord</h3>
+          {
+            paths.map( (path, index) => {
+              return (
+                <li key={index} className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer font-bold">
+                  <NavLink to={path.path}>{path.pathName}</NavLink>
+                </li>
+              )
+            })
+          }
+          {/* <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
+            <NavLink to="/supervision">Tableau de bord</NavLink>
           </li>
           <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <Link to="/candidatures">Gestion des Candidatures</Link>
+            <NavLink to="candidatures/">Gestion des Candidatures</NavLink>
           </li>
           <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <Link to="/electeurs">Gestion des Électeurs</Link>
+            <NavLink to="electeurs/">Gestion des Électeurs</NavLink>
           </li>
           <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <Link to="/elections">Élections Actuelles</Link>
-          </li>
+            <NavLink to="elections/">Élections Actuelles</NavLink>
+          </li> */}
         </ul>
       </div>
 
@@ -28,6 +37,4 @@ const TableauDeBord = () => {
       </div>
     </div>
   );
-};
-
-export default TableauDeBord;
+}

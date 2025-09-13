@@ -7,30 +7,31 @@ function Acceuil() {
     <div>
       <Navbar />
       <div className="  items-center justify-between  flex flex-wrap gap-4 p-20">
-        <div className="m-auto flex flex-col gap-3 h-[70dvh]   justify-around">
+        <div className="m-auto flex flex-col gap-3 min-h-[70dvh]  w-[55%] justify-around">
           <p className="font-bold text-3xl text-red-400 text-center" id="title">
             La solution de vote en ligne simple et fiable
           </p>
-          <div id="content" className="text-xl p-10">
+          <div id="content" className="text-2xl p-10 text-justify italic flex flex-col gap-4">
             
-            <p>
+            {/* <p>
               Créez un vote et les électeurs recevront automatiquement un courriel
               avec un lien personnel pour voter.
-            </p>
+            </p> */}
             <p>
               Créez un vote et les électeurs recevront automatiquement un courriel
               avec un lien personnel pour voter.
             </p>
             <p>
               Que vous soyez une société, une association ou un groupe de
-              personnes,
-              <br /> Balotilo facilite l'organisation de vos votes en ligne.
+              personnes, Super vote facilite l'organisation de vos votes en ligne. 
+            </p>
+            <p>
               Organisez vos décisions démocratiques facilement.
             </p>
           </div>
 
-          <button className="bg-red-400 text-white py-2 px-4 rounded text-xl font-bold">
-            <Link to="/CréerUnVote">Créer un vote</Link>
+          <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+            <Link to="/supervision">Créer un vote</Link>
           </button>
         </div>
 

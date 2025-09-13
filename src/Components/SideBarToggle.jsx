@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 
 import SideBar from "./SideBar";
 
-const SideBarToggle = () => {
+const SideBarToggle = ({ paths}) => {
+  // la liste des sous routes est dans const paths = 
   const [showNav, setShowNav] = useState(false);
   const navRef = useRef();
 
@@ -30,7 +31,7 @@ const SideBarToggle = () => {
           ref={navRef}
           className="absolute top-16 left-0 w-64 bg-white shadow-lg transition-all duration-300 animate-slide-in text-black"
         >
-          <SideBar />
+          <SideBar paths={paths}/>
         </div>
       )}
     </div>
