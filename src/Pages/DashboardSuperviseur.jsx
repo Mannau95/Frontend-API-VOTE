@@ -58,7 +58,7 @@ const DashboardSuperviseur = () => {
     };
 
     axios
-      .post("https://ton-backend.com/api/votes", payload)
+      .post("https://ton-backend.com/api/electeurs", payload)
       .then(() => alert("Vote créé avec succès"))
       .catch(() => alert("Erreur lors de la création du vote"));
   };

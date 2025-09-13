@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavigateToggle from "../Components/NavigateToggle.jsx";
 
-export default function ParticiperVote() {
+export default function DashboardElector() {
   const navigate = useNavigate();
 
   useEffect(() => {

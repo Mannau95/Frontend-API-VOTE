@@ -31,7 +31,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <NavLink to="/Vote">Participer à un vote</NavLink>
+              <NavLink to="/electeur">Participer à un vote</NavLink>
             </li>
             <li>
               <NavLink to="/Connexion">Se connecter</NavLink>
