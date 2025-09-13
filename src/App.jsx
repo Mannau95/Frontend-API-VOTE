@@ -5,7 +5,7 @@ import Acceuil from "./Pages/Acceuil.jsx";
 import Connexion from "./Pages/Connexion.jsx";
 import Participervote from "./Pages/ParticiperVote.jsx";
 import Sinscrire from "./Pages/Sinscrire.jsx";
-import CréerUnVote from "./Pages/CreerVote.jsx";
+import DashboardSuperviseur from "./Pages/DashboardSuperviseur.jsx";
 
 export default function App() {
   return (
@@ -17,7 +17,7 @@ export default function App() {
             <Route path="/Connexion" element={<Connexion />} />
             <Route path="/Vote" element={<Participervote />} />
             <Route path="/Sinscrire" element={<Sinscrire />} />
-            <Route path="/CréerUnVote" element={<CréerUnVote />} />
+            <Route path="/supervision" element={<DashboardSuperviseur />} />
           </Routes>
         </main>
         <Footer />

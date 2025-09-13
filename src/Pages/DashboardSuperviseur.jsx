@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SideBarToggle from "../Components/SideBarToggle";
 
 
-const CreerVote = () => {
+const DashboardSuperviseur = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -242,5 +242,5 @@ const CreerVote = () => {
   );
 };
 
-export default CreerVote;
+export default DashboardSuperviseur;
 

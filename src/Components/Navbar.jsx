@@ -27,7 +27,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <NavLink to="/CréerUnVote">Créer un vote</NavLink>
+              <NavLink to="/supervision">Créer un vote</NavLink>
             </li>
 
             <li>

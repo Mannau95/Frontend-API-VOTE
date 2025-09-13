@@ -31,7 +31,7 @@ function Acceuil() {
           </div>
 
           <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
-            <Link to="/CréerUnVote">Créer un vote</Link>
+            <Link to="/supervision">Créer un vote</Link>
           </button>
         </div>
 
