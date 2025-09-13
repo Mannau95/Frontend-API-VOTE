@@ -14,10 +14,10 @@ const Navbar = () => {
     <>
       <div className="navbar bg-red-400 shadow-sm text-white">
         <div className="">
-          <a className="btn btn-ghost text-xl  ">SUPER VOTE</a>
+          <a className="btn btn-ghost text-[1.1rem] ">SUPER VOTE</a>
         </div>
         <div className="navbar-center hi">
-          <ul className="menu menu-horizontal px-1">
+          <ul className="menu menu-horizontal px-1 font-bold text-md">
             <li>
               <details>
                 <summary>
