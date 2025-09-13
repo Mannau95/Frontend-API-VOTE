@@ -1,9 +1,15 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 //import { useState, useEffect } from "react";
 //import { vote } from "./Pages/Participer vote.jsx";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/Connexion");
+  };
   return (
     <>
       <div className="navbar bg-red-400 shadow-sm">
@@ -63,7 +69,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <a>Logout</a>
+                <a onClick={handleLogout}>Logout</a>
               </li>
             </ul>
           </div>
