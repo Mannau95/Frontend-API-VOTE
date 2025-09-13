@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SideBarToggle from "../Components/SideBarToggle";
-import { useState } from "react";
 
 
 const CreerVote = () => {
@@ -69,8 +68,8 @@ const CreerVote = () => {
 
       <SideBarToggle />
       <div className="min-h-screen flex flex-col items-center justify-center p-8 ">
-        {!formVisible && (
-          <>
+      {!formVisible ? (
+          <div className="text-center">
             <h1 className="text-3xl font-bold text-center mb-4 text-red-500">
               Créez un nouveau vote en ligne
             </h1>
@@ -78,28 +77,23 @@ const CreerVote = () => {
               Lancez facilement une élection en définissant les informations
               essentielles : titre, date, heure, système de vote et électeurs.
             </p>
-            <button
-              className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition"
-            >
-
-      /*<DashbordToggle />
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        {!formVisible ? (
-          <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">Créer un vote en ligne</h2>
             <button 
               onClick={() => setFormVisible(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-black px-6 py-2 rounded"
-            > */
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded"
+            > 
+
+      {/*<DashbordToggle />
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        */}
               Créer un vote
             </button>
           </div>
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-2xl bg-black p-6 rounded shadow"
+            className="w-full max-w-2xl bg-white text-black p-6 rounded shadow"
           >
-            <h3 className="text-xl font-semibold mb-4 text-center">
+            <h3 className="text-xl font-semibold mb-4 text-center text-red-400">
               Formulaire de création de vote
             </h3>
 
@@ -235,7 +229,7 @@ const CreerVote = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                  className="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded"
                 >
                   Valider
                 </button>
@@ -249,3 +243,4 @@ const CreerVote = () => {
 };
 
 export default CreerVote;
+
