@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import DashbordToggle from "../Components/DashbordToggle.jsx";
+import SideBarToggle from "../Components/SideBarToggle";
+import { useState } from "react";
+
 
 const CreerVote = () => {
   const navigate = useNavigate();
@@ -64,15 +66,31 @@ const CreerVote = () => {
 
   return (
     <div>
-      <DashbordToggle />
+
+      <SideBarToggle />
+      <div className="min-h-screen flex flex-col items-center justify-center p-8 ">
+        {!formVisible && (
+          <>
+            <h1 className="text-3xl font-bold text-center mb-4 text-red-500">
+              Créez un nouveau vote en ligne
+            </h1>
+            <p className="text-center text-gray-600 mb-6 max-w-xl">
+              Lancez facilement une élection en définissant les informations
+              essentielles : titre, date, heure, système de vote et électeurs.
+            </p>
+            <button
+              className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition"
+            >
+
+      /*<DashbordToggle />
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         {!formVisible ? (
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-4">Créer un vote en ligne</h2>
-            <button
+            <button 
               onClick={() => setFormVisible(true)}
               className="bg-blue-600 hover:bg-blue-700 text-black px-6 py-2 rounded"
-            >
+            > */
               Créer un vote
             </button>
           </div>

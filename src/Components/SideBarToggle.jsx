@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 
-import Dashbord from "./Dashbord";
+import SideBar from "./SideBar";
 
-const DashbordToggle = () => {
+const SideBarToggle = () => {
   const [showNav, setShowNav] = useState(false);
   const navRef = useRef();
 
@@ -20,7 +20,7 @@ const DashbordToggle = () => {
     <div className="relative">
       <button
         onClick={() => setShowNav(!showNav)}
-        className="m-4 text-2xl text-white focus:outline-none"
+        className="m-4 text-3xl focus:outline-none text-black"
       >
         ☰
       </button>
@@ -28,13 +28,13 @@ const DashbordToggle = () => {
       {showNav && (
         <div
           ref={navRef}
-          className="absolute top-16 left-0 w-64 bg-white shadow-lg transition-all duration-300 animate-slide-in"
+          className="absolute top-16 left-0 w-64 bg-white shadow-lg transition-all duration-300 animate-slide-in text-black"
         >
-          <Dashbord />
+          <SideBar />
         </div>
       )}
     </div>
   );
 };
 
-export default DashbordToggle;
+export default SideBarToggle;
