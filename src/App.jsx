@@ -6,6 +6,7 @@ import Connexion from "./Pages/Connexion.jsx";
 import Sinscrire from "./Pages/Sinscrire.jsx";
 import DashboardSuperviseur from "./Pages/DashboardSuperviseur.jsx";
 import DashboardElector from "./Pages/DashboardElector.jsx";
+import CreerVotePage from "./Pages/CreerVotePage.jsx";
 
 export default function App() {
   return (
@@ -15,9 +16,20 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Acceuil />} />
             <Route path="/Connexion" element={<Connexion />} />
-            <Route path="/electeur" element={<DashboardElector />} />
             <Route path="/Sinscrire" element={<Sinscrire />} />
-            <Route path="/supervision" element={<DashboardSuperviseur />} />
+
+            <Route path="/supervision" element={<DashboardSuperviseur />} > 
+              <Route index element={< CreerVotePage/>}></Route>
+              <Route path="candidatures/" element={<div>Gestion des candidatures</div>}></Route>
+              <Route path="electeurs/" element={<div>Gestion des electeurs</div>}></Route>
+              <Route path="elections/" element={<div>Mes elections Actuelles</div>}></Route>
+            </Route>
+            <Route path="/electeur" element={<DashboardElector />}>
+            <Route index element={<div>Participer a une election</div>}></Route>
+              <Route path="candidatures/" element={<div>Mes candidatures</div>}></Route>
+              <Route path="elections/" element={<div>Elections Actuelles</div>}></Route>
+              <Route path="profile/" element={<div>Reglages de mon profile</div>}></Route>
+            </Route>
           </Routes>
         </main>
         <Footer />
