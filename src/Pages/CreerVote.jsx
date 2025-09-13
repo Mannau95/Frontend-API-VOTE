@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DashbordToggle from "../Components/DashbordToggle";
+import SideBarToggle from "../Components/SideBarToggle";
 import { useState } from "react";
 
 function CréerUnVote() {
@@ -31,11 +31,11 @@ function CréerUnVote() {
 
   return (
     <div>
-      <DashbordToggle />
+      <SideBarToggle />
       <div className="min-h-screen flex flex-col items-center justify-center p-8 ">
         {!formVisible && (
           <>
-            <h1 className="text-3xl font-bold text-center mb-4">
+            <h1 className="text-3xl font-bold text-center mb-4 text-red-500">
               Créez un nouveau vote en ligne
             </h1>
             <p className="text-center text-gray-600 mb-6 max-w-xl">
@@ -43,7 +43,7 @@ function CréerUnVote() {
               essentielles : titre, date, heure, système de vote et électeurs.
             </p>
             <button
-              className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+              className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition"
               onClick={() => setFormVisible(true)}
             >
               Créer un vote

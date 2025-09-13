@@ -14,8 +14,8 @@ export default function ParticiperVote() {
   return (
     <div>
       <NavigateToggle />
-      <div className="ml-64 p-6">
-        <h1 className="text-2xl font-bold mb-4">Participer à un Vote</h1>
+      <div className="ml-64 p-6 min-h-[84dvh]">
+        <h1 className="text-2xl text-red-500 font-bold mb-4">Participer à un Vote</h1>
       </div>
     </div>
   );
