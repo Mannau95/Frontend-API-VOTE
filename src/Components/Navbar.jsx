@@ -12,7 +12,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <div className="navbar bg-red-400 shadow-sm">
+      <div className="navbar bg-red-400 shadow-sm text-white">
         <div className="">
           <a className="btn btn-ghost text-xl  ">SUPER VOTE</a>
         </div>
@@ -39,13 +39,13 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <div className=" navbar-end">
+        <div className=" navbar-end w-[60%]">
           <input
             type="text"
             placeholder="Search"
             // value={search}
             //onChange={(e) => setSearch(e.target.value)}
-            className="input input-bordered w-24 md:w-auto"
+            className="input input-bordered w-20 md:w-auto bg-white text-black"
           />
           <div className="dropdown dropdown-end">
             <div
