@@ -17,7 +17,6 @@ function CréerUnVote() {
     { id: 1, nom: "Alice" },
     { id: 2, nom: "Bob" },
     { id: 3, nom: "Claire" },
-    // Ajoute les autres ici
   ];
 
   const [formVisible, setFormVisible] = useState(false);
