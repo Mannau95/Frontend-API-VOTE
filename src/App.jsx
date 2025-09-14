@@ -10,11 +10,14 @@ import CreerVotePage from "./Pages/CreerVotePage.jsx";
 import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
 import AdministrationÉlections from "./Pages/AdministrationÉlections.jsx";
 import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
+import MesCandidatures from "./Pages/MesCandidatures.jsx";
+import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
+import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
 
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen text-black bg-white p-0 m-0 w-full">
+      <div className="min-h-screen text-black bg-gray-50 p-0 m-0 w-full">
         <main className=" m-0 flex-1 ">
           <Routes>
             <Route path="/" element={<Acceuil />} />
@@ -35,13 +38,10 @@ export default function App() {
             </Route>
             <Route path="/electeur" element={<DashboardElector />}>
               <Route index element={<AccueilElecteur />}></Route>
-              <Route
-                path="candidatures/"
-                element={<div>Mes candidatures</div>}
-              ></Route>
+              <Route path="candidatures/" element={<MesCandidatures />}></Route>
               <Route
                 path="elections/"
-                element={<div>Elections Actuelles</div>}
+                element={<ElectionsActuellesElecteur />}
               ></Route>
               <Route
                 path="profile/"
