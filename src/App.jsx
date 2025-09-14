@@ -12,6 +12,7 @@ import AdministrationÉlections from "./Pages/AdministrationÉlections.jsx";
 import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
 import MesCandidatures from "./Pages/MesCandidatures.jsx";
 import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
+// import Ges from "./Pages/GestionElecteurs.jsx";
 
 export default function App() {
   return (
@@ -29,10 +30,7 @@ export default function App() {
                 path="candidatures/"
                 element={<GestionCandidatures />}
               ></Route>
-              <Route
-                path="electeurs/"
-                element={<div>Gestion des electeurs</div>}
-              ></Route>
+              <Route path="electeurs/" element={<GestionElecteurs />}></Route>
               <Route
                 path="elections/"
                 element={<AdministrationÉlections />}
