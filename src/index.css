@@ -9,3 +9,7 @@ body {
 section {
   padding: 2rem 1rem;
 }
+
+.entete.active {
+  background: white;
+}

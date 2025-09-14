@@ -67,9 +67,9 @@ export default function AccueilElecteur() {
 
                 {/* Mot de bienvenu */}
                 <div>
-                    <p className="title text-2xl font-bold m-b-3">
+                    <h1 className="title text-2xl font-bold m-b-3">
                         Bomjour, Jean Doe!
-                    </p>
+                    </h1>
 
                     <p className='txet-lg' >
                         Bienvenu sur votre tableau de bord Super Vote.
@@ -81,9 +81,9 @@ export default function AccueilElecteur() {
 
             {/* les stqtistiques globales */}
             <section id='stats cles flex'>
-                <p className='text-[1.15rem] font-semibold mb-3'>
+                <h2 className='text-[1.15rem] font-semibold mb-3'>
                     Statistiques phares:
-                </p>
+                </h2>
                 <div className="flex justify-between items-start ">
                     <div className='flex flex-col w-[31%] px-5 py-6 shadow-xs shadow-gray-300 relative'>
                         <p>Elections Actives</p>
