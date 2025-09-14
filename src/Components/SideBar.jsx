@@ -3,13 +3,13 @@ import { NavLink,} from "react-router-dom";
 
 export default function SideBar({ paths }) {
   return (
-    <div className="w-64 h-screen bg-gray-100 p-6 border-r fixed top-0 left-0 flex flex-col justify-between">
+    <div className="w-64 h-screen bg-white p-6 shadow-2xl  fixed top-0 left-0 flex flex-col justify-between">
       <div>
         <ul className="space-y-4">
           {
             paths.map( (path, index) => {
               return (
-                <li key={index} className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer font-bold">
+                <li key={index} className="flex items-center text-gray-800 hover:text-red-400 cursor-pointer font-bold">
                   <NavLink to={path.path}>{path.pathName}</NavLink>
                 </li>
               )
