@@ -7,7 +7,8 @@ import Sinscrire from "./Pages/Sinscrire.jsx";
 import DashboardSuperviseur from "./Pages/DashboardSuperviseur.jsx";
 import DashboardElector from "./Pages/DashboardElector.jsx";
 import CreerVotePage from "./Pages/CreerVotePage.jsx";
-import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
+import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
+import AdministrationÉlections from "./Pages/AdministrationÉlections.jsx";
 
 export default function App() {
   return (
@@ -19,17 +20,38 @@ export default function App() {
             <Route path="/Connexion" element={<Connexion />} />
             <Route path="/Sinscrire" element={<Sinscrire />} />
 
-            <Route path="/supervision" element={<DashboardSuperviseur />} > 
-              <Route index element={< CreerVotePage/>}></Route>
-              <Route path="candidatures/" element={<div>Gestion des candidatures</div>}></Route>
-              <Route path="electeurs/" element={<div>Gestion des electeurs</div>}></Route>
-              <Route path="elections/" element={<div>Mes elections Actuelles</div>}></Route>
+            <Route path="/supervision" element={<DashboardSuperviseur />}>
+              <Route index element={<CreerVotePage />}></Route>
+              <Route
+                path="candidatures/"
+                element={<GestionCandidatures />}
+              ></Route>
+              <Route
+                path="electeurs/"
+                element={<div>Gestion des electeurs</div>}
+              ></Route>
+              <Route
+                path="elections/"
+                element={<AdministrationÉlections />}
+              ></Route>
             </Route>
             <Route path="/electeur" element={<DashboardElector />}>
-              <Route index element={<AccueilElecteur />} />
-              <Route path="candidatures/" element={<div>Mes candidatures</div>} />
-              <Route path="elections/" element={<div>Elections Actuelles</div>} />
-              <Route path="profile/" element={<div>Reglages de mon profile</div>} />
+              <Route
+                index
+                element={<div>Participer a une election</div>}
+              ></Route>
+              <Route
+                path="candidatures/"
+                element={<div>Mes candidatures</div>}
+              ></Route>
+              <Route
+                path="elections/"
+                element={<div>Elections Actuelles</div>}
+              ></Route>
+              <Route
+                path="profile/"
+                element={<div>Reglages de mon profile</div>}
+              ></Route
             </Route>
           </Routes>
         </main>
