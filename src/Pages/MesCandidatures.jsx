@@ -4,49 +4,49 @@ import ElectionCard from '../Components/ElectionCard'
 export default function MesCandidatures() {
   const electionsCandidatures = [
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
     },
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
     },
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
     },
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
     },
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
     },
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
     },
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
     },
     {
-      "image": "",
+      "image": "a",
       "title": "Election du Conseil Electoral 2025",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
       "begin_date": "03 octobre 2025",
