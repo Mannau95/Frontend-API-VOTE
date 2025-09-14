@@ -9,6 +9,7 @@ import DashboardElector from "./Pages/DashboardElector.jsx";
 import CreerVotePage from "./Pages/CreerVotePage.jsx";
 import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
 import AdministrationÉlections from "./Pages/AdministrationÉlections.jsx";
+import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
 
 export default function App() {
   return (
@@ -38,7 +39,7 @@ export default function App() {
             <Route path="/electeur" element={<DashboardElector />}>
               <Route
                 index
-                element={<div>Participer a une election</div>}
+                element={<AccueilElecteur/>}
               ></Route>
               <Route
                 path="candidatures/"
