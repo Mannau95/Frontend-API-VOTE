@@ -10,6 +10,7 @@ import CreerVotePage from "./Pages/CreerVotePage.jsx";
 import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
 import AdministrationÉlections from "./Pages/AdministrationÉlections.jsx";
 import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
+import MesCandidatures from "./Pages/MesCandidatures.jsx";
 
 export default function App() {
   return (
@@ -43,7 +44,7 @@ export default function App() {
               ></Route>
               <Route
                 path="candidatures/"
-                element={<div>Mes candidatures</div>}
+                element={<MesCandidatures />}
               ></Route>
               <Route
                 path="elections/"
