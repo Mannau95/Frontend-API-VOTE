@@ -51,7 +51,7 @@ export default function App() {
               <Route
                 path="profile/"
                 element={<div>Reglages de mon profile</div>}
-              ></Route
+              ></Route>
             </Route>
           </Routes>
         </main>
