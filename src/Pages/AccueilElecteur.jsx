@@ -22,11 +22,48 @@ export default function AccueilElecteur() {
         },
     ]
 
+    const candidatures = [
+        {
+            "election": "Election du Conseil d'Administration 2025",
+            "status": "En attente",
+            "date": "01 juillet 2025",
+        },
+        {
+            "election": "Vote pour la Nouvelle Politique de Télétravail",
+            "status": "Approuvée",
+            "date" : "01 août 2025",
+        },
+        {
+            "election": "Election de responsable",
+            "status": "Rejetée",
+            "date": "01 juillet 2025",
+        },
+    ]
+
+    const resultats = [
+        {
+            "name": "Vote pour la Président du Syncicat",
+            "date" : "01 septembre 2025",
+            "status": "Validé"
+        },
+
+        {
+            "name": "Vote pour la Président du Syncicat",
+            "date" : "01 septembre 2025",
+            "status": "Validé"
+        },
+    ]
+
     return (
         <div className='p-5'>
             <section id="MotAccueilElecteur" className="flex gap-4 bg-blue-100 px-6 py-12 rounded-md my-4">
                 {/* image */}
-                <img className='w-20% ' alt="ume irme"/>
+                <div className="w-20 rounded-full avatar">
+                    <img
+                    alt="Profil image" className='w-20 rounded-full'
+                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    />
+                </div>
 
                 {/* Mot de bienvenu */}
                 <div>
@@ -48,19 +85,22 @@ export default function AccueilElecteur() {
                     Statistiques phares:
                 </p>
                 <div className="flex justify-between items-start ">
-                    <div className='flex flex-col w-[31%] pl-2'>
+                    <div className='flex flex-col w-[31%] px-5 py-6 shadow-xs shadow-gray-300 relative'>
                         <p>Elections Actives</p>
                         <p className='font-bold text-2xl mt-2'>3</p>
+                        <img src="img/timer_ico.png" alt="timer icon" className='w-7 h-6 absolute top-10 right-6'/>
                     </div>
 
-                    <div className='flex flex-col w-[31%] pl-2'>
+                    <div className='flex flex-col w-[31%] px-5 py-6 shadow-xs shadow-gray-300 relative'>
                         <p>Candidature en Attente</p>
                         <p className='font-bold text-2xl mt-2'>2</p>
+                        <img src="img/msg_ico.png" alt="timer icon" className='w-7 h-6 absolute top-10 right-6'/>
                     </div>
 
-                    <div className='flex flex-col w-[31%] pl-2'>
+                    <div className='flex flex-col w-[31%] px-5 py-6 shadow-xs shadow-gray-300 relative'>
                         <p>Elections Participées</p>
                         <p className='font-bold text-2xl mt-2'>8</p>
+                        <img src="img/success_ico.png" alt="timer icon" className='w-7 h-6 absolute top-10 right-6'/>
                     </div>
 
                     
@@ -78,9 +118,12 @@ export default function AccueilElecteur() {
                     {
                         prochaines_elections.map((election, index) => {
                             return (
-                                <li key={index} className='bg-gray-50 p-3 ml-2 '>
-                                    <p className='font-semibold mb-3'>{ election.name }</p>
-                                    <p>{ "Du " + election.debut + " au " + election.fin }</p>
+                                <li key={index} className='bg-blue-50 p-3 ml-2 flex items-center gap-3 rounded-lg'>
+                                    <img src="img/success_ico.png" alt="timer icon" className='w-7 h-6'/>
+                                    <div className="text-content">
+                                        <p className='font-semibold mb-3'>{ election.name }</p>
+                                        <p>{ "Du " + election.debut + " au " + election.fin }</p>
+                                    </div>
                                 </li>
                             )
                         })
@@ -89,14 +132,57 @@ export default function AccueilElecteur() {
             </section>
 
             {/* MES CANDIDATURES */}
-            <section>
+            <section className='mx-2'>
                 <p className='text-[1.15rem] font-semibold mb-5'>Mes Candidatures</p>
 
-                <table>
-                    <thead>
-                        <th></th>
+                <table className='w-full'>
+                    <thead className='bg-blue-50'>
+                        <tr>
+                            <th className='py-3 text-left px-4'>Election</th>
+                            <th className='text-left px-4'>Statut</th>
+                            <th className='text-left px-4'>Date de soumission</th>
+                        </tr>
                     </thead>
+
+                    <tbody>
+                        {
+                            candidatures.map( (candidature, index) => {
+                                return (
+                                    <tr key={index}>
+                                        {
+                                            Object.keys(candidature).map((attr, index)=> {
+                                                return (
+                                                    <td className='py-2 px-4 shadow-xs shadow-gray-300 ' key={index}>{candidature[attr]}</td>
+                                                )
+                                            })
+                                        }
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
                 </table>
+            </section>
+
+            {/* RESULTATAS RECENTS  */}
+            <section className='mx-2'>
+                <p className='text-[1.15rem] font-semibold mb-5'>Résultats récents</p>
+
+                <ul className='flex flex-col flex-wrap gap-5'>
+                    {
+                        resultats.map((res, index) => {
+                            return (
+                                <li key={index} className='bg-blue-50 p-3 ml-2 flex items-center gap-3 rounded-lg'>
+                                    <img src="img/success_ico.png" alt="timer icon" className='w-7 h-6'/>
+                                    <div className="text-content">
+                                        <p className='font-semibold mb-3'>{ res.name }</p>
+                                        <p>{ "Conclut le " + res.date + " - " + res.status }</p>
+                                    </div>
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
             </section>
 
         </div>
