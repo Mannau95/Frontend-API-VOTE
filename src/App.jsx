@@ -14,6 +14,8 @@ import MesCandidatures from "./Pages/MesCandidatures.jsx";
 import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
 // import Ges from "./Pages/GestionElecteurs.jsx";
 
+import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
+
 export default function App() {
   return (
     <Router>
