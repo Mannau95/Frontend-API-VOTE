@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import NavigateToggle from "../Components/NavigateToggle.jsx";
-import SideBar from "../Components/SideBar.jsx";
+import SideBarToggle from "../Components/SideBarToggle.jsx";
 
 export default function DashboardElector() {
   // liste des sous routes
@@ -22,8 +22,8 @@ export default function DashboardElector() {
   return (
     <div>
       {/* <NavigateToggle /> */}
-      <SideBar paths={paths}/>
-      <div className="ml-64 p-6 min-h-[84dvh]">
+      <SideBarToggle paths={paths}/>
+      <div className="ml-64 min-h-[84dvh]">
         {/* <h1 className="text-2xl text-red-500 font-bold mb-4">Participer à un Vote</h1> */}
         <Outlet />
       </div>
