@@ -55,6 +55,19 @@ export default function App() {
                 path="profile/"
                 element={<div>Reglages de mon profile</div>}
               ></Route>
+              <Route index element={<AccueilElecteur />} />
+              <Route
+                path="candidatures/"
+                element={<div>Mes candidatures</div>}
+              />
+              <Route
+                path="elections/"
+                element={<div>Elections Actuelles</div>}
+              />
+              <Route
+                path="profile/"
+                element={<div>Reglages de mon profile</div>}
+              />
             </Route>
           </Routes>
         </main>
