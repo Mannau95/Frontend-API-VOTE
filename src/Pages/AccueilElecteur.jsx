@@ -40,6 +40,20 @@ export default function AccueilElecteur() {
         },
     ]
 
+    const resultats = [
+        {
+            "name": "Vote pour la Président du Syncicat",
+            "date" : "01 septembre 2025",
+            "status": "Validé"
+        },
+
+        {
+            "name": "Vote pour la Président du Syncicat",
+            "date" : "01 septembre 2025",
+            "status": "Validé"
+        },
+    ]
+
     return (
         <div className='p-5'>
             <section id="MotAccueilElecteur" className="flex gap-4 bg-blue-100 px-6 py-12 rounded-md my-4">
@@ -123,9 +137,11 @@ export default function AccueilElecteur() {
 
                 <table className='w-full'>
                     <thead className='bg-blue-50'>
-                        <th className='py-3 text-left px-4'>Election</th>
-                        <th className='text-left px-4'>Statut</th>
-                        <th className='text-left px-4'>Date de soumission</th>
+                        <tr>
+                            <th className='py-3 text-left px-4'>Election</th>
+                            <th className='text-left px-4'>Statut</th>
+                            <th className='text-left px-4'>Date de soumission</th>
+                        </tr>
                     </thead>
 
                     <tbody>
@@ -146,6 +162,27 @@ export default function AccueilElecteur() {
                         }
                     </tbody>
                 </table>
+            </section>
+
+            {/* RESULTATAS RECENTS  */}
+            <section className='mx-2'>
+                <p className='text-[1.15rem] font-semibold mb-5'>Résultats récents</p>
+
+                <ul className='flex flex-col flex-wrap gap-5'>
+                    {
+                        resultats.map((res, index) => {
+                            return (
+                                <li key={index} className='bg-blue-50 p-3 ml-2 flex items-center gap-3 rounded-lg'>
+                                    <img src="img/success_ico.png" alt="timer icon" className='w-7 h-6'/>
+                                    <div className="text-content">
+                                        <p className='font-semibold mb-3'>{ res.name }</p>
+                                        <p>{ "Conclut le " + res.date + " - " + res.status }</p>
+                                    </div>
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
             </section>
 
         </div>
