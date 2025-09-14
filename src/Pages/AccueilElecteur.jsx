@@ -42,25 +42,25 @@ export default function AccueilElecteur() {
                 </div>
             </section>
 
-            {/* les stqtistique */}
+            {/* les stqtistiques globales */}
             <section id='stats cles flex'>
                 <p className='text-[1.15rem] font-semibold mb-3'>
                     Statistiques phares:
                 </p>
                 <div className="flex justify-between items-start ">
-                    <div className='flex flex-col'>
+                    <div className='flex flex-col w-[31%] pl-2'>
                         <p>Elections Actives</p>
-                        <p className='text-bold text-2xl mt-2'>3</p>
+                        <p className='font-bold text-2xl mt-2'>3</p>
                     </div>
 
-                    <div className='flex flex-col'>
+                    <div className='flex flex-col w-[31%] pl-2'>
                         <p>Candidature en Attente</p>
-                        <p className='text-bold text-2xl mt-2'>2</p>
+                        <p className='font-bold text-2xl mt-2'>2</p>
                     </div>
 
-                    <div className='flex flex-col'>
+                    <div className='flex flex-col w-[31%] pl-2'>
                         <p>Elections Participées</p>
-                        <p className='text-bold text-2xl mt-2'>8</p>
+                        <p className='font-bold text-2xl mt-2'>8</p>
                     </div>
 
                     
@@ -68,23 +68,35 @@ export default function AccueilElecteur() {
 
             </section>
 
-            <section className='mt-15'>
+            {/* PROCHAINES ELECTIONS */}
+            <section>
                 <p className='text-[1.15rem] font-semibold mb-5'>
-                    Prochaine elections
+                    Prochaines elections
                 </p>
 
-                <ul className='flex flex-col gap-5'>
+                <ul className='flex flex-col flex-wrap gap-5'>
                     {
                         prochaines_elections.map((election, index) => {
                             return (
-                                <li key={index} className='bg-gray-50 p-3 ml-2'>
-                                    <p className='font-semibold'>{ election.name }</p>
+                                <li key={index} className='bg-gray-50 p-3 ml-2 '>
+                                    <p className='font-semibold mb-3'>{ election.name }</p>
                                     <p>{ "Du " + election.debut + " au " + election.fin }</p>
                                 </li>
                             )
                         })
                     }
                 </ul>
+            </section>
+
+            {/* MES CANDIDATURES */}
+            <section>
+                <p className='text-[1.15rem] font-semibold mb-5'>Mes Candidatures</p>
+
+                <table>
+                    <thead>
+                        <th></th>
+                    </thead>
+                </table>
             </section>
 
         </div>
