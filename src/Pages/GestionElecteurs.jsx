@@ -23,7 +23,7 @@ export default function GestionElecteurs() {
   }, []);
 
   const fetchElecteurs = async () => {
-    const res = await axios.get("/api/electeurs"); // à adapter selon ton backend
+    const res = await axios.get("v2/users/"); // à adapter selon ton backend
     setElecteurs(res.data);
     setTotal(res.data.length);
   };
@@ -33,7 +33,7 @@ export default function GestionElecteurs() {
     Papa.parse(file, {
       header: true,
       complete: async (results) => {
-        await axios.post("/api/electeurs/import", results.data); // endpoint à créer côté backend
+        await axios.post("/v2/users/import", results.data); // endpoint à créer côté backend
         fetchElecteurs();
       },
     });
@@ -53,7 +53,7 @@ export default function GestionElecteurs() {
     fetchElecteurs();
   };
   const handleDelete = async (id) => {
-    await axios.delete(`/api/electeurs/${id}`);
+    await axios.delete(`/v2/users/${id}`);
     fetchElecteurs();
   };
 
