@@ -12,13 +12,10 @@ export default function Connexion() {
     e.preventDefault();
 
     try {
-      const response = await httpAxiosClient.post(
-        '/auth/login/',
-        {
-          email, 
-          password: motDePasse
-        }
-      )
+      const response = await httpAxiosClient.post("/auth/login/", {
+        email,
+        password: motDePasse,
+      });
       // await axios.post(
       //   "http://localhost:8000/api/v2/users/<int:pk>/",
       //   {
@@ -28,7 +25,15 @@ export default function Connexion() {
       // );
 
       console.log("Connecté avec succès", response.data);
-      
+
+      localStorage.setItem(
+        "access_token",
+        JSON.stringify(response.data.access)
+      );
+      localStorage.setItem(
+        "refresh_token",
+        JSON.stringify(response.data.refresh)
+      );
     } catch (error) {
       console.error(error);
       setErreur(
