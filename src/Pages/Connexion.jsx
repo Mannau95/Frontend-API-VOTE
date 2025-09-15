@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { httpAxiosClient } from "../client/httpClient";
+import { data } from "autoprefixer";
+// import axios from "axios";
 
 export default function Connexion() {
   const [email, setEmail] = useState("");
@@ -10,13 +12,20 @@ export default function Connexion() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v2/users/<int:pk>/",
+      const response = await httpAxiosClient.post(
+        '/auth/login/',
         {
-          email,
-          mot_de_passe: motDePasse,
+          email, 
+          password: motDePasse
         }
-      );
+      )
+      // await axios.post(
+      //   "http://localhost:8000/api/v2/users/<int:pk>/",
+      //   {
+      //     email,
+      //     mot_de_passe: motDePasse,
+      //   }
+      // );
 
       console.log("Connecté avec succès", response.data);
     } catch (error) {
