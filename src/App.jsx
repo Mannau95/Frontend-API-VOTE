@@ -38,14 +38,8 @@ export default function App() {
               ></Route>
             </Route>
             <Route path="/electeur" element={<DashboardElector />}>
-              <Route
-                index
-                element={<AccueilElecteur/>}
-              ></Route>
-              <Route
-                path="candidatures/"
-                element={<MesCandidatures />}
-              ></Route>
+              <Route index element={<AccueilElecteur />}></Route>
+              <Route path="candidatures/" element={<MesCandidatures />}></Route>
               <Route
                 path="elections/"
                 element={<ElectionsActuellesElecteur />}
