@@ -28,6 +28,7 @@ export default function Connexion() {
       // );
 
       console.log("Connecté avec succès", response.data);
+      
     } catch (error) {
       console.error(error);
       setErreur(
