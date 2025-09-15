@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { httpAxiosClient } from "../client/httpClient";
 import { data } from "autoprefixer";
 // import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Connexion() {
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState("");
+  const navigate = useNavigate();
 
   const handleConnexion = async (e) => {
     e.preventDefault();
@@ -34,6 +36,7 @@ export default function Connexion() {
         "refresh_token",
         JSON.stringify(response.data.refresh)
       );
+      navigate("/");
     } catch (error) {
       console.error(error);
       setErreur(
