@@ -11,8 +11,9 @@ function Acceuil() {
     const user = JSON.parse(localStorage.getItem("super_vote_user"));
     if (!user) {
       const access = localStorage.getItem("access_token");
+      console.log(`Bearer ${access}`)
       httpAxiosClient
-        .post("/auth/user/", {
+        .post("/auth/user/", {},{
           headers: {
             Authorization: `Bearer ${access}`,
           },

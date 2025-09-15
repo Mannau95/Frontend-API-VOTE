@@ -29,13 +29,9 @@ export default function Connexion() {
       console.log("Connecté avec succès", response.data);
 
       localStorage.setItem(
-        "access_token",
-        JSON.stringify(response.data.access)
-      );
+        "access_token", response.data.access);
       localStorage.setItem(
-        "refresh_token",
-        JSON.stringify(response.data.refresh)
-      );
+        "refresh_token", response.data.refresh);
       navigate("/");
     } catch (error) {
       console.error(error);
