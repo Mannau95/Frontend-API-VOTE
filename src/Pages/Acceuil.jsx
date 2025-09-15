@@ -1,8 +1,32 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../Components/Navbar.jsx";
-
+import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { httpAxiosClient } from "../client/httpClient.js";
+import { data } from "autoprefixer";
 function Acceuil() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("super_vote_user"));
+    if (!user) {
+      const access = localStorage.getItem("access_token");
+      httpAxiosClient
+        .post("/auth/user/", {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        })
+        .then((data) => {
+          console.log("User data fetched successfully:", data.data);
+
+          //localStorage.setItem("super_vote_user", JSON.stringify(data.data));
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [navigate]);
   return (
     <div>
       <Navbar />
