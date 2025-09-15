@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react"
-//import { httpClient } from "../clients/httpClient";
+//import { httpClient } from "../client/httpClient";
 // import dayjs from 'dayjs';
-import { httpAxiosClient } from "../clients/httpClient";
+import { httpAxiosClient } from "../client/httpClient";
 
 const AuthContext = createContext()
 
