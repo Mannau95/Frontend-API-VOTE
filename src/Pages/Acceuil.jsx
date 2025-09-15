@@ -21,13 +21,19 @@ function Acceuil() {
         .then((data) => {
           console.log("User data fetched successfully:", data.data);
 
-          //localStorage.setItem("super_vote_user", JSON.stringify(data.data));
+          if(data.data.success){
+            localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+          } else{
+            navigate('/Connexion')
+          }
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
         });
     }
   }, [navigate]);
+
+  
   return (
     <div>
       <Navbar />
