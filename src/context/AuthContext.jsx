@@ -91,9 +91,7 @@ export function AuthProvider({children}){
     const value = {
         isAuthenticated, authenticate, unAuthenticate,
         globalUser, setGlobalUser,
-        subscribe, login,
         doRefresh, setDoRefresh,
-        pickedDate, setPickedDate
     };
     return (
 
