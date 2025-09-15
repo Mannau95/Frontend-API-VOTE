@@ -25,6 +25,7 @@ export default function Connexion() {
       // );
 
       console.log("Connecté avec succès", response.data);
+
       localStorage.setItem(
         "access_token",
         JSON.stringify(response.data.access)
