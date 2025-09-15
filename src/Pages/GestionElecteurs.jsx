@@ -23,7 +23,7 @@ export default function GestionElecteurs() {
   }, []);
 
   const fetchElecteurs = async () => {
-    const res = await axios.get("v2/users/"); // à adapter selon ton backend
+    const res = await axios.get("http://localhost:8000/api/v2/users/");
     setElecteurs(res.data);
     setTotal(res.data.length);
   };
@@ -33,14 +33,14 @@ export default function GestionElecteurs() {
     Papa.parse(file, {
       header: true,
       complete: async (results) => {
-        await axios.post("/v2/users/import", results.data); // endpoint à créer côté backend
+        await axios.post("http://localhost:8000/api/v2/users/", results.data);
         fetchElecteurs();
       },
     });
   };
 
   const handleAdd = async () => {
-    await axios.post("/api/electeurs", formData);
+    await axios.post("http://localhost:8000/api/v2/users/", formData);
     setFormData({
       Nom: "",
       email: "",
@@ -53,7 +53,7 @@ export default function GestionElecteurs() {
     fetchElecteurs();
   };
   const handleDelete = async (id) => {
-    await axios.delete(`/v2/users/${id}`);
+    await axios.delete(`http://localhost:8000/api/v2/users//${id}`);
     fetchElecteurs();
   };
 

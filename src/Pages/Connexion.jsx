@@ -1,54 +1,68 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
-const Login = () => {
-  const navigate = useNavigate();
+export default function Connexion() {
   const [email, setEmail] = useState("");
-  const [mdp, setMdp] = useState("");
+  const [motDePasse, setMotDePasse] = useState("");
+  const [erreur, setErreur] = useState("");
 
-  const handleLogin = (e) => {
+  const handleConnexion = async (e) => {
     e.preventDefault();
 
-    localStorage.setItem("user", JSON.stringify({ email }));
-    navigate("/");
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v2/users/<int:pk>/",
+        {
+          email,
+          mot_de_passe: motDePasse,
+        }
+      );
+
+      console.log("Connecté avec succès", response.data);
+    } catch (error) {
+      console.error(error);
+      setErreur(
+        "Vos identifiants sont incorrects, veuillez les vérifier à nouveau."
+      );
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow w-full max-w-md space-y-4"
-      >
-        <h2 className="text-xl font-bold">Se connecter</h2>
-        <input
-          type="email"
-          placeholder="E-mail"
-          required
-          className="w-full border p-2 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          required
-          className="w-full border p-2 rounded"
-          value={mdp}
-          onChange={(e) => setMdp(e.target.value)}
-        />
-        <button className="bg-blue-500 text-white w-full p-2 rounded hover:bg-blue-600">
-          Se connecter
-        </button>
-        <p className="text-sm text-blue-600">
-          Pas de compte ?{" "}
-          <Link to="/Sinscrire" className="text-blue-600">
-            S’inscrire
-          </Link>
-        </p>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Connexion</h2>
+        <form onSubmit={handleConnexion} className="space-y-4">
+          <div>
+            <label className="block mb-1">E-mail</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full border border-gray-300 p-2 rounded"
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Mot de passe</label>
+            <input
+              type="password"
+              value={motDePasse}
+              onChange={(e) => setMotDePasse(e.target.value)}
+              required
+              className="w-full border border-gray-300 p-2 rounded"
+            />
+          </div>
+
+          {erreur && <p className="text-red-500 text-sm">{erreur}</p>}
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          >
+            Se connecter
+          </button>
+        </form>
+      </div>
     </div>
   );
-};
-
-export default Login;
+}

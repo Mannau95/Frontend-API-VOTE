@@ -14,7 +14,7 @@ import MesCandidatures from "./Pages/MesCandidatures.jsx";
 import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
 // import Ges from "./Pages/GestionElecteurs.jsx'
 import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
-
+import MotDePasse from "./Pages/motdepasse.jsx";
 export default function App() {
   return (
     <Router>
@@ -24,6 +24,7 @@ export default function App() {
             <Route path="/" element={<Acceuil />} />
             <Route path="/Connexion" element={<Connexion />} />
             <Route path="/Sinscrire" element={<Sinscrire />} />
+            <Route path="/MotDePasse" element={<MotDePasse />} />
 
             <Route path="/supervision" element={<DashboardSuperviseur />}>
               <Route index element={<CreerVotePage />}></Route>

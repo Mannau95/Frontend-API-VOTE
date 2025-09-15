@@ -9,36 +9,43 @@ const AdminElectionPage = () => {
 
   useEffect(() => {
     // Récupérer stats globales
-    axios.get("/api/elections/stats").then((res) => setStats(res.data));
+    axios
+      .get("http://localhost:8000/api/v2/elections/")
+      .then((res) => setStats(res.data));
 
     // Récupérer élections en cours ou terminées
     fetchElections(tab);
   }, [tab]);
 
   const fetchElections = (type) => {
-    axios.get(`/api/elections?etat=${type}`).then((res) => {
-      setElections(res.data);
-      setSelectedElection(null);
-    });
+    axios
+      .get(`http://localhost:8000/api/v2/elections/<int:pk>/=${type}`)
+      .then((res) => {
+        setElections(res.data);
+        setSelectedElection(null);
+      });
   };
 
   const handleSelectElection = (election) => {
-    axios.get(`/api/elections/${election.id}/stats`).then((res) => {
-      setSelectedElection({ ...election, stats: res.data });
-    });
+    axios
+      .get(`http://localhost:8000/api/v2/elections/<int:pk>/${election.id}/`)
+      .then((res) => {
+        setSelectedElection({ ...election, stats: res.data });
+      });
   };
 
   const envoyerResultatsParMail = () => {
     if (!selectedElection) return;
     axios
-      .post(`/api/elections/${selectedElection.id}/envoyer-mails`)
+      .post(
+        `http://localhost:8000/api/v2/elections/<int:pk>/${selectedElection.id}`
+      )
       .then(() => alert("Emails envoyés avec succès"))
       .catch(() => alert("Échec de l'envoi des mails"));
   };
 
   return (
     <div className="p-6 space-y-8">
-      {/* Onglets */}
       <div className="flex gap-4">
         <button
           className={`px-4 py-2 rounded ${
