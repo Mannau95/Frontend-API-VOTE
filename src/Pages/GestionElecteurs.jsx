@@ -8,14 +8,22 @@ export default function GestionElecteurs() {
   const [electeurs, setElecteurs] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [formData, setFormData] = useState({ nom: "", email: "", numero: "" });
+  const [formData, setFormData] = useState({
+    Nom: "",
+    email: "",
+    sexe: "",
+    Date_de_naissance: "",
+    is_elector: true,
+    is_supervisor: false,
+    is_candidate: true,
+  });
 
   useEffect(() => {
     fetchElecteurs();
   }, []);
 
   const fetchElecteurs = async () => {
-    const res = await axios.get("/api/electeurs"); // à adapter selon ton backend
+    const res = await axios.get("http://localhost:8000/api/v2/users/");
     setElecteurs(res.data);
     setTotal(res.data.length);
   };
@@ -25,19 +33,27 @@ export default function GestionElecteurs() {
     Papa.parse(file, {
       header: true,
       complete: async (results) => {
-        await axios.post("/api/electeurs/import", results.data); // endpoint à créer côté backend
+        await axios.post("http://localhost:8000/api/v2/users/", results.data);
         fetchElecteurs();
       },
     });
   };
 
   const handleAdd = async () => {
-    await axios.post("/api/electeurs", formData);
-    setFormData({ nom: "", email: "", numero: "" });
+    await axios.post("http://localhost:8000/api/v2/users/", formData);
+    setFormData({
+      Nom: "",
+      email: "",
+      sexe: "",
+      Date_de_naissance: "",
+      is_elector: true,
+      is_supervisor: false,
+      is_candidate: true,
+    });
     fetchElecteurs();
   };
   const handleDelete = async (id) => {
-    await axios.delete(`/api/electeurs/${id}`);
+    await axios.delete(`http://localhost:8000/api/v2/users//${id}`);
     fetchElecteurs();
   };
 
@@ -61,8 +77,8 @@ export default function GestionElecteurs() {
           type="text"
           placeholder="Nom"
           className="border p-2"
-          value={formData.nom}
-          onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+          value={formData.Nom}
+          onChange={(e) => setFormData({ ...formData, Nom: e.target.value })}
         />
         <input
           type="email"
@@ -72,12 +88,28 @@ export default function GestionElecteurs() {
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
         <input
-          type="text"
-          placeholder="Téléphone"
-          className="border p-2"
-          value={formData.numero}
-          onChange={(e) => setFormData({ ...formData, numero: e.target.value })}
+          type="checkbox"
+          checked={formData.is_elector}
+          onChange={(e) =>
+            setFormData({ ...formData, is_elector: e.target.checked })
+          }
         />
+
+        <input
+          type="checkbox"
+          checked={formData.is_supervisor}
+          onChange={(e) =>
+            setFormData({ ...formData, is_supervisor: e.target.checked })
+          }
+        />
+        <input
+          type="checkbox"
+          checked={formData.is_candidate}
+          onChange={(e) =>
+            setFormData({ ...formData, is_candidate: e.target.checked })
+          }
+        />
+
         <button
           onClick={handleAdd}
           className="bg-green-500 text-white px-4 py-2"
@@ -97,7 +129,7 @@ export default function GestionElecteurs() {
           <tr className="bg-gray-100">
             <th className="border p-2">Nom</th>
             <th className="border p-2">Email</th>
-            <th className="border p-2">Téléphone</th>
+            <th className="border p-2">sexe</th>
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
@@ -106,7 +138,7 @@ export default function GestionElecteurs() {
             <tr key={i}>
               <td className="border p-2">{el.nom}</td>
               <td className="border p-2">{el.email}</td>
-              <td className="border p-2">{el.numero}</td>
+              <td className="border p-2">{el.sexe}</td>
               <td className="border p-2">
                 <button
                   onClick={() => handleDelete(el._id)}
