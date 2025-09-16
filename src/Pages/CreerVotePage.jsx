@@ -7,18 +7,19 @@ export default function CreerVotePage() {
   const navigate = useNavigate();
 
   const [formVisible, setFormVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [selectionMode, setSelectionMode] = useState("tous");
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [eligibles, setEligibles] = useState([]);
 
   const [formData, setFormData] = useState({
-    titre: "",
+    name: "",
     organisation: "",
     description: "",
     systemeVote: "anonyme",
-    jourVote: "",
-    heureDebut: "",
-    heureFin: "",
+    begin_date: "",
+    end_date: "",
   });
 
   // useEffect(() => {
@@ -90,8 +91,22 @@ export default function CreerVotePage() {
           Authorization: `Bearer ${access}`,
         },
       })
-      .then(() => alert("Vote créé avec succès"))
-      .catch(() => alert("Erreur lors de la création du vote"));
+      .then((data) => {
+        // alert("Vote créé avec succès")
+        console.log(data.status)
+        if(data.status === 201){
+          navigate('/supervision/elections/')
+          
+        } else {
+          setErrorMsg("Erreur lors de la création du vote")
+        }
+      })
+      .catch((e) => {
+        const err = e.response.data[Object.keys(e.response.data)[0]];
+        
+        ///alert("Erreur lors de la création du vote")}
+        setErrorMsg(err) //"Erreur lors de la création du vote")//JSON.stringify(e.response.data))
+      });
   };
 
   return (
@@ -127,8 +142,8 @@ export default function CreerVotePage() {
           <div className="mb-4">
             <label className="block font-medium">Titre d'Election *</label>
             <input
-              name="titre"
-              value={formData.titre}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               required
               className="w-full border rounded px-3 py-2"
@@ -139,9 +154,9 @@ export default function CreerVotePage() {
             <div>
               <label className="block font-medium">Jour du élection</label>
               <input
-                type="date"
-                name="jourVote"
-                value={formData.jourVote}
+                type="datetime-local"
+                name="begin_date"
+                value={formData.begin_date}
                 onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
               />
@@ -150,15 +165,15 @@ export default function CreerVotePage() {
             <div>
               <label className="block font-medium">Début</label>
               <input
-                type="time"
-                name="heureDebut"
-                value={formData.heureDebut}
+                type="datetime-local"
+                name="end_date"
+                value={formData.end_date}
                 onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
               />
             </div>
 
-            <div>
+            {/*<div>
               <label className="block font-medium">Fin</label>
               <input
                 type="time"
@@ -168,7 +183,7 @@ export default function CreerVotePage() {
                 required
                 className="w-full border rounded px-3 py-2"
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="mb-4">
@@ -190,6 +205,10 @@ export default function CreerVotePage() {
               required
               className="w-full border rounded px-3 py-2"
             />
+          </div>
+
+          <div className="my-3 text-xs text-red-500">
+              {errorMsg? errorMsg: ''}
           </div>
 
           <div className="mb-4">
@@ -255,7 +274,7 @@ export default function CreerVotePage() {
                 Annuler
               </button>
               <button
-                type="submit"
+                type="submit" disabled={isLoading}
                 className="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded"
               >
                 Valider
