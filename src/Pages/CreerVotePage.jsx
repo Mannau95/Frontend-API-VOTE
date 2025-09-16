@@ -152,7 +152,7 @@ export default function CreerVotePage() {
 
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block font-medium">Jour du élection</label>
+              <label className="block font-medium">Date de début</label>
               <input
                 type="datetime-local"
                 name="begin_date"
@@ -163,7 +163,7 @@ export default function CreerVotePage() {
             </div>
 
             <div>
-              <label className="block font-medium">Début</label>
+              <label className="block font-medium">Date de fin</label>
               <input
                 type="datetime-local"
                 name="end_date"
