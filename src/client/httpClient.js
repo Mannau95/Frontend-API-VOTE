@@ -47,15 +47,18 @@ export const httpAxiosClient = axios.create({
 // }
 
 // --- Intercepteur de Requetes --
-// httpAxiosClient.interceptors.request.use(
-//     async (config) => {
-//         // ajoute le token dans le header dans le cas ou token accessible
-//         return config
-//     },
-//     (error) => {
-//         return Promise.reject(error)
-//     }
-// )
+httpAxiosClient.interceptors.request.use(
+    async (config) => {
+        // ajoute le token dans le header dans le cas ou token accessible
+        if(localStorage && localStorage.getItem('access_token')){
+            config.headers['Authorization']= `Bearer ${localStorage.getItem('access_token')}`
+        }
+        return config
+    },
+    (error) => {
+        return Promise.reject(error)
+    }
+)
 
 // --- Intercepteur de Reponses --
 // httpAxiosClient.interceptors.response.use(

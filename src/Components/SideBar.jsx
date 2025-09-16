@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink,} from "react-router-dom";
+import { Link, NavLink,} from "react-router-dom";
 
 export default function SideBar({ paths }) {
   return (
@@ -31,8 +31,14 @@ export default function SideBar({ paths }) {
       </div>
 
       <div className="mb-4">
-        <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-          Déconnexion
+        <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          onClick={()=>{
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            localStorage.removeItem("super_vote_user");
+          }}
+        >
+          <Link to={'/Connexion'}>Déconnexion</Link>
         </button>
       </div>
     </div>
