@@ -31,6 +31,9 @@ export default function SideBar({ paths }) {
       </div>
 
       <div className="mb-4">
+      <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 my-4">
+          <Link to={'/'}>Acceuil</Link>
+        </button>
         <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           onClick={()=>{
             localStorage.removeItem("access_token");

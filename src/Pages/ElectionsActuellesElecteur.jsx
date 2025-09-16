@@ -1,8 +1,12 @@
 import React from 'react'
 import ElectionCard from '../Components/ElectionCard';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { httpAxiosClient } from '../client/httpClient';
 
 export default function ElectionsActuellesElecteur() {
+  const navigate = useNavigate();
     const [ isActive, setIsActive ] = useState(0)
     const elections = [
         {
@@ -42,6 +46,28 @@ export default function ElectionsActuellesElecteur() {
           "begin_date": "03 octobre 2025",
         },
       ]
+
+      useEffect(() => {
+        //const user = JSON.parse(localStorage.getItem("super_vote_user"));
+        // if (!user) {
+          // const access = localStorage.getItem("access_token");
+          // console.log(`Bearer ${access}`)
+          httpAxiosClient
+            .get("/elections/",)
+            .then((data) => {
+              console.log("User data fetched successfully:", data.data);
+    
+              // if(data.data.success){
+              //   localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+              // } else{
+              //   navigate('/Connexion')
+              // }
+            })
+            .catch((error) => {
+              console.error("Error fetching user data:", error);
+            });
+        // }
+      }, []);
 
     return (
         <div className='px-6 bg-gray-100'>
