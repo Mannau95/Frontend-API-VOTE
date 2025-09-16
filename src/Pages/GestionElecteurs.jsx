@@ -9,10 +9,11 @@ export default function GestionElecteurs() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [formData, setFormData] = useState({
-    Nom: "",
+    first_name: "",
+    last_name: "",
     email: "",
-    sexe: "",
-    Date_de_naissance: "",
+    sex: "",
+    birth_date: "",
     is_elector: true,
     is_supervisor: false,
     is_candidate: true,
@@ -23,9 +24,18 @@ export default function GestionElecteurs() {
   }, []);
 
   const fetchElecteurs = async () => {
-    const res = await httpAxiosClient.get("/users/");
-    setElecteurs(res.data);
-    setTotal(res.data.length);
+    httpAxiosClient
+      .get("/users/")
+      .then((data) => {
+        console.log("User data fetched successfully:", data.data);
+        if (data.data.succes) {
+          setElecteurs(data.data.data.data);
+        }
+        //setTotal(data.data.length);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
   };
 
   const handleCSVUpload = (e) => {
@@ -42,10 +52,11 @@ export default function GestionElecteurs() {
   const handleAdd = async () => {
     await httpAxiosClient.post("/users/", formData);
     setFormData({
-      Nom: "",
+      first_name: "",
+      last_name: "",
       email: "",
-      sexe: "",
-      Date_de_naissance: "",
+      sex: "",
+      birth_date: "",
       is_elector: true,
       is_supervisor: false,
       is_candidate: true,
@@ -62,11 +73,6 @@ export default function GestionElecteurs() {
     fetchElecteurs();
   };
 
-  const paginated = electeurs.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
-  );
-
   return (
     <div className="p-6 w-full flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-4">Gestion des Électeurs</h1>
@@ -81,64 +87,129 @@ export default function GestionElecteurs() {
         <label htmlFor="Nom">Ajouter un Électeur:</label>
 
         <div>
-          <div className=" my-2 p-4 flex gap-3">
-            <input
-              type="text"
-              placeholder="Nom"
-              className="border p-2"
-              value={formData.Nom}
-              onChange={(e) =>
-                setFormData({ ...formData, Nom: e.target.value })
-              }
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="border p-2"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
-          </div>
-          <div className="flex gap-4 my-3">
-            <div>
-              <label htmlFor="is_elector">Électeur</label>
+          <form action="">
+            <div className=" my-2 p-4 flex flex-col gap-3">
               <input
-                type="checkbox"
-                checked={formData.is_elector}
+                required
+                type="text"
+                placeholder="Nom"
+                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                value={formData.first_name}
                 onChange={(e) =>
-                  setFormData({ ...formData, is_elector: e.target.checked })
+                  setFormData({ ...formData, first_name: e.target.value })
                 }
               />
-            </div>
-            <div>
-              <label htmlFor="is_supervisor">Superviseur</label>
+
               <input
-                type="checkbox"
-                checked={formData.is_supervisor}
+                required
+                type="text"
+                placeholder="Prénom"
+                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                value={formData.last_name}
                 onChange={(e) =>
-                  setFormData({ ...formData, is_supervisor: e.target.checked })
+                  setFormData({ ...formData, last_name: e.target.value })
                 }
               />
-            </div>
-            <div>
-              <label htmlFor="is_candidate">Candidat</label>
+
               <input
-                type="checkbox"
-                checked={formData.is_candidate}
+                required
+                type="email"
+                placeholder="Email"
+                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                value={formData.email}
                 onChange={(e) =>
-                  setFormData({ ...formData, is_candidate: e.target.checked })
+                  setFormData({ ...formData, email: e.target.value })
                 }
               />
+
+              <select
+                required
+                id="sexe"
+                name="sexe"
+                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) =>
+                  setFormData({ ...formData, sex: e.target.value })
+                }
+              >
+                <option value="">Sexe...</option>
+                <option value="homme">H</option>
+                <option value="femme">F</option>
+              </select>
+
+              <div>
+                <input
+                  required
+                  type="date"
+                  placeholder=" Date d'anniversaire"
+                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  value={formData.birth_date}
+                  onChange={(e) =>
+                    setFormData({ ...formData, birth_date: e.target.value })
+                  }
+                />
+              </div>
             </div>
-          </div>
-          <button
-            onClick={handleAdd}
-            className="bg-green-500 text-white px-4 py-2"
-          >
-            Ajouter
-          </button>
+            <div className="flex gap-4 my-3">
+              <div>
+                <label
+                  required
+                  htmlFor="is_elector"
+                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  Électeur
+                </label>
+                <input
+                  type="checkbox"
+                  checked={formData.is_elector}
+                  onChange={(e) =>
+                    setFormData({ ...formData, is_elector: e.target.checked })
+                  }
+                />
+              </div>
+              <div>
+                <label
+                  required
+                  htmlFor="is_supervisor"
+                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {" "}
+                  Superviseur{" "}
+                </label>
+                <input
+                  type="checkbox"
+                  checked={formData.is_supervisor}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      is_supervisor: e.target.checked,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="is_candidate"
+                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {" "}
+                  Candidat{" "}
+                </label>
+                <input
+                  type="checkbox"
+                  checked={formData.is_candidate}
+                  onChange={(e) =>
+                    setFormData({ ...formData, is_candidate: e.target.checked })
+                  }
+                />
+              </div>
+            </div>
+            <button
+              onClick={handleAdd}
+              className="bg-green-500 text-white px-4 py-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              Ajouter
+            </button>
+          </form>
         </div>
       </div>
 
@@ -159,12 +230,12 @@ export default function GestionElecteurs() {
           </tr>
         </thead>
         <tbody>
-          {paginated.map((el, i) => (
+          {electeurs.map((el, i) => (
             <tr key={i}>
               <td className="border p-2">{el.first_name}</td>
               <td className="border p-2">{el.last_name}</td>
               <td className="border p-2">{el.email}</td>
-              <td className="border p-2">{el.sexe}</td>
+              <td className="border p-2">{el.sex}</td>
               <td className="border p-2">
                 <button
                   onClick={() => handleDelete(el._id)}
