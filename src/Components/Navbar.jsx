@@ -21,11 +21,7 @@ const Navbar = () => {
         <div className="navbar-center hi">
           <ul className="menu menu-horizontal px-1 font-bold text-md">
             <li>
-              <details>
-                <summary>
-                  <NavLink to="/">Accueil</NavLink>
-                </summary>
-              </details>
+              <NavLink to="/">Accueil</NavLink>
             </li>
 
             <li>
