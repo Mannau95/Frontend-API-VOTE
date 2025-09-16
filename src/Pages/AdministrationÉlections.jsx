@@ -147,7 +147,6 @@ const AdminElectionPage = () => {
             </>
           )}
 
-          {/* Bouton pour envoyer les résultats par mail */}
           <button
             onClick={envoyerResultatsParMail}
             className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
