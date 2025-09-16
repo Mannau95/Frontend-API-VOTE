@@ -7,7 +7,9 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("super_vote_user");
     navigate("/Connexion");
   };
   return (
@@ -27,11 +29,11 @@ const Navbar = () => {
             </li>
 
             <li>
-              <NavLink to="/supervision">Créer un vote</NavLink>
+              <NavLink to="/supervision">Créer une élection</NavLink>
             </li>
 
             <li>
-              <NavLink to="/electeur">Participer à un vote</NavLink>
+              <NavLink to="/electeur">Participer à une élection</NavLink>
             </li>
             <li>
               <NavLink to="/Connexion">Se connecter</NavLink>
