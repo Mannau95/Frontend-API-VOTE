@@ -8,44 +8,45 @@ import { httpAxiosClient } from '../client/httpClient';
 export default function ElectionsActuellesElecteur() {
   const navigate = useNavigate();
     const [ isActive, setIsActive ] = useState(0)
-    const elections = [
-        {
-          "image": "a",
-          "title": "Election du Conseil Electoral 2025",
-          "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
-          "begin_date": "03 octobre 2025",
-        },
-        {
-          "image": "a",
-          "title": "Election du Conseil Electoral 2025",
-          "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
-          "begin_date": "03 octobre 2025",
-        },
-        {
-          "image": "a",
-          "title": "Election du Conseil Electoral 2025",
-          "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
-          "begin_date": "03 octobre 2025",
-        },
-        {
-          "image": "a",
-          "title": "Election du Conseil Electoral 2025",
-          "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
-          "begin_date": "03 octobre 2025",
-        },
-        {
-          "image": "a",
-          "title": "Election du Conseil Electoral 2025",
-          "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
-          "begin_date": "03 octobre 2025",
-        },
-        {
-          "image": "a",
-          "title": "Election du Conseil Electoral 2025",
-          "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
-          "begin_date": "03 octobre 2025",
-        },
-      ]
+    const [elections, setElections] = useState([])
+    // const elections = [
+    //     {
+    //       "image": "a",
+    //       "name": "Election du Conseil Electoral 2025",
+    //       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
+    //       "begin_date": "03 octobre 2025",
+    //     },
+    //     {
+    //       "image": "a",
+    //       "name": "Election du Conseil Electoral 2025",
+    //       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
+    //       "begin_date": "03 octobre 2025",
+    //     },
+    //     {
+    //       "image": "a",
+    //       "name": "Election du Conseil Electoral 2025",
+    //       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
+    //       "begin_date": "03 octobre 2025",
+    //     },
+    //     {
+    //       "image": "a",
+    //       "name": "Election du Conseil Electoral 2025",
+    //       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
+    //       "begin_date": "03 octobre 2025",
+    //     },
+    //     {
+    //       "image": "a",
+    //       "name": "Election du Conseil Electoral 2025",
+    //       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
+    //       "begin_date": "03 octobre 2025",
+    //     },
+    //     {
+    //       "image": "a",
+    //       "name": "Election du Conseil Electoral 2025",
+    //       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat rem nisi id velit explicabo error, deserunt fuga obcaecati adipisci sed esse totam, debitis quaerat iste  ",
+    //       "begin_date": "03 octobre 2025",
+    //     },
+    //   ]
 
       useEffect(() => {
         //const user = JSON.parse(localStorage.getItem("super_vote_user"));
@@ -56,6 +57,9 @@ export default function ElectionsActuellesElecteur() {
             .get("/elections/",)
             .then((data) => {
               console.log("User data fetched successfully:", data.data);
+              if(data.data.succes){
+                setElections(data.data.data.data)
+              }
     
               // if(data.data.success){
               //   localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
@@ -84,7 +88,7 @@ export default function ElectionsActuellesElecteur() {
                 {
                     elections.map((cand, index) =>{
                     return (
-                        <ElectionCard election={cand} key={index}/>
+                        <ElectionCard election={cand} key={index} btnTitle='Voter'/>
                     )
                     })
                 }
