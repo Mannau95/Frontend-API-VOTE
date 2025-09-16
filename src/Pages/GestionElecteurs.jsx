@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Papa from "papaparse";
+import { httpAxiosClient } from "../client/httpClient";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,7 +23,7 @@ export default function GestionElecteurs() {
   }, []);
 
   const fetchElecteurs = async () => {
-    const res = await axios.get("http://localhost:8000/api/v2/users/");
+    const res = await httpAxiosClient.get("/users/");
     setElecteurs(res.data);
     setTotal(res.data.length);
   };
@@ -33,14 +33,14 @@ export default function GestionElecteurs() {
     Papa.parse(file, {
       header: true,
       complete: async (results) => {
-        await axios.post("http://localhost:8000/api/v2/users/", results.data);
+        await httpAxiosClient.post("/users/", results.data);
         fetchElecteurs();
       },
     });
   };
 
   const handleAdd = async () => {
-    await axios.post("http://localhost:8000/api/v2/users/", formData);
+    await httpAxiosClient.post("/users/", formData);
     setFormData({
       Nom: "",
       email: "",
@@ -52,8 +52,13 @@ export default function GestionElecteurs() {
     });
     fetchElecteurs();
   };
-  const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:8000/api/v2/users//${id}`);
+  const handleDelete = async (pk) => {
+    await httpAxiosClient.delete(`/users/${pk}/`);
+    fetchElecteurs();
+  };
+
+  const handleEdit = async (pk) => {
+    await httpAxiosClient.patch(`/users/${pk}/`, formData);
     fetchElecteurs();
   };
 
@@ -63,7 +68,7 @@ export default function GestionElecteurs() {
   );
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-4">Gestion des Électeurs</h1>
 
       {/* Statistiques */}
@@ -72,50 +77,69 @@ export default function GestionElecteurs() {
       </p>
 
       {/* Formulaire d'ajout */}
-      <div className="flex gap-2 mb-4">
-        <input
-          type="text"
-          placeholder="Nom"
-          className="border p-2"
-          value={formData.Nom}
-          onChange={(e) => setFormData({ ...formData, Nom: e.target.value })}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="border p-2"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-        />
-        <input
-          type="checkbox"
-          checked={formData.is_elector}
-          onChange={(e) =>
-            setFormData({ ...formData, is_elector: e.target.checked })
-          }
-        />
+      <div className=" gap-2 mb-4">
+        <label htmlFor="Nom">Ajouter un Électeur:</label>
 
-        <input
-          type="checkbox"
-          checked={formData.is_supervisor}
-          onChange={(e) =>
-            setFormData({ ...formData, is_supervisor: e.target.checked })
-          }
-        />
-        <input
-          type="checkbox"
-          checked={formData.is_candidate}
-          onChange={(e) =>
-            setFormData({ ...formData, is_candidate: e.target.checked })
-          }
-        />
-
-        <button
-          onClick={handleAdd}
-          className="bg-green-500 text-white px-4 py-2"
-        >
-          Ajouter
-        </button>
+        <div>
+          <div className=" my-2 p-4 flex gap-3">
+            <input
+              type="text"
+              placeholder="Nom"
+              className="border p-2"
+              value={formData.Nom}
+              onChange={(e) =>
+                setFormData({ ...formData, Nom: e.target.value })
+              }
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              className="border p-2"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+          </div>
+          <div className="flex gap-4 my-3">
+            <div>
+              <label htmlFor="is_elector">Électeur</label>
+              <input
+                type="checkbox"
+                checked={formData.is_elector}
+                onChange={(e) =>
+                  setFormData({ ...formData, is_elector: e.target.checked })
+                }
+              />
+            </div>
+            <div>
+              <label htmlFor="is_supervisor">Superviseur</label>
+              <input
+                type="checkbox"
+                checked={formData.is_supervisor}
+                onChange={(e) =>
+                  setFormData({ ...formData, is_supervisor: e.target.checked })
+                }
+              />
+            </div>
+            <div>
+              <label htmlFor="is_candidate">Candidat</label>
+              <input
+                type="checkbox"
+                checked={formData.is_candidate}
+                onChange={(e) =>
+                  setFormData({ ...formData, is_candidate: e.target.checked })
+                }
+              />
+            </div>
+          </div>
+          <button
+            onClick={handleAdd}
+            className="bg-green-500 text-white px-4 py-2"
+          >
+            Ajouter
+          </button>
+        </div>
       </div>
 
       {/* Import CSV */}
@@ -128,6 +152,7 @@ export default function GestionElecteurs() {
         <thead>
           <tr className="bg-gray-100">
             <th className="border p-2">Nom</th>
+            <th className="border p-2">Prénom</th>
             <th className="border p-2">Email</th>
             <th className="border p-2">sexe</th>
             <th className="border p-2">Actions</th>
@@ -136,7 +161,8 @@ export default function GestionElecteurs() {
         <tbody>
           {paginated.map((el, i) => (
             <tr key={i}>
-              <td className="border p-2">{el.nom}</td>
+              <td className="border p-2">{el.first_name}</td>
+              <td className="border p-2">{el.last_name}</td>
               <td className="border p-2">{el.email}</td>
               <td className="border p-2">{el.sexe}</td>
               <td className="border p-2">
@@ -145,6 +171,12 @@ export default function GestionElecteurs() {
                   className="bg-red-500 text-white px-2 py-1 mr-2"
                 >
                   Supprimer
+                </button>
+                <button
+                  onClick={() => handleEdit(el._id)}
+                  className="bg-blue-500 text-white px-2 py-1 mr-2"
+                >
+                  Modifier
                 </button>
               </td>
             </tr>
