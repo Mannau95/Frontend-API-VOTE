@@ -1,23 +1,28 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { httpAxiosClient } from '../client/httpClient'
+import { FormatDate } from '../utils/formatDate'
 
 export default function AccueilElecteur() {
+    const [prochainesElections, setProchainesElections] = useState([])
     const prochaines_elections = [
         {
             "name": "Election du Conseil d'Administration 2024",
-            "debut" : "15 juillet 2024",
-            "fin": "20 juillet 2024"
+            "begin_date" : "15 juillet 2024",
+            "end_date": "20 juillet 2024"
 
         },
         {
             "name": "Vote pour la Nouvelle Politique de Télétravail",
-            "debut" : "01 août 2024",
-            "fin": "05 août 2024"
+            "begin_date" : "01 août 2024",
+            "end_date": "05 août 2024"
 
         },
         {
             "name": "Election du Comité d'Entreprise",
-            "debut" : "10 septembre 2024",
-            "fin": "12 septembre 2024"
+            "begin_date" : "10 septembre 2024",
+            "end_date": "12 septembre 2024"
 
         },
     ]
@@ -53,6 +58,31 @@ export default function AccueilElecteur() {
             "status": "Validé"
         },
     ]
+
+    useEffect(() => {
+        //const user = JSON.parse(localStorage.getItem("super_vote_user"));
+        // if (!user) {
+          // const access = localStorage.getItem("access_token");
+          // console.log(`Bearer ${access}`)
+          httpAxiosClient
+            .get("/elections/",)
+            .then((data) => {
+              console.log("User data fetched successfully:", data.data);
+              if(data.data.succes){
+                setProchainesElections(data.data.data.data)
+              }
+    
+              // if(data.data.success){
+              //   localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+              // } else{
+              //   navigate('/Connexion')
+              // }
+            })
+            .catch((error) => {
+              console.error("Error fetching user data:", error);
+            });
+        // }
+      }, []);
 
     return (
         <div className='p-5'>
@@ -116,13 +146,13 @@ export default function AccueilElecteur() {
 
                 <ul className='flex flex-col flex-wrap gap-5'>
                     {
-                        prochaines_elections.map((election, index) => {
+                        prochainesElections.map((election, index) => {
                             return (
                                 <li key={index} className='bg-blue-50 p-3 ml-2 flex items-center gap-3 rounded-lg'>
                                     <img src="img/success_ico.png" alt="timer icon" className='w-7 h-6'/>
                                     <div className="text-content">
                                         <p className='font-semibold mb-3'>{ election.name }</p>
-                                        <p>{ "Du " + election.debut + " au " + election.fin }</p>
+                                        <p>{ "Du " + FormatDate.fromIsoToString(election.begin_date) + " au " + FormatDate.fromIsoToString(election.end_date) }</p>
                                     </div>
                                 </li>
                             )
