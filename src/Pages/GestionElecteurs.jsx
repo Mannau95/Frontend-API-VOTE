@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Papa from "papaparse";
 import { httpAxiosClient } from "../client/httpClient";
 
 const ITEMS_PER_PAGE = 10;
@@ -30,10 +29,11 @@ export default function GestionElecteurs() {
         console.log("User data fetched successfully:", data.data);
         if (data.data.succes) {
           console.log(data.data.data.length);
-          
+
           setTotal(data.data.data.length);
           setElecteurs(data.data.data);
         }
+        //setTotal(data.data.length);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
@@ -221,8 +221,34 @@ export default function GestionElecteurs() {
       </div>
 
       {/* Import CSV */}
-      <div className="mb-4">
-        <input type="file" accept=".csv" onChange={handleCSVUpload} />
+
+      <div className="flex justify-center items-center mb-10 bg-gray-100">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 rounded shadow-md w-full max-w-md"
+        >
+          <label className="block mb-4 text-lg font-semibold">
+            Importer le fichier des électeurs
+          </label>
+
+          <input
+            type="file"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            onChange={handleFileChange}
+            className="w-full border border-black px-4 py-2 mb-4"
+            placeholder="Choisir un fichier"
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            disabled={loading}
+          >
+            {loading ? "Chargement..." : "Valider"}
+          </button>
+
+          {message && <p className="mt-4 text-center text-sm">{message}</p>}
+        </form>
       </div>
 
       {/* Tableau des électeurs */}

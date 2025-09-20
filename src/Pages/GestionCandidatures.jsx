@@ -3,6 +3,8 @@ import { httpAxiosClient } from "../client/httpClient";
 import ElectionCard from "../Components/ElectionCard";
 
 const PAGE_SIZE = 5;
+import { httpAxiosClient } from "../client/httpClient";
+import ElectionCard from "../Components/ElectionCard";
 
 function GestionCandidatures() {
   const [elections, setElections] = useState([]);
@@ -21,7 +23,7 @@ function GestionCandidatures() {
     setLoadingElections(true);
     try {
       // const connectedUserId = JSON.parse(localStorage.getItem('vote_user')).id
-      const res = await httpAxiosClient.get(`elections/`); 
+      const res = await httpAxiosClient.get(`elections/`);
       // console.log(res.data.data)
       // Filtrer les élections démarrées (à enlever)
       const filtered = res.data.data.filter((e) => Date.parse(e.begin_date) > Date.now());
@@ -49,7 +51,7 @@ function GestionCandidatures() {
   // Approuver ou rejeter un candidat
   const handleDecision = async (candidatId, decision) => {
     try {
-      await httpAxiosClient.post(`/api/candidats/${candidatId}/decision`, {
+      await httpAxiosClient.post(`/candidats/${candidatId}/decision`, {
         statut: decision,
       });
       setCandidats((prev) =>
@@ -68,8 +70,8 @@ function GestionCandidatures() {
   );
 
   return (
-    <div className=" max-w-8xl mx-auto">
-      <h1 className="text-3xl font-bold p-3 rounded-xl bg-white text-center mb-6">Gestion des Candidatures</h1>
+    <div className="p-6 w-full flex flex-col items-center">
+      <h1 className="text-3xl font-bold mb-6">Gestion des Candidatures</h1>
 
       {/* Liste élections */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -77,15 +79,26 @@ function GestionCandidatures() {
         {!loadingElections && elections.length === 0 && (
           <p>Aucune élection disponible.</p>
         )}
-        {elections.map((election) => (
-          <div
-            key={election.id}
-            // className="p-4 border rounded shadow cursor-pointer hover:bg-gray-100"
-            onClick={() => loadCandidats(election.id)}
-          >
-            <ElectionCard election={election} btnTitle="Voir plus" hasBtn={true} />
+
+        <div className="px-6 bg-gray-100">
+          <h1 className="text-2xl font-semibold mb-6">
+            Les Elections Actuelles
+          </h1>
+
+          {/* ENTETE  */}
+
+          <div className="flex flex-wrap justify-items-start items-center gap-[1%] gap-y-6 my-4">
+            {elections.map((cand, index) => {
+              return (
+                <ElectionCard
+                  election={cand}
+                  key={index}
+                  onClick={() => loadCandidats(cand.id)}
+                />
+              );
+            })}
           </div>
-        ))}
+        </div>
       </div>
 
       {/* Candidats */}
