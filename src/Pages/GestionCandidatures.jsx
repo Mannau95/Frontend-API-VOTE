@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-const PAGE_SIZE = 5;
+import { httpAxiosClient } from "../client/httpClient";
+import ElectionCard from "../Components/ElectionCard";
 
 function GestionCandidatures() {
   const [elections, setElections] = useState([]);
@@ -10,7 +9,7 @@ function GestionCandidatures() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loadingElections, setLoadingElections] = useState(false);
   const [loadingCandidats, setLoadingCandidats] = useState(false);
-
+  const PAGE_SIZE = 5;
   // Charger les élections créées par l'utilisateur
   useEffect(() => {
     loadElections();
@@ -19,7 +18,7 @@ function GestionCandidatures() {
   const loadElections = async () => {
     setLoadingElections(true);
     try {
-      const res = await axios.get("/api/elections/mine"); // adapter l'URL backend
+      const res = await httpAxiosClient.get("/elections/");
       // Filtrer les élections démarrées (à enlever)
       const filtered = res.data.filter((e) => !e.started);
       setElections(filtered);
@@ -33,7 +32,7 @@ function GestionCandidatures() {
   const loadCandidats = async (electionId) => {
     setLoadingCandidats(true);
     try {
-      const res = await axios.get(`/api/elections/electionId/candidats`);
+      const res = await httpAxiosClient.get(`/elections/electionId/candidats`);
       setCandidats(res.data);
       setSelectedElection(electionId);
       setCurrentPage(1);
@@ -46,7 +45,7 @@ function GestionCandidatures() {
   // Approuver ou rejeter un candidat
   const handleDecision = async (candidatId, decision) => {
     try {
-      await axios.post(`/api/candidats/${candidatId}/decision`, {
+      await httpAxiosClient.post(`/candidats/${candidatId}/decision`, {
         statut: decision,
       });
       setCandidats((prev) =>
@@ -65,7 +64,7 @@ function GestionCandidatures() {
   );
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 w-full flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-6">Gestion des Candidatures</h1>
 
       {/* Liste élections */}
@@ -74,16 +73,26 @@ function GestionCandidatures() {
         {!loadingElections && elections.length === 0 && (
           <p>Aucune élection disponible.</p>
         )}
-        {elections.map((election) => (
-          <div
-            key={election.id}
-            className="p-4 border rounded shadow cursor-pointer hover:bg-gray-100"
-            onClick={() => loadCandidats(election.id)}
-          >
-            <h2 className="text-xl font-semibold">{election.titre}</h2>
-            <p className="text-gray-600">{election.description}</p>
+
+        <div className="px-6 bg-gray-100">
+          <h1 className="text-2xl font-semibold mb-6">
+            Les Elections Actuelles
+          </h1>
+
+          {/* ENTETE  */}
+
+          <div className="flex flex-wrap justify-items-start items-center gap-[1%] gap-y-6 my-4">
+            {elections.map((cand, index) => {
+              return (
+                <ElectionCard
+                  election={cand}
+                  key={index}
+                  onClick={() => loadCandidats(cand.id)}
+                />
+              );
+            })}
           </div>
-        ))}
+        </div>
       </div>
 
       {/* Candidats */}
