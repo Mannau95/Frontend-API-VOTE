@@ -6,7 +6,7 @@ const DashboardSuperviseur = () => {
   // liste des sous routes
   const paths = [
     { path: "/supervision", pathName: "Tableau de bord" },
-    { path: "candidatures/", pathName: "Gestion des Candidatures" },
+    { path: "candidats/", pathName: "Gestion des Candidatures" },
     { path: "electeurs/", pathName: "Gestion des Électeurs" },
     { path: "elections/", pathName: "Administration des Élections" },
   ];
