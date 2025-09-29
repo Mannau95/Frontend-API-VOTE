@@ -10,37 +10,42 @@ function Acceuil() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("super_vote_user"));
     console.log(user);
-    
+
     if (!user) {
       const access = localStorage.getItem("access_token");
-      if(! access){
-        navigate('/Connexion')
-      }else{
+      if (!access) {
+        navigate("/Connexion");
+      } else {
         httpAxiosClient
-          .post("/auth/user/", {},{
-            headers: {
-              Authorization: `Bearer ${access}`,
-            },
-          })
+          .post(
+            "/auth/user/",
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${access}`,
+              },
+            }
+          )
           .then((data) => {
             console.log("User data fetched successfully:", data.data);
-  
-            if(data.data.success){
-              localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
-            } else{
-              navigate('/Connexion')
+
+            if (data.data.success) {
+              localStorage.setItem(
+                "super_vote_user",
+                JSON.stringify(data.data.data)
+              );
+            } else {
+              navigate("/Connexion");
             }
           })
           .catch((error) => {
             console.error("Error fetching user data:", error);
-            navigate('/Connexion')
+            navigate("/Connexion");
           });
-
       }
     }
   }, []);
 
-  
   return (
     <div>
       <Navbar />

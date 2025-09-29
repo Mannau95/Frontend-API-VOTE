@@ -7,7 +7,7 @@ import Sinscrire from "./Pages/Sinscrire.jsx";
 import DashboardSuperviseur from "./Pages/DashboardSuperviseur.jsx";
 import DashboardElector from "./Pages/DashboardElector.jsx";
 import CreerVotePage from "./Pages/CreerVotePage.jsx";
-//import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
+import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
 import AdministrationÉlections from "./Pages/AdministrationÉlections.jsx";
 import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
 import MesCandidatures from "./Pages/MesCandidatures.jsx";
@@ -29,7 +29,10 @@ export default function App() {
             <Route path="/supervision" element={<DashboardSuperviseur />}>
               <Route index element={<CreerVotePage />}></Route>
 
-              {/* <Route path="candidatures/" element={<GestionCandidatures />}></Route> */}
+              <Route
+                path="candidats/"
+                element={<GestionCandidatures />}
+              ></Route>
 
               <Route path="electeurs/" element={<GestionElecteurs />}></Route>
               <Route
@@ -49,10 +52,7 @@ export default function App() {
                 element={<div>Reglages de mon profile</div>}
               ></Route>
               <Route index element={<AccueilElecteur />} />
-              <Route
-                path="candidatures/"
-                element={<div>Mes candidatures</div>}
-              />
+
               <Route
                 path="elections/"
                 element={<div>Elections Actuelles</div>}

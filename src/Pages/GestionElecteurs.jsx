@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Papa from "papaparse";
 import { httpAxiosClient } from "../client/httpClient";
 
 const ITEMS_PER_PAGE = 10;
@@ -31,22 +30,44 @@ export default function GestionElecteurs() {
         if (data.data.succes) {
           setElecteurs(data.data.data.data);
         }
-        //setTotal(data.data.length);
+        setTotal(data.data.length);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
   };
 
-  const handleCSVUpload = (e) => {
-    const file = e.target.files[0];
-    Papa.parse(file, {
-      header: true,
-      complete: async (results) => {
-        await httpAxiosClient.post("/users/", results.data);
-        fetchElecteurs();
-      },
-    });
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) {
+      setMessage("Veuillez sélectionner un fichier.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    setLoading(true);
+    try {
+      await httpAxiosClient.post("/users/import", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setMessage("Fichier importé avec succès !");
+    } catch (error) {
+      setMessage("Erreur lors de l'importation.", error);
+    }
+    setLoading(false);
+    fetchElecteurs();
   };
 
   const handleAdd = async () => {
@@ -136,18 +157,16 @@ export default function GestionElecteurs() {
                 <option value="femme">F</option>
               </select>
 
-              <div>
-                <input
-                  required
-                  type="date"
-                  placeholder=" Date d'anniversaire"
-                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  value={formData.birth_date}
-                  onChange={(e) =>
-                    setFormData({ ...formData, birth_date: e.target.value })
-                  }
-                />
-              </div>
+              <input
+                required
+                type="date"
+                placeholder=" Date d'anniversaire"
+                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                value={formData.birth_date}
+                onChange={(e) =>
+                  setFormData({ ...formData, birth_date: e.target.value })
+                }
+              />
             </div>
             <div className="flex gap-4 my-3">
               <div>
@@ -214,8 +233,34 @@ export default function GestionElecteurs() {
       </div>
 
       {/* Import CSV */}
-      <div className="mb-4">
-        <input type="file" accept=".csv" onChange={handleCSVUpload} />
+
+      <div className="flex justify-center items-center mb-10 bg-gray-100">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 rounded shadow-md w-full max-w-md"
+        >
+          <label className="block mb-4 text-lg font-semibold">
+            Importer le fichier des électeurs
+          </label>
+
+          <input
+            type="file"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            onChange={handleFileChange}
+            className="w-full border border-black px-4 py-2 mb-4"
+            placeholder="Choisir un fichier"
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            disabled={loading}
+          >
+            {loading ? "Chargement..." : "Valider"}
+          </button>
+
+          {message && <p className="mt-4 text-center text-sm">{message}</p>}
+        </form>
       </div>
 
       {/* Tableau des électeurs */}
