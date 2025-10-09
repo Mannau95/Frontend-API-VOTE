@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { httpAxiosClient } from "../client/httpClient";
-import { data } from "autoprefixer";
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../store/user/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function Connexion() {
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const handleConnexion = async (e) => {
     e.preventDefault();
@@ -28,10 +30,8 @@ export default function Connexion() {
 
       console.log("Connecté avec succès", response.data);
 
-      localStorage.setItem(
-        "access_token", response.data.access);
-      localStorage.setItem(
-        "refresh_token", response.data.refresh);
+      dispatch(setUser(response.data))
+
       navigate("/");
     } catch (error) {
       console.error(error);
@@ -43,12 +43,13 @@ export default function Connexion() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Connexion</h2>
+      <div className="bg-white p-8 rounded-xl shadow-md min-h-[70dvh] w-full max-w-md flex flex-col justify-center">
+        <h2 className="text-2xl font-bold mb-6 text-center text-red-400">Connexion</h2>
         <form onSubmit={handleConnexion} className="space-y-4">
           <div>
-            <label className="block mb-1">E-mail</label>
+            <label for='email' className=" mb-1">E-mail</label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -57,8 +58,9 @@ export default function Connexion() {
             />
           </div>
           <div>
-            <label className="block mb-1">Mot de passe</label>
+            <label for='pw' className=" mb-1">Mot de passe</label>
             <input
+              id='pw'
               type="password"
               value={motDePasse}
               onChange={(e) => setMotDePasse(e.target.value)}
@@ -71,7 +73,7 @@ export default function Connexion() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            className="w-full bg-red-400 text-white py-2 rounded hover:bg-red-500 transition-all font-semibold"
           >
             Se connecter
           </button>

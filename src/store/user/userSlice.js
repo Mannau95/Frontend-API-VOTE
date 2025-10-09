@@ -12,6 +12,9 @@ const userSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             state.user = action.payload;
+            localStorage.setItem("vote_access_token", action.payload.access);
+            localStorage.setItem("vote_refresh_token", action.payload.refresh);
+            localStorage.setItem("vote_user", JSON.stringify(action.payload.user));
         },
         setLoading: (state, action) => {
             state.loading = action.payload;

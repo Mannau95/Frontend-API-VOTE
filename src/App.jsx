@@ -15,6 +15,7 @@ import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
 // import Ges from "./Pages/GestionElecteurs.jsx'
 import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
 import MotDePasse from "./Pages/motdepasse.jsx";
+import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 export default function App() {
   return (
     <Router>
@@ -24,43 +25,26 @@ export default function App() {
             <Route path="/" element={<Acceuil />} />
             <Route path="/Connexion" element={<Connexion />} />
             <Route path="/Sinscrire" element={<Sinscrire />} />
-            <Route path="/MotDePasse" element={<MotDePasse />} />
+            <Route path="/MotDePasse" element={<ProtectedRoute> <MotDePasse /> </ProtectedRoute>} />
 
-            <Route path="/supervision" element={<DashboardSuperviseur />}>
+            <Route path="/supervision" element={<ProtectedRoute> <DashboardSuperviseur /> </ProtectedRoute>}>
               <Route index element={<CreerVotePage />}></Route>
 
               {/* <Route path="candidatures/" element={<GestionCandidatures />}></Route> */}
 
-              <Route path="electeurs/" element={<GestionElecteurs />}></Route>
-              <Route
-                path="elections/"
-                element={<AdministrationÉlections />}
-              ></Route>
+              <Route path="electeurs/" element={<GestionElecteurs />}/>
+              <Route path="elections/" element={<AdministrationÉlections />} />
             </Route>
-            <Route path="/electeur" element={<DashboardElector />}>
-              <Route index element={<AccueilElecteur />}></Route>
-              <Route path="candidatures/" element={<MesCandidatures />}></Route>
-              <Route
-                path="elections/"
-                element={<ElectionsActuellesElecteur />}
-              ></Route>
-              <Route
-                path="profile/"
-                element={<div>Reglages de mon profile</div>}
-              ></Route>
+
+            <Route path="/electeur" element={<ProtectedRoute> <DashboardElector /> </ProtectedRoute>}>
               <Route index element={<AccueilElecteur />} />
-              <Route
-                path="candidatures/"
-                element={<div>Mes candidatures</div>}
-              />
-              <Route
-                path="elections/"
-                element={<div>Elections Actuelles</div>}
-              />
-              <Route
-                path="profile/"
-                element={<div>Reglages de mon profile</div>}
-              />
+              <Route path="candidatures/" element={<MesCandidatures />} />
+              <Route path="elections/" element={<ElectionsActuellesElecteur />} />
+              <Route path="profile/" element={<div>Reglages de mon profile</div>} />
+              {/* <Route index element={<AccueilElecteur />} />
+              <Route path="candidatures/" element={<div>Mes candidatures</div>} />
+              <Route path="elections/" element={<div>Elections Actuelles</div>} />
+              <Route path="profile/" element={<div>Reglages de mon profile</div>} /> */}
             </Route>
           </Routes>
         </main>
