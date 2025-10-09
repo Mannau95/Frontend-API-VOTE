@@ -8,7 +8,7 @@ export default function ProtectedRoute({children, role= '*'}) {
             if(!localStorage){
                 alert('No localStorage on this browser! Call tech team')
             }else{
-                const user = localStorage.getItem('vote_user')
+                const user = JSON.parse(localStorage.getItem('vote_user'))
                 if(!(user && (user[role] || role === '*' ) ) ){
                     navigate('/Connexion')
                 }

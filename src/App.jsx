@@ -27,7 +27,7 @@ export default function App() {
             <Route path="/Sinscrire" element={<Sinscrire />} />
             <Route path="/MotDePasse" element={<ProtectedRoute> <MotDePasse /> </ProtectedRoute>} />
 
-            <Route path="/supervision" element={<ProtectedRoute> <DashboardSuperviseur /> </ProtectedRoute>}>
+            <Route path="/supervision" element={<ProtectedRoute role='is_supervisor'> <DashboardSuperviseur /> </ProtectedRoute>}>
               <Route index element={<CreerVotePage />}></Route>
 
               {/* <Route path="candidatures/" element={<GestionCandidatures />}></Route> */}
