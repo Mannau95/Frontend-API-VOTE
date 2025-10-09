@@ -47,7 +47,7 @@ export default function Connexion() {
         <h2 className="text-2xl font-bold mb-6 text-center text-red-400">Connexion</h2>
         <form onSubmit={handleConnexion} className="space-y-4">
           <div>
-            <label for='email' className=" mb-1">E-mail</label>
+            <label htmlFor='email' className=" mb-1">E-mail</label>
             <input
               id="email"
               type="email"
@@ -58,7 +58,7 @@ export default function Connexion() {
             />
           </div>
           <div>
-            <label for='pw' className=" mb-1">Mot de passe</label>
+            <label htmlFor='pw' className=" mb-1">Mot de passe</label>
             <input
               id='pw'
               type="password"

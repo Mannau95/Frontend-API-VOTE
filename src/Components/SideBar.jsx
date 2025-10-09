@@ -9,9 +9,11 @@ export default function SideBar({ paths }) {
           {
             paths.map( (path, index) => {
               return (
-                <li key={index} className="flex items-center text-gray-800 hover:text-red-400 cursor-pointer font-bold">
-                  <NavLink to={path.path}>{path.pathName}</NavLink>
-                </li>
+                <NavLink to={path.path}>
+                  <li key={index} className="flex items-center text-gray-800 hover:text-red-400 cursor-pointer font-bold">
+                    {path.pathName}
+                  </li>
+                </NavLink>
               )
             })
           }
@@ -31,9 +33,11 @@ export default function SideBar({ paths }) {
       </div>
 
       <div className="mb-4">
-      <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 my-4">
-          <Link to={'/'}>Acceuil</Link>
-        </button>
+        <Link to={'/'} >
+          <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 my-4">
+            Acceuil
+          </button>
+        </Link>
         <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           onClick={()=>{
             localStorage.removeItem("access_token");
