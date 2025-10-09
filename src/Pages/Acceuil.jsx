@@ -69,9 +69,14 @@ function Acceuil() {
             <p>Organisez vos décisions démocratiques facilement.</p>
           </div>
 
-          <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
-            <Link to="/supervision">Créer un vote</Link>
-          </button>
+          <div className="flex justify-center gap-3">
+            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+              <Link to="/supervision">Créer une élection</Link>
+            </button>
+            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+              <Link to="/electeur">Participer à une élection</Link>
+            </button>
+          </div>
         </div>
 
         <img src="./image.jpg" alt="*" className=" h-50" />
