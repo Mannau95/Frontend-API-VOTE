@@ -16,6 +16,7 @@ import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
 import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
 import MotDePasse from "./Pages/motdepasse.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
 export default function App() {
   return (
     <Router>
@@ -34,6 +35,7 @@ export default function App() {
 
               <Route path="electeurs/" element={<GestionElecteurs />}/>
               <Route path="elections/" element={<AdministrationÉlections />} />
+              <Route path="candidatures/" element={<GestionCandidatures />} />
             </Route>
 
             <Route path="/electeur" element={<ProtectedRoute> <DashboardElector /> </ProtectedRoute>}>

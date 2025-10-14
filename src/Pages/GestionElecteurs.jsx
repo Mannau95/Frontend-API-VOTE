@@ -43,7 +43,7 @@ export default function GestionElecteurs() {
     Papa.parse(file, {
       header: true,
       complete: async (results) => {
-        await httpAxiosClient.post("/users/", results.data);
+        await httpAxiosClient.post("/users/mass/", results.data);
         fetchElecteurs();
       },
     });

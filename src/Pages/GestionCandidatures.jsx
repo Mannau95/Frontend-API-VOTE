@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { httpAxiosClient } from "../client/httpClient";
 
 const PAGE_SIZE = 5;
 
@@ -19,7 +19,8 @@ function GestionCandidatures() {
   const loadElections = async () => {
     setLoadingElections(true);
     try {
-      const res = await axios.get("/api/elections/mine"); // adapter l'URL backend
+      const connectedUserId = JSON.parse(localStorage.getItem('vote_user')).id
+      const res = await httpAxiosClient.get(`users/${connectedUserId}/elections/`); 
       // Filtrer les élections démarrées (à enlever)
       const filtered = res.data.filter((e) => !e.started);
       setElections(filtered);
@@ -33,7 +34,7 @@ function GestionCandidatures() {
   const loadCandidats = async (electionId) => {
     setLoadingCandidats(true);
     try {
-      const res = await axios.get(`/api/elections/electionId/candidats`);
+      const res = await httpAxiosClient.get(`elections/${electionId}/candidats/`);
       setCandidats(res.data);
       setSelectedElection(electionId);
       setCurrentPage(1);
@@ -46,7 +47,7 @@ function GestionCandidatures() {
   // Approuver ou rejeter un candidat
   const handleDecision = async (candidatId, decision) => {
     try {
-      await axios.post(`/api/candidats/${candidatId}/decision`, {
+      await httpAxiosClient.post(`/api/candidats/${candidatId}/decision`, {
         statut: decision,
       });
       setCandidats((prev) =>

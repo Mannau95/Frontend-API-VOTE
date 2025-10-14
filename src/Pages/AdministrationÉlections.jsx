@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { httpAxiosClient } from "../client/httpClient";
 
 const AdminElectionPage = () => {
   const [tab, setTab] = useState("enCours"); // enCours | terminees
@@ -9,8 +9,8 @@ const AdminElectionPage = () => {
 
   useEffect(() => {
     // Récupérer stats globales
-    axios
-      .get("http://localhost:8000/api/v2/elections/")
+    httpAxiosClient
+      .get("elections/stats/")
       .then((res) => setStats(res.data));
 
     // Récupérer élections en cours ou terminées
@@ -18,8 +18,8 @@ const AdminElectionPage = () => {
   }, [tab]);
 
   const fetchElections = (type) => {
-    axios
-      .get(`http://localhost:8000/api/v2/elections/<int:pk>/=${type}`)
+    httpAxiosClient
+      .get(`elections/<int:pk>/=${type}`)
       .then((res) => {
         setElections(res.data);
         setSelectedElection(null);
@@ -27,8 +27,8 @@ const AdminElectionPage = () => {
   };
 
   const handleSelectElection = (election) => {
-    axios
-      .get(`http://localhost:8000/api/v2/elections/<int:pk>/${election.id}/`)
+    httpAxiosClient
+      .get(`elections/${election.id}/`)
       .then((res) => {
         setSelectedElection({ ...election, stats: res.data });
       });
@@ -36,9 +36,9 @@ const AdminElectionPage = () => {
 
   const envoyerResultatsParMail = () => {
     if (!selectedElection) return;
-    axios
+    httpAxiosClient
       .post(
-        `http://localhost:8000/api/v2/elections/<int:pk>/${selectedElection.id}`
+        `elections/${selectedElection.id}`
       )
       .then(() => alert("Emails envoyés avec succès"))
       .catch(() => alert("Échec de l'envoi des mails"));

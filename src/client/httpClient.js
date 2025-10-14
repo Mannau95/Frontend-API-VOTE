@@ -37,14 +37,14 @@ const refreshAccessToken = async () => {
     try {
         const refreshToken = localStorage.getItem('vote_refresh_token');
         // config.headers['Authorization']= `${localStorage.getItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE)}`
-        axios.post(baseUrl+'/auth/refresh', {}, {
+        axios.post(baseUrl+'auth/refresh/', {}, {
             headers:{
                 'Authorization':`Bearer ${refreshToken}`
             }
         })
         .then((data)=>{
             localStorage.setItem('vote_access_token', data.data['accessToken'])
-            localStorage.setItem('vote_refresh_token', data.data['refreshToken'])
+            // localStorage.setItem('vote_refresh_token', data.data['refreshToken'])
         })
         
         return true;
