@@ -9,8 +9,8 @@ export default function SideBar({ paths }) {
           {
             paths.map( (path, index) => {
               return (
-                <NavLink to={path.path}>
-                  <li key={index} className="flex items-center text-gray-800 hover:text-red-400 cursor-pointer font-bold">
+                <NavLink to={path.path} key={index}>
+                  <li className="flex items-center text-gray-800 hover:text-red-400 cursor-pointer font-bold">
                     {path.pathName}
                   </li>
                 </NavLink>
