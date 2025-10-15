@@ -29,9 +29,11 @@ export default function GestionElecteurs() {
       .then((data) => {
         console.log("User data fetched successfully:", data.data);
         if (data.data.succes) {
-          setElecteurs(data.data.data.data);
+          console.log(data.data.data.length);
+          
+          setTotal(data.data.data.length);
+          setElecteurs(data.data.data);
         }
-        //setTotal(data.data.length);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
@@ -50,7 +52,11 @@ export default function GestionElecteurs() {
   };
 
   const handleAdd = async () => {
-    await httpAxiosClient.post("/users/", formData);
+    httpAxiosClient.post("users/", formData)
+    .then( data => console.log(data)
+    .catch((err) => console.log(err.message))
+
+    )
     setFormData({
       first_name: "",
       last_name: "",
@@ -63,6 +69,7 @@ export default function GestionElecteurs() {
     });
     fetchElecteurs();
   };
+
   const handleDelete = async (pk) => {
     await httpAxiosClient.delete(`/users/${pk}/`);
     fetchElecteurs();
@@ -132,8 +139,8 @@ export default function GestionElecteurs() {
                 }
               >
                 <option value="">Sexe...</option>
-                <option value="homme">H</option>
-                <option value="femme">F</option>
+                <option value="M">H</option>
+                <option value="F">F</option>
               </select>
 
               <div>
@@ -231,21 +238,21 @@ export default function GestionElecteurs() {
         </thead>
         <tbody>
           {electeurs.map((el, i) => (
-            <tr key={i}>
+            <tr key={i} className='bg-white'>
               <td className="border p-2">{el.first_name}</td>
               <td className="border p-2">{el.last_name}</td>
               <td className="border p-2">{el.email}</td>
               <td className="border p-2">{el.sex}</td>
-              <td className="border p-2">
+              <td className=" border-b p-2 flex justify-center">
                 <button
-                  onClick={() => handleDelete(el._id)}
-                  className="bg-red-500 text-white px-2 py-1 mr-2"
+                  onClick={() => handleDelete(el.id)}
+                  className="bg-red-500 text-white px-2 py-2 mr-2 rounded"
                 >
                   Supprimer
                 </button>
                 <button
-                  onClick={() => handleEdit(el._id)}
-                  className="bg-blue-500 text-white px-2 py-1 mr-2"
+                  onClick={() => handleEdit(el.id)}
+                  className="bg-blue-500 text-white px-2 py-2 mr-2 rounded"
                 >
                   Modifier
                 </button>

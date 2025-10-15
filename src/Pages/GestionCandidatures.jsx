@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { httpAxiosClient } from "../client/httpClient";
+import ElectionCard from "../Components/ElectionCard";
 
 const PAGE_SIZE = 5;
 
@@ -19,10 +20,11 @@ function GestionCandidatures() {
   const loadElections = async () => {
     setLoadingElections(true);
     try {
-      const connectedUserId = JSON.parse(localStorage.getItem('vote_user')).id
-      const res = await httpAxiosClient.get(`users/${connectedUserId}/elections/`); 
+      // const connectedUserId = JSON.parse(localStorage.getItem('vote_user')).id
+      const res = await httpAxiosClient.get(`elections/`); 
+      // console.log(res.data.data)
       // Filtrer les élections démarrées (à enlever)
-      const filtered = res.data.filter((e) => !e.started);
+      const filtered = res.data.data.filter((e) => Date.parse(e.begin_date) > Date.now());
       setElections(filtered);
     } catch (error) {
       console.error("Erreur chargement élections", error);
@@ -66,8 +68,8 @@ function GestionCandidatures() {
   );
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Gestion des Candidatures</h1>
+    <div className=" max-w-8xl mx-auto">
+      <h1 className="text-3xl font-bold p-3 rounded-xl bg-white text-center mb-6">Gestion des Candidatures</h1>
 
       {/* Liste élections */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -78,11 +80,10 @@ function GestionCandidatures() {
         {elections.map((election) => (
           <div
             key={election.id}
-            className="p-4 border rounded shadow cursor-pointer hover:bg-gray-100"
+            // className="p-4 border rounded shadow cursor-pointer hover:bg-gray-100"
             onClick={() => loadCandidats(election.id)}
           >
-            <h2 className="text-xl font-semibold">{election.titre}</h2>
-            <p className="text-gray-600">{election.description}</p>
+            <ElectionCard election={election} btnTitle="Voir plus" hasBtn={true} />
           </div>
         ))}
       </div>
