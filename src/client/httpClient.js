@@ -34,7 +34,7 @@ const processQueue = (error, token = null) => {
 
 // --- Fonstion de rafraichissement du token
 const refreshAccessToken = async () => {
-    try {
+    // try {
         const refreshToken = localStorage.getItem('vote_refresh_token');
         // config.headers['Authorization']= `${localStorage.getItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE)}`
         axios.post(baseUrl+'auth/refresh/', {}, {
@@ -43,15 +43,20 @@ const refreshAccessToken = async () => {
             }
         })
         .then((data)=>{
-            localStorage.setItem('vote_access_token', data.data['accessToken'])
+            console.log(data);
+            
+            localStorage.setItem('vote_access_token', data.data['access'])
             // localStorage.setItem('vote_refresh_token', data.data['refreshToken'])
         })
         
         return true;
-    } catch (error) {
-        window.location.href = '/login'
-        return Promise.reject(error)
-    }
+    // } catch (error) {
+    //     window.location.href = '/login'
+    //     localStorage.removeItem('vote_access_token')
+    //     localStorage.removeItem('vote_refresh_token')
+        
+    //     return Promise.reject(error)
+    // }
 }
 
 // --- Intercepteur de Requetes --
@@ -96,6 +101,8 @@ httpAxiosClient.interceptors.response.use(
                     //  si rafraichissement echoue 
                     // rejeter toutes les requetes en attendant 
                     processQueue(refreshError)
+                    // window.localStorage.removeItem('vote_access_token')
+                    // window.localStorage.removeItem('vote_refresh_token')
                     return Promise.reject(refreshError);
                 }
             }
@@ -108,6 +115,8 @@ httpAxiosClient.interceptors.response.use(
                 // une fois refresh fini
                 return httpAxiosClient(originalRequest)
             }).catch( err => {
+                // window.localStorage.removeItem('vote_access_token')
+                // window.localStorage.removeItem('vote_refresh_token')
                 return Promise.reject(err)
             })
 
