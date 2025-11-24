@@ -8,13 +8,14 @@ import DashboardSuperviseur from "./Pages/DashboardSuperviseur.jsx";
 import DashboardElector from "./Pages/DashboardElector.jsx";
 import CreerVotePage from "./Pages/CreerVotePage.jsx";
 import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
-import AdministrationÉlections from "./Pages/AdministrationÉlections.jsx";
+import AdminElectionPage from "./Pages/AdministrationElections.jsx";
 import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
 import MesCandidatures from "./Pages/MesCandidatures.jsx";
 import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
 // import Ges from "./Pages/GestionElecteurs.jsx'
 import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
-import MotDePasse from "./Pages/motdepasse.jsx";
+import StartSetPassword from "./Pages/StartSetPassword.jsx";
+import SetPassword from "./Pages/SetPassword.jsx";
 export default function App() {
   return (
     <Router>
@@ -24,7 +25,9 @@ export default function App() {
             <Route path="/" element={<Acceuil />} />
             <Route path="/Connexion" element={<Connexion />} />
             <Route path="/Sinscrire" element={<Sinscrire />} />
-            <Route path="/MotDePasse" element={<MotDePasse />} />
+            {/*<Route path="/MotDePasse" element={<MotDePasse />} />*/}
+            <Route path="/startSetPassword" element={<StartSetPassword />} />
+            <Route path="/setPassword/:token" element={<SetPassword />} />
 
             <Route path="/supervision" element={<DashboardSuperviseur />}>
               <Route index element={<CreerVotePage />}></Route>
@@ -37,7 +40,7 @@ export default function App() {
               <Route path="electeurs/" element={<GestionElecteurs />}></Route>
               <Route
                 path="elections/"
-                element={<AdministrationÉlections />}
+                element={<AdminElectionPage />}
               ></Route>
             </Route>
             <Route path="/electeur" element={<DashboardElector />}>

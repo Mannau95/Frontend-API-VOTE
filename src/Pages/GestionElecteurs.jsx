@@ -26,11 +26,12 @@ export default function GestionElecteurs() {
     httpAxiosClient
       .get("/users/")
       .then((data) => {
-        console.log("User data fetched successfully:", data.data);
-        if (data.data.succes) {
-          setElecteurs(data.data.data.data);
+        // console.log("User data fetched successfully:", data.data);
+        if (data.data?.succes) {
+          setElecteurs(data.data.data);
         }
-        setTotal(data.data.length);
+        setTotal(data.data.data.length);
+        // console.log("electors", electeurs)
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
@@ -153,8 +154,8 @@ export default function GestionElecteurs() {
                 }
               >
                 <option value="">Sexe...</option>
-                <option value="homme">H</option>
-                <option value="femme">F</option>
+                <option value="M">Masculin</option>
+                <option value="F">Feminin</option>
               </select>
 
               <input
@@ -275,7 +276,7 @@ export default function GestionElecteurs() {
           </tr>
         </thead>
         <tbody>
-          {electeurs.map((el, i) => (
+          { electeurs && electeurs.map((el, i) => (
             <tr key={i}>
               <td className="border p-2">{el.first_name}</td>
               <td className="border p-2">{el.last_name}</td>

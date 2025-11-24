@@ -67,9 +67,9 @@ export default function AccueilElecteur() {
           httpAxiosClient
             .get("/elections/",)
             .then((data) => {
-              console.log("User data fetched successfully:", data.data);
+              // console.log("User data fetched successfully:", data.data);
               if(data.data.succes){
-                setProchainesElections(data.data.data.data)
+                setProchainesElections(data.data.data)
               }
     
               // if(data.data.success){
