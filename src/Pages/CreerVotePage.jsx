@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { httpAxiosClient } from "../client/httpClient";
 
@@ -15,9 +14,7 @@ export default function CreerVotePage() {
 
   const [formData, setFormData] = useState({
     name: "",
-    organisation: "",
     description: "",
-    systemeVote: "anonyme",
     begin_date: "",
     end_date: "",
   });
@@ -39,31 +36,31 @@ export default function CreerVotePage() {
   //   }
   // }, [navigate]);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("super_vote_user"));
-    if (!user) {
-      const access = localStorage.getItem("access_token");
-      console.log(`Bearer ${access}`)
-      httpAxiosClient
-        .post("/auth/user/", {},{
-          headers: {
-            Authorization: `Bearer ${access}`,
-          },
-        })
-        .then((data) => {
-          console.log("User data fetched successfully:", data.data);
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("super_vote_user"));
+  //   if (!user) {
+  //     const access = localStorage.getItem("access_token");
+  //     console.log(`Bearer ${access}`)
+  //     httpAxiosClient
+  //       .post("/auth/user/", {},{
+  //         headers: {
+  //           Authorization: `Bearer ${access}`,
+  //         },
+  //       })
+  //       .then((data) => {
+  //         console.log("User data fetched successfully:", data.data);
 
-          if(data.data.success){
-            localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
-          } else{
-            navigate('/Connexion')
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    }
-  }, [navigate]);
+  //         if(data.data.success){
+  //           localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+  //         } else{
+  //           navigate('/Connexion')
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching user data:", error);
+  //       });
+  //   }
+  // }, [navigate]);
 
   const toggleUtilisateur = (id) => {
     setEligibles((prev) =>
@@ -78,19 +75,18 @@ export default function CreerVotePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true)
+    setErrorMsg(null)
     const payload = {
       ...formData
       // utilisateursEligibles: selectionMode === "tous" ? "tous" : eligibles,
     };
+    console.log('create vote payload', payload);
 
-    const access = localStorage.getItem("access_token");
+    // const access = localStorage.getItem("access_token");
 
     httpAxiosClient
-      .post("/elections/", payload, {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      })
+      .post("/elections/", payload)
       .then((data) => {
         // alert("Vote créé avec succès")
         console.log(data.status)
@@ -106,7 +102,10 @@ export default function CreerVotePage() {
         
         ///alert("Erreur lors de la création du vote")}
         setErrorMsg(err) //"Erreur lors de la création du vote")//JSON.stringify(e.response.data))
-      });
+      })
+      .finally(()=>{
+        setIsLoading(false)
+      })
   };
 
   return (
@@ -141,11 +140,7 @@ export default function CreerVotePage() {
 
           <div className="mb-4">
             <label className="block font-medium">Titre d'Election *</label>
-            <input
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
+            <input name="name" value={formData.name} onChange={handleChange} required
               className="w-full border rounded px-3 py-2"
             />
           </div>
@@ -153,40 +148,21 @@ export default function CreerVotePage() {
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block font-medium">Date de début</label>
-              <input
-                type="datetime-local"
-                name="begin_date"
-                value={formData.begin_date}
-                onChange={handleChange}
+              <input type="datetime-local" name="begin_date" value={formData.begin_date} onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
               />
             </div>
 
             <div>
               <label className="block font-medium">Date de fin</label>
-              <input
-                type="datetime-local"
-                name="end_date"
-                value={formData.end_date}
-                onChange={handleChange}
+              <input  type="datetime-local"  name="end_date"  value={formData.end_date} onChange={handleChange}
                 className="w-full border rounded px-3 py-2"
               />
             </div>
 
-            {/*<div>
-              <label className="block font-medium">Fin</label>
-              <input
-                type="time"
-                name="heureFin"
-                value={formData.heureFin}
-                onChange={handleChange}
-                required
-                className="w-full border rounded px-3 py-2"
-              />
-            </div> */}
           </div>
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block font-medium">Groupe / Organisation</label>
             <input
               name="organisation"
@@ -194,15 +170,11 @@ export default function CreerVotePage() {
               onChange={handleChange}
               className="w-full border rounded px-3 py-2"
             />
-          </div>
+          </div> */}
 
           <div className="mb-4">
-            <label className="block font-medium">Description *</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              required
+            <label htmlFor="description" className="block font-medium">Description *</label>
+            <textarea id='description' name="description" value={formData.description} onChange={handleChange} required
               className="w-full border rounded px-3 py-2"
             />
           </div>
@@ -212,71 +184,14 @@ export default function CreerVotePage() {
           </div>
 
           <div className="mb-4">
-            {/* <div className="mb-4">
-              <label className="block font-medium">Système de vote</label>
-              <select
-                name="systemeVote"
-                value={formData.systemeVote}
-                onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="anonyme">Vote Anonyme</option>
-                <option value="non_anonyme">Vote Non Anonyme</option>
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <label className="block font-medium">Électeurs éligibles</label>
-              <div className="flex gap-4 mb-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="selection"
-                    value="tous"
-                    checked={selectionMode === "tous"}
-                    onChange={() => setSelectionMode("tous")}
-                  />
-                  Tous les utilisateurs
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="selection"
-                    value="selection"
-                    checked={selectionMode === "selection"}
-                    onChange={() => setSelectionMode("selection")}
-                  />
-                  Sélectionner les utilisateurs
-                </label>
-              </div>
-
-              {selectionMode === "selection" && (
-                <div className="max-h-40 overflow-y-auto border p-2 rounded grid grid-cols-2 gap-2">
-                  {utilisateurs.map((user) => (
-                    <label key={user.id} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={eligibles.includes(user.id)}
-                        onChange={() => toggleUtilisateur(user.id)}
-                      />
-                      {user.nom}
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div> */}
             <div className="flex justify-end gap-4 mt-6">
-              <button
-                type="button"
+              <button type="button" className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
                 onClick={() => setFormVisible(false)}
-                className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
               >
                 Annuler
               </button>
-              <button
-                type="submit" disabled={isLoading}
-                className="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded"
-              >
+
+              <button type="submit" disabled={isLoading} className="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded">
                 Valider
               </button>
             </div>

@@ -1,34 +1,48 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { httpAxiosClient } from "../client/httpClient";
+import ElectionCard from "../Components/ElectionCard";
 
 const AdminElectionPage = () => {
-  const [tab, setTab] = useState("enCours"); // enCours | terminees
+  const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
   const [stats, setStats] = useState({});
   const [elections, setElections] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [selectedElection, setSelectedElection] = useState(null);
 
   useEffect(() => {
     // Récupérer stats globales
-    axios
-      .get("http://localhost:8000/api/v2/elections/")
-      .then((res) => setStats(res.data));
+    // httpAxiosClient
+    //   .get("elections/stats/")
+    //   .then((res) => setStats(res.data));
 
     // Récupérer élections en cours ou terminées
-    fetchElections(tab);
-  }, [tab]);
+    fetchElections();
+  }, []);
 
-  const fetchElections = (type) => {
-    axios
-      .get(`http://localhost:8000/api/v2/elections/<int:pk>/=${type}`)
+  useEffect(()=>{
+    if(elections){
+      const data = tab == 0? elections.filter(el => Date.parse(el.begin_date) >= Date.now()) : elections.filter(el => Date.parse(el.begin_date) < Date.now())
+      setFiltered(data);
+    }
+
+  }, [tab, elections])
+
+  const fetchElections = () => {
+    httpAxiosClient
+      .get(`elections/`)
       .then((res) => {
-        setElections(res.data);
+        const data = res.data.data
+        setElections(data)
         setSelectedElection(null);
+        setStats({
+          "totalElections": data.length,
+        })
       });
   };
 
   const handleSelectElection = (election) => {
-    axios
-      .get(`http://localhost:8000/api/v2/elections/<int:pk>/${election.id}/`)
+    httpAxiosClient
+      .get(`elections/${election.id}/`)
       .then((res) => {
         setSelectedElection({ ...election, stats: res.data });
       });
@@ -36,9 +50,9 @@ const AdminElectionPage = () => {
 
   const envoyerResultatsParMail = () => {
     if (!selectedElection) return;
-    axios
+    httpAxiosClient
       .post(
-        `http://localhost:8000/api/v2/elections/<int:pk>/${selectedElection.id}`
+        `elections/${selectedElection.id}`
       )
       .then(() => alert("Emails envoyés avec succès"))
       .catch(() => alert("Échec de l'envoi des mails"));
@@ -48,18 +62,19 @@ const AdminElectionPage = () => {
     <div className="p-6 space-y-8">
       <div className="flex gap-4">
         <button
-          className={`px-4 py-2 rounded ${
-            tab === "enCours" ? "bg-blue-600 text-white" : "bg-gray-200"
+          className={`px-4 py-2 rounded cursor-pointer ${
+            tab == 0? "bg-blue-600 text-white" : "bg-gray-200"
           }`}
-          onClick={() => setTab("enCours")}
+          onClick={() => setTab(0)}
         >
           Élections en cours
         </button>
+
         <button
-          className={`px-4 py-2 rounded ${
-            tab === "terminees" ? "bg-green-600 text-white" : "bg-gray-200"
+          className={`px-4 py-2 rounded cursor-pointer ${
+            tab == 1 ? "bg-green-600 text-white" : "bg-gray-200"
           }`}
-          onClick={() => setTab("terminees")}
+          onClick={() => setTab(1)}
         >
           Élections terminées
         </button>
@@ -90,19 +105,20 @@ const AdminElectionPage = () => {
 
       {/* Liste des élections */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {elections.map((election) => (
+        {filtered.map((election) => (
           <div
             key={election.id}
-            className="border p-4 rounded shadow cursor-pointer hover:bg-gray-50"
+            // className="border p-4 rounded shadow cursor-pointer hover:bg-gray-50"
             onClick={() => handleSelectElection(election)}
           >
-            <img
+            <ElectionCard election={election} />
+            {/* <img
               src={election.image || "/default.jpg"}
               alt="image"
               className="w-full h-32 object-cover mb-3 rounded"
             />
             <h3 className="text-xl font-semibold">{election.titre}</h3>
-            <p className="text-sm text-gray-600">{election.description}</p>
+            <p className="text-sm text-gray-600">{election.description}</p> */}
           </div>
         ))}
       </div>
