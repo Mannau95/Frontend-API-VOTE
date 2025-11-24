@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 //import { useState, useEffect } from "react";
 //import { vote } from "./Pages/Participer vote.jsx";
@@ -14,7 +14,9 @@ const Navbar = () => {
     navigate("/Connexion");
   };
 
-  const userState = useSelector(state => state.user)
+  // const userState = useSelector(state => state.user)
+    const userState = JSON.parse(localStorage.getItem("super_vote_user"));
+    console.log(userState);
 
   return (
     <>

@@ -39,6 +39,7 @@ function Acceuil() {
   //     }
   //   }
   // }, []);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("super_vote_user"));
     console.log(user);
@@ -51,12 +52,6 @@ function Acceuil() {
         httpAxiosClient
           .post(
             "/auth/user/",
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${access}`,
-              },
-            }
           )
           .then((data) => {
             console.log("User data fetched successfully:", data.data);
