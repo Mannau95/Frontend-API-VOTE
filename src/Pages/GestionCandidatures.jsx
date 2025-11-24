@@ -20,7 +20,7 @@ function GestionCandidatures() {
     try {
       const res = await httpAxiosClient.get("/elections/");
       // Filtrer les élections démarrées (à enlever)
-      const filtered = res.data.filter((e) => !e.started);
+      const filtered = res.data.data.filter((e) => Date.parse(e.begin_date) > Date.now());
       setElections(filtered);
     } catch (error) {
       console.error("Erreur chargement élections", error);
@@ -32,7 +32,7 @@ function GestionCandidatures() {
   const loadCandidats = async (electionId) => {
     setLoadingCandidats(true);
     try {
-      const res = await httpAxiosClient.get(`/elections/electionId/candidats`);
+      const res = await httpAxiosClient.get(`elections/${electionId}/candidats/`);
       setCandidats(res.data);
       setSelectedElection(electionId);
       setCurrentPage(1);

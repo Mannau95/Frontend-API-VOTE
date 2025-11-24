@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {httpAxiosClient} from "../client/httpClient.js";
 
-export default function Sinscrire2() {
-  const [searchParams] = useSearchParams();
+export default function SetPassword() {
+  const {token} = useParams();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const emailFromUrl = searchParams.get("email");
-    if (emailFromUrl) {
-      setEmail(emailFromUrl);
-    } else {
+    if (!token) {
       setMessage("❌ Lien invalide");
     }
-  }, [searchParams]);
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,10 +26,11 @@ export default function Sinscrire2() {
     }
 
     try {
-      await axios.post("http://localhost:8000/api/v2/users/<int:pk>/", {
-        email,
-        password,
-      });
+      await httpAxiosClient
+          .patch(`/users/reset_password/reset_password/`, {
+            token: token,
+            password,
+          });
 
       setMessage("✅ Inscription terminée. Redirection...");
       setTimeout(() => navigate("/connexion"), 2000);
@@ -53,16 +51,6 @@ export default function Sinscrire2() {
         </h2>
 
         {message && <p className="mb-4 text-center text-sm">{message}</p>}
-
-        <div className="mb-4">
-          <label className="block text-gray-700">E-mail</label>
-          <input
-            type="email"
-            value={email}
-            disabled
-            className="w-full border p-2 rounded bg-gray-100"
-          />
-        </div>
 
         <div className="mb-4">
           <label className="block text-gray-700">Mot de passe</label>

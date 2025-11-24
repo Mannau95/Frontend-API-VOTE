@@ -7,6 +7,39 @@ import { data } from "autoprefixer";
 function Acceuil() {
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("vote_user"));
+  //   console.log(user);
+
+  //   if (!user) {
+  //     const access = localStorage.getItem("access_token");
+  //     if(! access){
+  //       navigate('/Connexion')
+  //     }else{
+  //       httpAxiosClient
+  //         .post("/auth/user/", {},{
+  //           headers: {
+  //             Authorization: `Bearer ${access}`,
+  //           },
+  //         })
+  //         .then((data) => {
+  //           console.log("User data fetched successfully:", data.data);
+
+  //           if(data.data.success){
+  //             localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+  //           } else{
+  //             navigate('/Connexion')
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error fetching user data:", error);
+  //           navigate('/Connexion')
+  //         });
+
+  //     }
+  //   }
+  // }, []);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("super_vote_user"));
     console.log(user);
@@ -19,12 +52,6 @@ function Acceuil() {
         httpAxiosClient
           .post(
             "/auth/user/",
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${access}`,
-              },
-            }
           )
           .then((data) => {
             console.log("User data fetched successfully:", data.data);
@@ -74,9 +101,14 @@ function Acceuil() {
             <p>Organisez vos décisions démocratiques facilement.</p>
           </div>
 
-          <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
-            <Link to="/supervision">Créer un vote</Link>
-          </button>
+          <div className="flex justify-center gap-3">
+            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+              <Link to="/supervision">Créer une élection</Link>
+            </button>
+            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+              <Link to="/electeur">Participer à une élection</Link>
+            </button>
+          </div>
         </div>
 
         <img src="./image.jpg" alt="*" className=" h-50" />

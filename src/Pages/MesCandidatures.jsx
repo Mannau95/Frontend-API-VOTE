@@ -1,7 +1,11 @@
 import React from 'react'
 import ElectionCard from '../Components/ElectionCard'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { httpAxiosClient } from '../client/httpClient'
 
 export default function MesCandidatures() {
+    // const [electionsCandidatures, setElectionsCandidatures] = useState(null)
   const electionsCandidatures = [
     {
       "image": "a",
@@ -52,6 +56,27 @@ export default function MesCandidatures() {
       "begin_date": "03 octobre 2025",
     },
   ]
+  // useEffect(()=>{
+  //   const connectedUserId = JSON.parse(localStorage.getItem('vote_user')).id
+  //   httpAxiosClient
+  //     .get(`/users/${connectedUserId}/candidatures/`,)
+  //     .then((data) => {
+  //       console.log("User data fetched successfully:", data.data);
+  //       // if(data.data.succes){
+  //       //   setElectionsCandidatures(data.data.data.data)
+  //       // }
+  //
+  //       // if(data.data.success){
+  //       //   localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+  //       // } else{
+  //       //   navigate('/Connexion')
+  //       // }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching candidatures data:", error);
+  //     });
+  // }, [])
+
   return (
     <div className='px-6 bg-gray-50'>
       <h1 className='text-2xl font-semibold mb-6'>Mes Candidatures</h1>
