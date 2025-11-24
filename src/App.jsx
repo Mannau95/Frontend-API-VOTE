@@ -30,40 +30,22 @@ export default function App() {
             <Route path="/setPassword/:token" element={<SetPassword />} />
 
             <Route path="/supervision" element={<DashboardSuperviseur />}>
-              <Route index element={<CreerVotePage />}></Route>
+              <Route index element={<CreerVotePage />} />
 
-              <Route
-                path="candidats/"
-                element={<GestionCandidatures />}
-              ></Route>
+              <Route path="candidats/" element={<GestionCandidatures />}/>
 
-              <Route path="electeurs/" element={<GestionElecteurs />}></Route>
-              <Route
-                path="elections/"
-                element={<AdminElectionPage />}
-              ></Route>
+              <Route path="electeurs/" element={<GestionElecteurs />} />
+              <Route path="elections/" element={<AdminElectionPage />}/>
             </Route>
             <Route path="/electeur" element={<DashboardElector />}>
-              <Route index element={<AccueilElecteur />}></Route>
-              <Route path="candidatures/" element={<MesCandidatures />}></Route>
-              <Route
-                path="elections/"
-                element={<ElectionsActuellesElecteur />}
-              ></Route>
-              <Route
-                path="profile/"
-                element={<div>Reglages de mon profile</div>}
-              ></Route>
+              <Route index element={<AccueilElecteur />} />
+              <Route path="candidatures/" element={<MesCandidatures />} />
+              <Route path="elections/" element={<ElectionsActuellesElecteur />} />
+              <Route path="profile/" element={<div>Reglages de mon profile</div>} />
               <Route index element={<AccueilElecteur />} />
 
-              <Route
-                path="elections/"
-                element={<div>Elections Actuelles</div>}
-              />
-              <Route
-                path="profile/"
-                element={<div>Reglages de mon profile</div>}
-              />
+              <Route path="elections/" element={<div>Elections Actuelles</div>} />
+              <Route path="profile/" element={<div>Reglages de mon profile</div>} />
             </Route>
           </Routes>
         </main>
