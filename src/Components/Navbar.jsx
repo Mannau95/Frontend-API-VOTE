@@ -10,12 +10,12 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    localStorage.removeItem("super_vote_user");
+    localStorage.removeItem("vote_user");
     navigate("/Connexion");
   };
 
   // const userState = useSelector(state => state.user)
-    const userState = JSON.parse(localStorage.getItem("super_vote_user"));
+    const userState = JSON.parse(localStorage.getItem("vote_user"));
     console.log(userState);
 
   return (

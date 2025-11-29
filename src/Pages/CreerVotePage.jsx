@@ -19,49 +19,6 @@ export default function CreerVotePage() {
     end_date: "",
   });
 
-  // useEffect(() => {
-  //   axios
-  //     .get("https://ton-backend.com/api/utilisateurs")
-  //     .then((res) => {
-  //       setUtilisateurs(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Erreur lors de la récupération des utilisateurs :", err);
-  //     });
-  // }, []);
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("superVote"));
-  //   if (!user) {
-  //     navigate("/Connexion");
-  //   }
-  // }, [navigate]);
-
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("super_vote_user"));
-  //   if (!user) {
-  //     const access = localStorage.getItem("access_token");
-  //     console.log(`Bearer ${access}`)
-  //     httpAxiosClient
-  //       .post("/auth/user/", {},{
-  //         headers: {
-  //           Authorization: `Bearer ${access}`,
-  //         },
-  //       })
-  //       .then((data) => {
-  //         console.log("User data fetched successfully:", data.data);
-
-  //         if(data.data.success){
-  //           localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
-  //         } else{
-  //           navigate('/Connexion')
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching user data:", error);
-  //       });
-  //   }
-  // }, [navigate]);
-
   const toggleUtilisateur = (id) => {
     setEligibles((prev) =>
       prev.includes(id) ? prev.filter((el) => el !== id) : [...prev, id]

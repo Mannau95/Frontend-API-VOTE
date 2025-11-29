@@ -67,7 +67,7 @@ export default function MesCandidatures() {
   //       // }
   //
   //       // if(data.data.success){
-  //       //   localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+  //       //   localStorage.setItem("vote_user", JSON.stringify(data.data.data));
   //       // } else{
   //       //   navigate('/Connexion')
   //       // }

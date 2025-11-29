@@ -42,7 +42,7 @@ export default function SideBar({ paths }) {
           onClick={()=>{
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            localStorage.removeItem("super_vote_user");
+            localStorage.removeItem("vote_user");
           }}
         >
           <Link to={'/Connexion'}>Déconnexion</Link>

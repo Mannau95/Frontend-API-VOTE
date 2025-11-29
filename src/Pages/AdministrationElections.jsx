@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { httpAxiosClient } from "../client/httpClient";
 import ElectionCard from "../Components/ElectionCard";
+import {Link} from "react-router-dom";
 
 const AdminElectionPage = () => {
   const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
@@ -60,24 +61,37 @@ const AdminElectionPage = () => {
 
   return (
     <div className="p-6 space-y-8">
-      <div className="flex gap-4">
-        <button
-          className={`px-4 py-2 rounded cursor-pointer ${
-            tab == 0? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
-          onClick={() => setTab(0)}
-        >
-          Élections en cours
-        </button>
+      <div className="flex justify-between items-center">
+        <div className="flex gap-4">
+            <button
+                className={`px-4 py-2 rounded cursor-pointer ${
+                    tab === 0? "bg-blue-600 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => setTab(0)}
+            >
+                Élections en cours
+            </button>
 
-        <button
-          className={`px-4 py-2 rounded cursor-pointer ${
-            tab == 1 ? "bg-green-600 text-white" : "bg-gray-200"
-          }`}
-          onClick={() => setTab(1)}
-        >
-          Élections terminées
-        </button>
+            <button
+                className={`px-4 py-2 rounded cursor-pointer ${
+                    tab === 1 ? "bg-green-600 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => setTab(1)}
+            >
+                Élections terminées
+            </button>
+        </div>
+        <div className="flex-end">
+          <Link to="/supervision/">
+              <button
+                  className={`px-4 py-2 rounded cursor-pointer ${
+                      tab === 0? "bg-green-600 text-white" : "bg-gray-200"
+                  }`}
+              >
+                  Créer une Election
+              </button>
+          </Link>
+        </div>
       </div>
 
       {/* Statistiques */}
