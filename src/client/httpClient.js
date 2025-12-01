@@ -1,7 +1,145 @@
+// import axios from 'axios';
+//
+// const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//
+//
+// export const httpAxiosClient = axios.create({
+//     headers: {
+//         'Content-Type': 'application/json'
+//     },
+//     timeout: 10000,
+//     baseURL: baseUrl,
+//     // afterRequest: (response)=>{ console.log(response);},
+//     retry: {
+//         limit: 2,
+//         statusCodes: [401]
+//     },
+//     // withCredentials: true,
+// });
+//
+// // --- gestion des flages et de la queue
+// let isRefreshing = false;
+// let failedQueue = [];
+//
+// const processQueue = (error, token = null) => {
+//     failedQueue.forEach( prom => {
+//         if( error) {
+//             prom.reject(error);
+//         } else {
+//             prom.resolve();
+//         }
+//     });
+//     failedQueue = []
+// }
+//
+// // --- Fonstion de rafraichissement du token
+// const refreshAccessToken = async () => {
+//     // try {
+//         const refreshToken = localStorage.getItem('vote_refresh_token');
+//         // config.headers['Authorization']= `${localStorage.getItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE)}`
+//         axios.post(baseUrl+'auth/refresh/', {}, {
+//             headers:{
+//                 'Authorization':`Bearer ${refreshToken}`
+//             }
+//         })
+//         .then((data)=>{
+//             console.log(data);
+//
+//             localStorage.setItem('vote_access_token', data.data['access'])
+//             // localStorage.setItem('vote_refresh_token', data.data['refreshToken'])
+//         })
+//
+//         return true;
+//     // } catch (error) {
+//     //     window.location.href = '/login'
+//     //     localStorage.removeItem('vote_access_token')
+//     //     localStorage.removeItem('vote_refresh_token')
+//
+//     //     return Promise.reject(error)
+//     // }
+// }
+//
+// // --- Intercepteur de Requetes --
+// httpAxiosClient.interceptors.request.use(
+//     async (config) => {
+//         // ajoute le token dans le header dans le cas ou token accessible
+//         if(localStorage && localStorage.getItem('vote_access_token')){
+//             config.headers['Authorization']= `Bearer ${localStorage.getItem('vote_access_token')}`
+//         }
+//         return config
+//     },
+//     (error) => {
+//         return Promise.reject(error)
+//     }
+// )
+//
+//
+// // --- Intercepteur de Reponses --
+// httpAxiosClient.interceptors.response.use(
+//     (response) =>  response,
+//     async (error) => {
+//         // console.log('from interceptor ', error.response);
+//
+//         const originalRequest = error.config
+//
+//         // verifier si code == 401 ou si rafraichissment
+//         if( error.response?.status === 401 && !originalRequest._retry) {
+//             originalRequest._retry = true
+//
+//             if(!isRefreshing){
+//                 isRefreshing =true
+//
+//                 try {
+//                     // tentative de rafraichissement du token
+//                     await refreshAccessToken()
+//                     isRefreshing = false;
+//                     processQueue(null)
+//
+//                     // reessayer la requete avec de nouveau cookies
+//                     return httpAxiosClient(originalRequest)
+//                 } catch (refreshError) {
+//                     //  si rafraichissement echoue
+//                     // rejeter toutes les requetes en attendant
+//                     processQueue(refreshError)
+//                     // window.localStorage.removeItem('vote_access_token')
+//                     // window.localStorage.removeItem('vote_refresh_token')
+//                     return Promise.reject(refreshError);
+//                 }
+//             }
+//
+//             // si rafraichissement deja en cours , mettre file en file d'attente
+//             // la requete actuelle
+//             return new Promise( (resolve, reject) => {
+//                 failedQueue.push({resolve, reject})
+//             }).then( ()=> {
+//                 // une fois refresh fini
+//                 return httpAxiosClient(originalRequest)
+//             }).catch( err => {
+//                 // window.localStorage.removeItem('vote_access_token')
+//                 // window.localStorage.removeItem('vote_refresh_token')
+//                 return Promise.reject(err)
+//             })
+//
+//         }
+//
+//         else if (error.response) {
+//             return Promise.reject({
+//                 status: error.response.data?.status,
+//                 message: error.response.data?.message || error.response.message || 'Une erreur est survenue. Veuillez réessayer.'
+//             })
+//         } else {
+//             return Promise.reject(error)
+//         }
+//
+//         // return Promise.reject(error);
+//     }
+// )
+
 import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
+// const baseUrl = 'http://localhost:3000/api'
+const env = import.meta.env
 
 export const httpAxiosClient = axios.create({
     headers: {
@@ -9,128 +147,132 @@ export const httpAxiosClient = axios.create({
     },
     timeout: 10000,
     baseURL: baseUrl,
-    // afterRequest: (response)=>{ console.log(response);},
-    retry: {
-        limit: 2,
-        statusCodes: [401]
-    },
     // withCredentials: true,
 });
 
-// --- gestion des flages et de la queue
+// --- gestion des flags et de la queue
 let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-    failedQueue.forEach( prom => {
-        if( error) {
+    failedQueue.forEach(prom => {
+        if (error) {
             prom.reject(error);
         } else {
-            prom.resolve();
+            prom.resolve(token);
         }
     });
-    failedQueue = []
+    failedQueue = [];
 }
 
-// --- Fonstion de rafraichissement du token
+// --- Fonction de rafraichissement du token
 const refreshAccessToken = async () => {
-    // try {
-        const refreshToken = localStorage.getItem('vote_refresh_token');
-        // config.headers['Authorization']= `${localStorage.getItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE)}`
-        axios.post(baseUrl+'auth/refresh/', {}, {
-            headers:{
-                'Authorization':`Bearer ${refreshToken}`
+    try {
+        const refreshToken = localStorage.getItem("vote_refresh_token");
+
+        const response = await axios.post(
+            baseUrl + '/auth/refresh',
+            {},
+            {
+                headers: {
+                    'Authorization': `Bearer ${refreshToken}`
+                }
             }
-        })
-        .then((data)=>{
-            console.log(data);
-            
-            localStorage.setItem('vote_access_token', data.data['access'])
-            // localStorage.setItem('vote_refresh_token', data.data['refreshToken'])
-        })
-        
-        return true;
-    // } catch (error) {
-    //     window.location.href = '/login'
-    //     localStorage.removeItem('vote_access_token')
-    //     localStorage.removeItem('vote_refresh_token')
-        
-    //     return Promise.reject(error)
-    // }
+        );
+
+        const newAccessToken = response.data?.access;
+        const newRefreshToken = response.data?.refresh;
+
+        localStorage.setItem("vote_access_token", newAccessToken);
+        localStorage.setItem("vote_refresh_token", newRefreshToken);
+
+        return newAccessToken;
+    } catch (error) {
+        // Clear tokens on refresh failure
+        console.log(error);
+
+        // localStorage.removeItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE);
+        // localStorage.removeItem(env.VITE_LOCALSTORAGE_REFRESH_ROUTE);
+        window.location.href = '/login';
+        throw error;
+    }
 }
 
 // --- Intercepteur de Requetes --
 httpAxiosClient.interceptors.request.use(
-    async (config) => {
+    (config) => {
         // ajoute le token dans le header dans le cas ou token accessible
-        if(localStorage && localStorage.getItem('vote_access_token')){
-            config.headers['Authorization']= `Bearer ${localStorage.getItem('vote_access_token')}`
+        const token = localStorage.getItem("vote_access_token");
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
-        return config
+        return config;
     },
     (error) => {
-        return Promise.reject(error)
+        return Promise.reject(error);
     }
-)
-
+);
 
 // --- Intercepteur de Reponses --
 httpAxiosClient.interceptors.response.use(
-    (response) =>  response,
+    (response) => response,
     async (error) => {
-        // console.log('from interceptor ', error.response);
-        
-        const originalRequest = error.config
+        const originalRequest = error.config;
 
-        // verifier si code == 401 ou si rafraichissment
-        if( error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true
+        // verifier si code == 401 ou si rafraichissement
+        if (error.response?.status === 401 && !originalRequest._retry) {
 
-            if(!isRefreshing){
-                isRefreshing =true
-
-                try {
-                    // tentative de rafraichissement du token
-                    await refreshAccessToken()
-                    isRefreshing = false;
-                    processQueue(null)
-
-                    // reessayer la requete avec de nouveau cookies
-                    return httpAxiosClient(originalRequest)
-                } catch (refreshError) {
-                    //  si rafraichissement echoue 
-                    // rejeter toutes les requetes en attendant 
-                    processQueue(refreshError)
-                    // window.localStorage.removeItem('vote_access_token')
-                    // window.localStorage.removeItem('vote_refresh_token')
-                    return Promise.reject(refreshError);
-                }
+            if (isRefreshing) {
+                // Si rafraichissement déjà en cours, mettre en file d'attente
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                })
+                    .then((token) => {
+                        originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                        return httpAxiosClient(originalRequest);
+                    })
+                    .catch(err => {
+                        return Promise.reject(err);
+                    });
             }
 
-            // si rafraichissement deja en cours , mettre file en file d'attente 
-            // la requete actuelle 
-            return new Promise( (resolve, reject) => {
-                failedQueue.push({resolve, reject})
-            }).then( ()=> {
-                // une fois refresh fini
-                return httpAxiosClient(originalRequest)
-            }).catch( err => {
-                // window.localStorage.removeItem('vote_access_token')
-                // window.localStorage.removeItem('vote_refresh_token')
-                return Promise.reject(err)
-            })
+            originalRequest._retry = true;
+            isRefreshing = true;
 
+            try {
+                // console.log("Old token:", localStorage.getItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE));
+
+                // Tentative de rafraichissement du token
+                const newToken = await refreshAccessToken();
+
+                // console.log("New token:", localStorage.getItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE));
+
+                // Traiter la file d'attente avec le nouveau token
+                processQueue(null, newToken);
+
+                // Mettre à jour le header de la requête originale avec le nouveau token
+                originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+
+                // Réessayer la requête originale
+                return httpAxiosClient(originalRequest);
+
+            } catch (refreshError) {
+                // Si rafraichissement échoue, rejeter toutes les requêtes en attente
+                processQueue(refreshError, null);
+                return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
+            }
         }
 
-        else if (error.response) {
+        // Gestion des autres erreurs
+        if (error.response) {
             return Promise.reject({
-                status: error.response.data?.status,
-                message: error.response.data?.message || error.response.message || 'Une erreur est survenue. Veuillez réessayer.'
-            })
+                status: error.response.data?.statusCode || error.response.status,
+                message: error.response.data?.message || error.response.statusText || 'Une erreur est survenue. Veuillez réessayer.'
+            });
         } else {
-            return Promise.reject(error)
+            return Promise.reject(error);
         }
-
-        // return Promise.reject(error);
     }
-)
+);
