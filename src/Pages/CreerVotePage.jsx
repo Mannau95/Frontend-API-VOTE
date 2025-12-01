@@ -9,8 +9,6 @@ export default function CreerVotePage() {
 
   const [formVisible, setFormVisible] = useState(false);
   const { loading, error } = useSelector(state => state.elections)
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [errorMsg, setErrorMsg] = useState(null);
   const [selectionMode, setSelectionMode] = useState("tous");
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [eligibles, setEligibles] = useState([]);
@@ -40,7 +38,7 @@ export default function CreerVotePage() {
           ...formData
           // utilisateursEligibles: selectionMode === "tous" ? "tous" : eligibles,
       };
-      console.log('Creation vote payload', payload);
+      // console.log('Creation vote payload', payload);
 
       const response = await dispatch(createElection(payload)).unwrap()
       if(response){

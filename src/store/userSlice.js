@@ -28,14 +28,12 @@ export const updateProfil = createAsyncThunk(
     'categories/updateProfil',
     async (updatedData, thunkApi) => {
         const {categoryId, categoryData} = updatedData
-        // console.log(categoryId);
 
         try{
             const response = await httpAxiosClient.patch(`/categories/${categoryId}`, categoryData)
             // const categories = JSON.parse(localStorage.getItem('inventaire_categories'))
             return response.data
         } catch(error){
-            // console.log(error);
 
             return thunkApi.rejectWithValue(error)
         }

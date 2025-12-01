@@ -7,8 +7,8 @@ export const fetchElections = createAsyncThunk(
   'elections/fetchElections',
   async () => {
     const response = await httpAxiosClient.get('/elections/')
-    localStorage.setItem('vote_elections', JSON.stringify(response.data))
-    return response.data
+    localStorage.setItem('vote_elections', JSON.stringify(response.data.data))
+    return response.data.data
   }
 )
 
@@ -22,7 +22,6 @@ export const createElection = createAsyncThunk(
           localStorage.setItem('vote_elections', JSON.stringify(elections))
           return response.data
       } catch(error){
-          // console.log(error);
 
           return thunkApi.rejectWithValue(error)
       }
@@ -33,14 +32,12 @@ export const updateElection = createAsyncThunk(
   'elections/updateElection',
   async (updatedData, thunkApi) => {
     const {electionId, electionData} = updatedData
-    // console.log(categoryId);
     
     try{
       const response = await httpAxiosClient.put(`/elections/${electionId}`, electionData)
       // const elections = JSON.parse(localStorage.getItem('vote_elections'))
       return response.data
     } catch(error){
-      // console.log(error);
       
       return thunkApi.rejectWithValue(error)
     }
@@ -58,7 +55,7 @@ export const deleteElection = createAsyncThunk(
 const electionsSlice = createSlice({
   name: 'elections',
   initialState: {
-    items: [],
+    elections: [],
     loading: false,
     error: null,
   },
@@ -76,16 +73,16 @@ const electionsSlice = createSlice({
       })
       .addCase(fetchElections.fulfilled, (state, action) => {
         state.loading = false
-        state.items = action.payload
+        state.elections = action.payload
       })
       .addCase(fetchElections.rejected, (state, action) => {
         state.loading = false
-        state.error = action.error.data.message
+        state.error = action.error.message
       })
       // Create Elections
       .addCase(createElection.fulfilled, (state, action) => {
         state.loading = false
-        state.items.push(action.payload)
+        state.elections.push(action.payload)
       })
       .addCase(createElection.pending, (state) => {
         state.loading = true
@@ -93,7 +90,6 @@ const electionsSlice = createSlice({
       })
       .addCase(createElection.rejected, (state, action) => {
         state.loading = false
-        console.log(action?.error)
         state.error = action?.error.message
       })
       // update Product
@@ -104,8 +100,8 @@ const electionsSlice = createSlice({
       .addCase(updateElection.fulfilled, (state, action) => {
         // console.log(action)
         state.loading = false
-        state.items = state.items.filter(item => item.id !== action.payload.id)
-        state.items.push(action.payload)
+        state.elections = state.elections.filter(item => item.id !== action.payload.id)
+        state.elections.push(action.payload)
       })
       .addCase(updateElection.rejected, (state, action) => {
         state.loading = false
@@ -115,7 +111,7 @@ const electionsSlice = createSlice({
       // Delete Elections
       .addCase(deleteElection.fulfilled, (state, action) => {
         state.loading = false
-        state.items = state.items.filter(item => item.id !== action.payload)
+        state.elections = state.elections.filter(item => item.id !== action.payload)
       })
       .addCase(deleteElection.pending, (state, ) => {
         state.loading = true

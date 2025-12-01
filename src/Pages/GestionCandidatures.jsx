@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { httpAxiosClient } from "../client/httpClient";
 import ElectionCard from "../Components/ElectionCard";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchElections} from "../store/electionSlice.js";
 
 function GestionCandidatures() {
-  const [elections, setElections] = useState([]);
+  // const [elections, setElections] = useState([]);
+  const {elections, loading, error} = useSelector(state => state.elections);
   const [selectedElection, setSelectedElection] = useState(null);
   const [candidats, setCandidats] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loadingElections, setLoadingElections] = useState(false);
+  // const [loadingElections, setLoadingElections] = useState(false);
   const [loadingCandidats, setLoadingCandidats] = useState(false);
   const PAGE_SIZE = 5;
+  const dispatch = useDispatch();
+
   // Charger les élections créées par l'utilisateur
   useEffect(() => {
     loadElections();
   }, []);
 
   const loadElections = async () => {
-    setLoadingElections(true);
-    try {
-      const res = await httpAxiosClient.get("/elections/");
-      // Filtrer les élections démarrées (à enlever)
-      const filtered = res.data.data.filter((e) => Date.parse(e.begin_date) > Date.now());
-      setElections(filtered);
-    } catch (error) {
-      console.error("Erreur chargement élections", error);
-    }
-    setLoadingElections(false);
+      dispatch(fetchElections()).unwrap()
+    // setLoadingElections(true);
+    // try {
+    //   const res = await httpAxiosClient.get("/elections/");
+    //   // Filtrer les élections démarrées (à enlever)
+    //   const filtered = res.data.data.filter((e) => Date.parse(e.begin_date) > Date.now());
+    //   setElections(filtered);
+    // } catch (error) {
+    //   console.error("Erreur chargement élections", error);
+    // }
+    // setLoadingElections(false);
   };
 
   // Charger les candidats pour une élection donnée
@@ -69,10 +75,6 @@ function GestionCandidatures() {
 
       {/* Liste élections */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {loadingElections && <p>Chargement des élections...</p>}
-        {!loadingElections && elections.length === 0 && (
-          <p>Aucune élection disponible.</p>
-        )}
 
         <div className="px-6 bg-gray-100">
           <h1 className="text-2xl font-semibold mb-6">
@@ -80,18 +82,24 @@ function GestionCandidatures() {
           </h1>
 
           {/* ENTETE  */}
+          {loading && <p>Chargement des élections...</p>}
+          {!loading && elections?.length === 0 && (
+            <p>Aucune élection disponible.</p>
+          )}
 
-          <div className="flex flex-wrap justify-items-start items-center gap-[1%] gap-y-6 my-4">
-            {elections.map((cand, index) => {
-              return (
-                <ElectionCard
-                  election={cand}
-                  key={index}
-                  onClick={() => loadCandidats(cand.id)}
-                />
-              );
-            })}
-          </div>
+            <div className="flex flex-wrap justify-items-start items-center gap-[1%] gap-y-6 my-4">
+                {
+                    elections &&
+                    elections?.map((cand, index) => {
+                        return (
+                            <ElectionCard
+                                election={cand}
+                                key={index}
+                                onClick={() => loadCandidats(cand.id)}
+                            />
+                        );
+                    })}
+            </div>
         </div>
       </div>
 

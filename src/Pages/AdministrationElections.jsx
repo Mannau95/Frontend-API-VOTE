@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import { httpAxiosClient } from "../client/httpClient";
 import ElectionCard from "../Components/ElectionCard";
 import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchElections} from "../store/electionSlice.js";
 
 const AdminElectionPage = () => {
   const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
   const [stats, setStats] = useState({});
-  const [elections, setElections] = useState([]);
+  const { elections, loading, error } = useSelector(state => state.elections);
+  // const [elections, setElections] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [selectedElection, setSelectedElection] = useState(null);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     // Récupérer stats globales
@@ -17,26 +21,24 @@ const AdminElectionPage = () => {
     //   .then((res) => setStats(res.data));
 
     // Récupérer élections en cours ou terminées
-    fetchElections();
+    fetchElects();
   }, []);
 
   useEffect(()=>{
     if(elections){
-      const data = tab == 0? elections.filter(el => Date.parse(el.begin_date) >= Date.now()) : elections.filter(el => Date.parse(el.begin_date) < Date.now())
+      const data = tab === 0? elections.filter(el => Date.parse(el.begin_date) >= Date.now()) : elections.filter(el => Date.parse(el.begin_date) < Date.now())
       setFiltered(data);
     }
 
-  }, [tab, elections])
+  }, [tab])
 
-  const fetchElections = () => {
-    httpAxiosClient
-      .get(`elections/`)
+  const fetchElects = () => {
+    dispatch(fetchElections()).unwrap()
       .then((res) => {
-        const data = res.data.data
-        setElections(data)
+        setFiltered(res)
         setSelectedElection(null);
         setStats({
-          "totalElections": data.length,
+          "totalElections": res.length,
         })
       });
   };
