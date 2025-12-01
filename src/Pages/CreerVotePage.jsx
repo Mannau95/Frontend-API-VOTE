@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { httpAxiosClient } from "../client/httpClient";
+import {useDispatch, useSelector} from "react-redux";
+import {createElection} from "../store/electionSlice.js";
 
 export default function CreerVotePage() {
   const navigate = useNavigate();
 
   const [formVisible, setFormVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const { loading, error } = useSelector(state => state.elections)
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [errorMsg, setErrorMsg] = useState(null);
   const [selectionMode, setSelectionMode] = useState("tous");
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [eligibles, setEligibles] = useState([]);
+  const dispatch = useDispatch()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -30,39 +34,43 @@ export default function CreerVotePage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true)
-    setErrorMsg(null)
-    const payload = {
-      ...formData
-      // utilisateursEligibles: selectionMode === "tous" ? "tous" : eligibles,
-    };
-    console.log('create vote payload', payload);
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      const payload = {
+          ...formData
+          // utilisateursEligibles: selectionMode === "tous" ? "tous" : eligibles,
+      };
+      console.log('Creation vote payload', payload);
 
-    // const access = localStorage.getItem("access_token");
-
-    httpAxiosClient
-      .post("/elections/", payload)
-      .then((data) => {
-        // alert("Vote créé avec succès")
-        console.log(data.status)
-        if(data.status === 201){
+      const response = await dispatch(createElection(payload)).unwrap()
+      if(response){
           navigate('/supervision/elections/')
-          
-        } else {
-          setErrorMsg("Erreur lors de la création du vote")
-        }
-      })
-      .catch((e) => {
-        const err = e.response.data[Object.keys(e.response.data)[0]];
-        
-        ///alert("Erreur lors de la création du vote")}
-        setErrorMsg(err) //"Erreur lors de la création du vote")//JSON.stringify(e.response.data))
-      })
-      .finally(()=>{
-        setIsLoading(false)
-      })
+      }
+
+      // const access = localStorage.getItem("access_token");
+
+      // httpAxiosClient
+      //   .post("/elections/", payload)
+      //   .then((data) => {
+      //     // alert("Vote créé avec succès")
+      //     console.log(data.status)
+      //     if(data.status === 201){
+      //       navigate('/supervision/elections/')
+      //
+      //     } else {
+      //       setErrorMsg("Erreur lors de la création du vote")
+      //     }
+      //   })
+      //   .catch((e) => {
+      //     // const err = e.response.data[Object.keys(e.response.data)[0]];
+      //
+      //     ///alert("Erreur lors de la création du vote")}
+      //     // setErrorMsg(err) //"Erreur lors de la création du vote")//JSON.stringify(e.response.data))
+      //   })
+      //   .finally(()=>{
+      //     setIsLoading(false)
+      //   })
+
   };
 
   return (
@@ -137,7 +145,7 @@ export default function CreerVotePage() {
           </div>
 
           <div className="my-3 text-xs text-red-500">
-              {errorMsg? errorMsg: ''}
+              {error? error: ''}
           </div>
 
           <div className="mb-4">
@@ -148,7 +156,7 @@ export default function CreerVotePage() {
                 Annuler
               </button>
 
-              <button type="submit" disabled={isLoading} className="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded">
+              <button type="submit" disabled={loading} className="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded">
                 Valider
               </button>
             </div>

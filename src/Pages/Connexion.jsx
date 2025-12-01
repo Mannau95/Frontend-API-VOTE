@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { httpAxiosClient } from "../client/httpClient";
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { setUser } from "../store/user/userSlice";
+import {login, setUser} from "../store/userSlice.js";
 import { useDispatch } from "react-redux";
 
 export default function Connexion() {
@@ -16,21 +16,22 @@ export default function Connexion() {
     e.preventDefault();
 
     try {
-      const response = await httpAxiosClient.post("/auth/login/", {
-        email,
-        password: motDePasse,
-      });
-      // await axios.post(
-      //   "http://localhost:8000/api/v2/users/<int:pk>/",
-      //   {
-      //     email,
-      //     mot_de_passe: motDePasse,
-      //   }
-      // );
-
-      console.log("Connecté avec succès", response.data);
-
-      dispatch(setUser(response.data))
+        await dispatch(login({email, password: motDePasse})).unwrap()
+      // const response = await httpAxiosClient.post("/auth/login/", {
+      //   email,
+      //   password: motDePasse,
+      // });
+      // // await axios.post(
+      // //   "http://localhost:8000/api/v2/users/<int:pk>/",
+      // //   {
+      // //     email,
+      // //     mot_de_passe: motDePasse,
+      // //   }
+      // // );
+      //
+      // console.log("Connecté avec succès", response.data);
+      //
+      // dispatch(setUser(response.data))
 
       navigate("/");
     } catch (error) {
