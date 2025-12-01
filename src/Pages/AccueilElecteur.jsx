@@ -60,7 +60,7 @@ export default function AccueilElecteur() {
     ]
 
     useEffect(() => {
-        //const user = JSON.parse(localStorage.getItem("super_vote_user"));
+        //const user = JSON.parse(localStorage.getItem("vote_user"));
         // if (!user) {
           // const access = localStorage.getItem("access_token");
           // console.log(`Bearer ${access}`)
@@ -73,7 +73,7 @@ export default function AccueilElecteur() {
               }
     
               // if(data.data.success){
-              //   localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+              //   localStorage.setItem("vote_user", JSON.stringify(data.data.data));
               // } else{
               //   navigate('/Connexion')
               // }

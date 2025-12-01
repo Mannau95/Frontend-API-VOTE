@@ -14,7 +14,7 @@ export default function DashboardElector() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("super_vote_user"));
+    const user = JSON.parse(localStorage.getItem("vote_user"));
     if (!user) {
       navigate("/Connexion");
     }

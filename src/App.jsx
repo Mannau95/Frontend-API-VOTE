@@ -16,6 +16,7 @@ import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
 import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
 import StartSetPassword from "./Pages/StartSetPassword.jsx";
 import SetPassword from "./Pages/SetPassword.jsx";
+import NotFound from "./Pages/NotFound.jsx";
 export default function App() {
   return (
     <Router>
@@ -43,10 +44,8 @@ export default function App() {
               <Route path="elections/" element={<ElectionsActuellesElecteur />} />
               <Route path="profile/" element={<div>Reglages de mon profile</div>} />
               <Route index element={<AccueilElecteur />} />
-
-              <Route path="elections/" element={<div>Elections Actuelles</div>} />
-              <Route path="profile/" element={<div>Reglages de mon profile</div>} />
             </Route>
+            <Route path="/*" element={< NotFound/>}/>
           </Routes>
         </main>
         <Footer />

@@ -1,22 +1,26 @@
-import React from "react";
+import React, {useEffect} from "react";
 // import { useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import {useSelector} from "react-redux";
 //import { useState, useEffect } from "react";
 //import { vote } from "./Pages/Participer vote.jsx";
 
 const Navbar = () => {
   const navigate = useNavigate();
+    const userState = useSelector(state => state.user)
+    // userState = JSON.parse(localStorage.getItem("vote_user"));
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    localStorage.removeItem("super_vote_user");
+    localStorage.removeItem("vote_user");
     navigate("/Connexion");
   };
 
-  // const userState = useSelector(state => state.user)
-    const userState = JSON.parse(localStorage.getItem("super_vote_user"));
-    console.log(userState);
+  useEffect(() => {
+      //
+      if(!userState) { navigate('/Connexion'); }
+  }, [])
 
   return (
     <>
@@ -44,7 +48,7 @@ const Navbar = () => {
           </ul>
         </div>
 
-        { userState.user &&
+        { userState && userState.user &&
           <div className="navbar-end pr-6 gap-3">
             <input
               type="text"

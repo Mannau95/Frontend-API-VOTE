@@ -49,7 +49,7 @@ export default function ElectionsActuellesElecteur() {
     //   ]
 
       useEffect(() => {
-        //const user = JSON.parse(localStorage.getItem("super_vote_user"));
+        //const user = JSON.parse(localStorage.getItem("vote_user"));
         // if (!user) {
           // const access = localStorage.getItem("access_token");
           // console.log(`Bearer ${access}`)
@@ -57,15 +57,9 @@ export default function ElectionsActuellesElecteur() {
             .get("/elections/",)
             .then((data) => {
               console.log("User data fetched successfully:", data.data);
-              if(data.data.succes){
-                setElections(data.data.data.data)
+              if(data.data?.succes){
+                setElections(data.data.data)
               }
-    
-              // if(data.data.success){
-              //   localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
-              // } else{
-              //   navigate('/Connexion')
-              // }
             })
             .catch((error) => {
               console.error("Error fetching user data:", error);

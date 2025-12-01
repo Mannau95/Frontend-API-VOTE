@@ -26,7 +26,7 @@ function Acceuil() {
   //           console.log("User data fetched successfully:", data.data);
 
   //           if(data.data.success){
-  //             localStorage.setItem("super_vote_user", JSON.stringify(data.data.data));
+  //             localStorage.setItem("vote_user", JSON.stringify(data.data.data));
   //           } else{
   //             navigate('/Connexion')
   //           }
@@ -41,7 +41,7 @@ function Acceuil() {
   // }, []);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("super_vote_user"));
+    const user = JSON.parse(localStorage.getItem("vote_user"));
     console.log(user);
 
     if (!user) {
@@ -58,7 +58,7 @@ function Acceuil() {
 
             if (data.data.success) {
               localStorage.setItem(
-                "super_vote_user",
+                "vote_user",
                 JSON.stringify(data.data.data)
               );
             } else {
