@@ -2,13 +2,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit' // Votre client axios
 import { httpAxiosClient } from '../client/httpClient'
 
-// Async thunks pour les opérations produits
+// Async thunks pour les opérations
 export const fetchCandidatures = createAsyncThunk(
   'candidature/fetchCandidatures',
   async () => {
     const response = await httpAxiosClient.get('/candidatures')
-    localStorage.setItem('vote_candidature', JSON.stringify(response.data.items))
-    return response.data.items
+    localStorage.setItem('vote_candidature', JSON.stringify(response.data.candidatures))
+    return response.data.candidatures
   }
 )
 
@@ -50,7 +50,7 @@ export const deleteCandidature = createAsyncThunk(
 const candidatureSlice = createSlice({
   name: 'candidature',
   initialState: {
-    items: [],
+    candidatures: [],
     loading: false,
     error: null,
   },
@@ -68,7 +68,7 @@ const candidatureSlice = createSlice({
       })
       .addCase(fetchCandidatures.fulfilled, (state, action) => {
         state.loading = false
-        state.items = action.payload
+        state.candidatures = action.payload
       })
       .addCase(fetchCandidatures.rejected, (state, action) => {
         state.loading = false
@@ -81,7 +81,7 @@ const candidatureSlice = createSlice({
       })
       .addCase(createCandidature.fulfilled, (state, action) => {
         state.loading = false
-        state.items.push(action.payload)
+        state.candidatures.push(action.payload)
       })
       .addCase(createCandidature.rejected, (state, action) => {
         state.loading = false
@@ -95,8 +95,8 @@ const candidatureSlice = createSlice({
       .addCase(updateCandidature.fulfilled, (state, action) => {
         // console.log(action)
         state.loading = false
-        state.items = state.items.filter(item => item.id !== action.payload)
-        state.items.push(action.payload)
+        state.candidatures = state.candidatures.filter(item => item.id !== action.payload)
+        state.candidatures.push(action.payload)
       })
       .addCase(updateCandidature.rejected, (state, action) => {
         state.loading = false
@@ -109,11 +109,11 @@ const candidatureSlice = createSlice({
       })
       .addCase(deleteCandidature.fulfilled, (state, action) => {
         state.loading = false
-        state.items = state.items.filter(item => item.id !== action.payload)
+        state.candidatures = state.candidatures.filter(item => item.id !== action.payload)
       })
       .addCase(deleteCandidature.rejected, (state, action) => {
         state.loading = false
-        state.error = action.error.data.message
+        state.error = action.error.message
       })
   },
 })

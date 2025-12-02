@@ -2,14 +2,23 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {httpAxiosClient} from "../client/httpClient.js";
 
 // Async thunks pour les opérations catégories
-export const fetchConnectedUser = createAsyncThunk(
-    'user/fetchConnectedUser',
+export const fetchElectors = createAsyncThunk(
+    'user/fetchElectors',
     async () => {
-        const response = await httpAxiosClient.get('/categories')
-        // localStorage.setItem("vote_access_token", response.data?.data?.access);
+        const response = await httpAxiosClient.get('/users/')
+        localStorage.setItem("vote_electors", response.data?.data);
         // localStorage.setItem("vote_refresh_token", response.data?.data?.payload.refresh);
         // localStorage.setItem("vote_user", JSON.stringify(response.payload.user));
-        return response.data
+        return response.data.data
+    }
+)
+
+export const fetchUserCandidatures = createAsyncThunk(
+    'user/fetchUserCandidatures',
+    async () => {
+        const response = await httpAxiosClient.get('users/me/candidatures')
+        localStorage.setItem('vote_user_candidatures', JSON.stringify(response.data?.data))
+        return response.data.candidatures
     }
 )
 
@@ -25,7 +34,7 @@ export const login = createAsyncThunk(
 )
 
 export const updateProfil = createAsyncThunk(
-    'categories/updateProfil',
+    'user/updateProfil',
     async (updatedData, thunkApi) => {
         const {categoryId, categoryData} = updatedData
 
@@ -41,7 +50,7 @@ export const updateProfil = createAsyncThunk(
 )
 
 export const deleteAccount = createAsyncThunk(
-    'categories/deleteAccount',
+    'user/deleteAccount',
     async (categoryId) => {
         await httpAxiosClient.delete(`/categories/${categoryId}`)
         return categoryId
@@ -50,6 +59,8 @@ export const deleteAccount = createAsyncThunk(
 
 const initialState = {
     user: null,
+    electors: [],
+    userCandidatures: [],
     loading: false,
     error: null
   };
@@ -83,7 +94,32 @@ const userSlice = createSlice({
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false
-                state.error = action.error.data.message
+                state.error = action.error.message
+            })
+            .addCase(fetchElectors.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchElectors.fulfilled, (state, action) => {
+                state.loading = false
+                state.electors = action.payload
+            })
+            .addCase(fetchElectors.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.error.message
+            })
+            // Fetch Candidatures
+            .addCase(fetchUserCandidatures.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchUserCandidatures.fulfilled, (state, action) => {
+                state.loading = false
+                state.userCandidatures = action.payload
+            })
+            .addCase(fetchUserCandidatures.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.error.message
             })
     }
 })

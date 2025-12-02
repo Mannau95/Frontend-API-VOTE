@@ -3,9 +3,15 @@ import ElectionCard from '../Components/ElectionCard'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { httpAxiosClient } from '../client/httpClient'
+import {useDispatch, useSelector} from "react-redux";
+import {fetchElections} from "../store/electionSlice.js";
+import {fetchUserCandidatures} from "../store/userSlice.js";
 
 export default function MesCandidatures() {
-    const [electionsCandidatures, setElectionsCandidatures] = useState([])
+    // const [electionsCandidatures, setElectionsCandidatures] = useState([])
+    const {elections, loading, error} = useSelector(state => state.elections)
+    const {userCandidatures} = useSelector(state => state.elections)
+    const dispatch = useDispatch()
   // const electionsCandidatures = [
   //   {
   //     "image": "a",
@@ -59,24 +65,11 @@ export default function MesCandidatures() {
 
   useEffect(()=>{
     const connectedUserId = JSON.parse(localStorage.getItem('vote_user')).id
-    httpAxiosClient
-      // .get(`/users/${connectedUserId}/candidatures/`,)
-        .get(`/elections/`)
-      .then((data) => {
-        console.log("User data fetched successfully:", data.data);
-        if(data.data.succes){
-          setElectionsCandidatures(data.data.data)
-        }
-
-        // if(data.data.success){
-        //   localStorage.setItem("vote_user", JSON.stringify(data.data.data));
-        // } else{
-        //   navigate('/Connexion')
-        // }
-      })
+    dispatch(fetchElections()).unwrap()
       .catch((error) => {
         console.error("Error fetching candidatures data:", error);
       });
+    dispatch(fetchUserCandidatures()).unwrap()
   }, [])
 
   return (
@@ -85,20 +78,37 @@ export default function MesCandidatures() {
 
       <div id="infos" className='bg-blue-100 my-3 p-5 flex justify-between rounded-lg'>
         <p>Découvrez facilement les élections ouvertes et poser votre candidature facilement. </p>
-        <p>Voir mes candidatures soumises</p>
       </div>
 
       <section>
-        <h2 className='text-xl font-medium mb-4'>Elections Actuelles ouvertes</h2>
+        <h2 className='text-xl font-semibold mb-4'>Candidatures Déposées</h2>
+
+        <div className='flex flex-wrap justify-around items-center gap-[1%] gap-y-3'>
+            {
+                userCandidatures ?
+                userCandidatures.map((cand, index) =>{
+                    return (
+                        <ElectionCard election={cand} key={index}/>
+                    )
+                }):
+                <p>Aucune candidature déposée pour le moment.</p>
+            }
+        </div>
+
+      </section>
+
+      <section>
+        <h2 className='text-xl font-semibold mb-4'>Elections Actuelles ouvertes</h2>
 
         <div className='flex flex-wrap justify-around items-center gap-[1%] gap-y-3'>
           {
-              electionsCandidatures.length > 0 &&
-            electionsCandidatures.map((cand, index) =>{
+            elections ?
+            elections.map((cand, index) =>{
               return (
                 <ElectionCard election={cand} key={index}/>
               )
-            })
+            }):
+              <p>Aucune élection n'est en cours pour le moment.</p>
           }
         </div>
 

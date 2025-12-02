@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { httpAxiosClient } from "../client/httpClient";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchElectors} from "../store/userSlice.js";
 
 const ITEMS_PER_PAGE = 10;
 
 export default function GestionElecteurs() {
-  const [electeurs, setElecteurs] = useState([]);
+  // const [electeurs, setElecteurs] = useState([]);
   const [page, setPage] = useState(1);
+  const { electors, loading, error } = useSelector(state => state.user);
   const [total, setTotal] = useState(0);
   const [formData, setFormData] = useState({
     first_name: "",
@@ -17,29 +20,22 @@ export default function GestionElecteurs() {
     is_supervisor: false,
     is_candidate: true,
   });
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchElecteurs();
+    fetchElects();
   }, []);
 
-  const fetchElecteurs = async () => {
-    httpAxiosClient
-      .get("/users/")
+  const fetchElects = async () => {
+    dispatch(fetchElectors()).unwrap()
       .then((data) => {
         // console.log("User data fetched successfully:", data.data);
-        if (data.data?.succes) {
-          setElecteurs(data.data.data);
-        }
-        setTotal(data.data.data.length);
+        setTotal(data.length);
         // console.log("electors", electeurs)
       })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
   };
 
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const handleFileChange = (e) => {
@@ -56,7 +52,6 @@ export default function GestionElecteurs() {
     const formData = new FormData();
     formData.append("file", file);
 
-    setLoading(true);
     try {
       await httpAxiosClient.post("/users/import", formData, {
         headers: {
@@ -67,8 +62,6 @@ export default function GestionElecteurs() {
     } catch (error) {
       setMessage("Erreur lors de l'importation.", error);
     }
-    setLoading(false);
-    fetchElecteurs();
   };
 
   const handleAdd = async () => {
@@ -83,16 +76,13 @@ export default function GestionElecteurs() {
       is_supervisor: false,
       is_candidate: true,
     });
-    fetchElecteurs();
   };
   const handleDelete = async (pk) => {
     await httpAxiosClient.delete(`/users/${pk}/`);
-    fetchElecteurs();
   };
 
   const handleEdit = async (pk) => {
     await httpAxiosClient.patch(`/users/${pk}/`, formData);
-    fetchElecteurs();
   };
 
   return (
@@ -276,7 +266,7 @@ export default function GestionElecteurs() {
           </tr>
         </thead>
         <tbody>
-          { electeurs && electeurs.map((el, i) => (
+          { electors && electors.map((el, i) => (
             <tr key={i}>
               <td className="border p-2">{el.first_name}</td>
               <td className="border p-2">{el.last_name}</td>

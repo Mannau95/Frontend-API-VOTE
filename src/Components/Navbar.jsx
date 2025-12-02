@@ -7,19 +7,19 @@ import {useSelector} from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
-    const userState = useSelector(state => state.user)
+    const {user} = useSelector(state => state.user)
     // userState = JSON.parse(localStorage.getItem("vote_user"));
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("vote_access_token");
+    localStorage.removeItem("vote_refresh_token");
     localStorage.removeItem("vote_user");
     navigate("/Connexion");
   };
 
   useEffect(() => {
       //
-      if(!userState) { navigate('/Connexion'); }
+      if(!user) { navigate('/Connexion'); }
   }, [])
 
   return (
@@ -36,7 +36,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <NavLink to="/supervision">Créer une élection</NavLink>
+                {user?.is_supervisor && <NavLink to="/supervision">Créer une élection</NavLink>}
             </li>
 
             <li>
@@ -48,11 +48,11 @@ const Navbar = () => {
           </ul>
         </div>
 
-        { userState && userState.user &&
+        { user &&
           <div className="navbar-end pr-6 gap-3">
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Recherche"
               // value={search}
               //onChange={(e) => setSearch(e.target.value)}
               className="input input-bordered w-20 md:w-auto bg-white text-black"

@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import { httpAxiosClient } from "../client/httpClient.js";
 import { data } from "autoprefixer";
+import {useSelector} from "react-redux";
 function Acceuil() {
   const navigate = useNavigate();
+  const {user} = useSelector((state) => state.user);
 
   // useEffect(() => {
   //   const user = JSON.parse(localStorage.getItem("vote_user"));
@@ -42,10 +44,9 @@ function Acceuil() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("vote_user"));
-    console.log(user);
 
     if (!user) {
-      const access = localStorage.getItem("access_token");
+      const access = localStorage.getItem("vote_access_token");
       if (!access) {
         navigate("/Connexion");
       } else {
@@ -102,9 +103,10 @@ function Acceuil() {
           </div>
 
           <div className="flex justify-center gap-3">
-            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
-              <Link to="/supervision">Créer une élection</Link>
-            </button>
+              { user?.is_supervisor && <button
+                  className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+                  <Link to="/supervision">Créer une élection</Link>
+              </button>}
             <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
               <Link to="/electeur">Participer à une élection</Link>
             </button>
