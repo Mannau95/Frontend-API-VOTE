@@ -51,7 +51,7 @@
 //
 //         return true;
 //     // } catch (error) {
-//     //     window.location.href = '/login'
+//     //     window.location.href = '/Connexion'
 //     //     localStorage.removeItem('vote_access_token')
 //     //     localStorage.removeItem('vote_refresh_token')
 //
@@ -171,7 +171,7 @@ const refreshAccessToken = async () => {
         const refreshToken = localStorage.getItem("vote_refresh_token");
 
         const response = await axios.post(
-            baseUrl + '/auth/refresh',
+            baseUrl + 'auth/refresh',
             {},
             {
                 headers: {
@@ -193,7 +193,7 @@ const refreshAccessToken = async () => {
 
         // localStorage.removeItem(env.VITE_LOCALSTORAGE_ACCESS_ROUTE);
         // localStorage.removeItem(env.VITE_LOCALSTORAGE_REFRESH_ROUTE);
-        window.location.href = '/login';
+        window.location.href = '/Connexion';
         throw error;
     }
 }

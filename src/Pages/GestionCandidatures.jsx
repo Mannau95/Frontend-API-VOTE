@@ -70,14 +70,14 @@ function GestionCandidatures() {
   );
 
   return (
-    <div className="p-6 w-full flex flex-col items-center">
+    <div className="p-6 flex flex-col items-center justify-center">
       <h1 className="text-3xl font-bold mb-6">Gestion des Candidatures</h1>
 
       {/* Liste élections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className=" gap-6 mb-8">
 
-        <div className="px-6 bg-gray-100">
-          <h1 className="text-2xl font-semibold mb-6">
+        <div className=" px-6 bg-gray-100">
+          <h1 className="text-2xl font-semibold mb-6 p-4">
             Les Elections Actuelles
           </h1>
 
@@ -87,7 +87,7 @@ function GestionCandidatures() {
             <p>Aucune élection disponible.</p>
           )}
 
-            <div className="flex flex-wrap justify-items-start items-center gap-[1%] gap-y-6 my-4">
+            <div className="flex flex-wrap justify-items-start items-center gap-[2%] gap-y-6 my-4">
                 {
                     elections &&
                     elections?.map((cand, index) => {

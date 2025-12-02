@@ -98,7 +98,7 @@ export default function AccueilElecteur() {
                 {/* Mot de bienvenu */}
                 <div>
                     <h1 className="title text-2xl font-bold m-b-3">
-                        Bomjour, Jean Doe!
+                        Bonjour, Jean Doe!
                     </h1>
 
                     <p className='txet-lg' >
