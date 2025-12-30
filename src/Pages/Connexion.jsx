@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { httpAxiosClient } from "../client/httpClient";
 // import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {login, setUser} from "../store/userSlice.js";
 import { useDispatch } from "react-redux";
 
@@ -78,6 +78,12 @@ export default function Connexion() {
           >
             Se connecter
           </button>
+
+            <p className="text-red-600 flex">
+                <Link to="/startSetPassword" className="ml-auto">
+                     Mot de passe oublié?
+                </Link>
+            </p>
         </form>
       </div>
     </div>
