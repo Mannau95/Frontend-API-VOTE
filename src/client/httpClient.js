@@ -171,7 +171,7 @@ const refreshAccessToken = async () => {
         const refreshToken = localStorage.getItem("vote_refresh_token");
 
         const response = await axios.post(
-            baseUrl + 'auth/refresh',
+            baseUrl + 'auth/refresh/',
             {},
             {
                 headers: {
@@ -181,10 +181,8 @@ const refreshAccessToken = async () => {
         );
 
         const newAccessToken = response.data?.access;
-        const newRefreshToken = response.data?.refresh;
 
         localStorage.setItem("vote_access_token", newAccessToken);
-        localStorage.setItem("vote_refresh_token", newRefreshToken);
 
         return newAccessToken;
     } catch (error) {

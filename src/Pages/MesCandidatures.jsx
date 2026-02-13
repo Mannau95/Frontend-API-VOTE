@@ -6,6 +6,7 @@ import { httpAxiosClient } from '../client/httpClient'
 import {useDispatch, useSelector} from "react-redux";
 import {fetchElections} from "../store/electionSlice.js";
 import {fetchUserCandidatures} from "../store/userSlice.js";
+import {Link} from "react-router-dom";
 
 export default function MesCandidatures() {
     // const [electionsCandidatures, setElectionsCandidatures] = useState([])
@@ -88,7 +89,9 @@ export default function MesCandidatures() {
                 userCandidatures ?
                 userCandidatures.map((cand, index) =>{
                     return (
-                        <ElectionCard election={cand} key={index}/>
+                        <Link to={`${index}`} key={index}>
+                            <ElectionCard election={cand} key={index}/>
+                        </Link>
                     )
                 }):
                 <p>Aucune candidature déposée pour le moment.</p>
@@ -105,7 +108,9 @@ export default function MesCandidatures() {
             elections ?
             elections.map((cand, index) =>{
               return (
-                <ElectionCard election={cand} key={index}/>
+                <Link to={`../elections/${index}/take`} key={index}>
+                    <ElectionCard election={cand} key={index}/>
+                </Link>
               )
             }):
               <p>Aucune élection n'est en cours pour le moment.</p>

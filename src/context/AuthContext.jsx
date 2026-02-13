@@ -35,9 +35,7 @@ export function AuthProvider({children}){
             email: email,
         }
 
-        console.log("Subscire starts with ", formData);
         formData['password'] = pass
-        console.log(import.meta.env.VITE_API_BASE_URL);
 
         const response  = await httpAxiosClient.post('auth/signup', {
             json: formData,

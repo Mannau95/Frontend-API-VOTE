@@ -17,6 +17,9 @@ import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
 import StartSetPassword from "./Pages/StartSetPassword.jsx";
 import SetPassword from "./Pages/SetPassword.jsx";
 import NotFound from "./Pages/NotFound.jsx";
+import CandidatureDetail from "./Pages/CandidatureDetail.jsx";
+import ElecteurTakeCandidature from "./Pages/ElecteurTakeCandidature.jsx";
+import AccueilSuperviseur from "./Pages/AccueilSuperviseur.jsx";
 export default function App() {
   return (
     <Router>
@@ -31,7 +34,7 @@ export default function App() {
             <Route path="/setPassword/:token" element={<SetPassword />} />
 
             <Route path="/supervision" element={<DashboardSuperviseur />}>
-              <Route index element={<CreerVotePage />} />
+              <Route index element={<AccueilSuperviseur />} />
 
               <Route path="candidats/" element={<GestionCandidatures />}/>
 
@@ -41,7 +44,9 @@ export default function App() {
             <Route path="/electeur" element={<DashboardElector />}>
               <Route index element={<AccueilElecteur />} />
               <Route path="candidatures/" element={<MesCandidatures />} />
+              <Route path="candidatures/:candidatureId" element={<CandidatureDetail />} />
               <Route path="elections/" element={<ElectionsActuellesElecteur />} />
+              <Route path="elections/:electionId/take" element={<ElecteurTakeCandidature />} />
               <Route path="profile/" element={<div>Reglages de mon profile</div>} />
               <Route index element={<AccueilElecteur />} />
             </Route>

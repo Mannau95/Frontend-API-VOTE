@@ -16,7 +16,7 @@ export const fetchElectors = createAsyncThunk(
 export const fetchUserCandidatures = createAsyncThunk(
     'user/fetchUserCandidatures',
     async () => {
-        const response = await httpAxiosClient.get('users/me/candidatures')
+        const response = await httpAxiosClient.get('users/me/candidatures/')
         localStorage.setItem('vote_user_candidatures', JSON.stringify(response.data?.data))
         return response.data.candidatures
     }
@@ -58,7 +58,7 @@ export const deleteAccount = createAsyncThunk(
 )
 
 const initialState = {
-    user: null,
+    user: JSON.parse(localStorage.getItem("vote_user")),
     electors: [],
     userCandidatures: [],
     loading: false,

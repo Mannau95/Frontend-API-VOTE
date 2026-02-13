@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import NavigateToggle from "../Components/NavigateToggle.jsx";
 import SideBarToggle from "../Components/SideBarToggle.jsx";
+import {useSelector} from "react-redux";
 
 export default function DashboardElector() {
+    const {user} = useSelector((state) => state.user);
   // liste des sous routes
   const paths = [
     { "path": "/electeur", "pathName": "Tableau de bord"},
@@ -14,11 +16,11 @@ export default function DashboardElector() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("vote_user"));
+      console.log(user)
     if (!user) {
       navigate("/Connexion");
     }
-  }, [navigate]);
+  }, [navigate, user]);
   return (
     <div>
       {/* <NavigateToggle /> */}

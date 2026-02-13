@@ -7,7 +7,7 @@ import {useSelector} from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
-    const {user} = useSelector(state => state.user)
+  const {user} = useSelector(state => state.user)
     // userState = JSON.parse(localStorage.getItem("vote_user"));
 
   const handleLogout = () => {
@@ -17,10 +17,6 @@ const Navbar = () => {
     navigate("/Connexion");
   };
 
-  useEffect(() => {
-      //
-      if(!user) { navigate('/Connexion'); }
-  }, [])
 
   return (
     <>
@@ -42,9 +38,12 @@ const Navbar = () => {
             <li>
               <NavLink to="/electeur">Participer à une élection</NavLink>
             </li>
-            <li>
-              <NavLink to="/Connexion">Se connecter</NavLink>
-            </li>
+            {
+              !user &&
+              (<li>
+                <NavLink to="/Connexion">Se connecter</NavLink>
+              </li>)
+            }
           </ul>
         </div>
 

@@ -13,3 +13,19 @@ section {
 .entete.active {
   background: white;
 }
+
+h2{
+    @apply text-xl font-semibold leading-tight;
+}
+
+h3{
+    @apply text-[1.15rem] font-medium my-3;
+}
+
+button{
+    @apply border border-gray-200 rounded-md text-xs font-medium leading-tight py-2 px-2 cursor-pointer;
+}
+
+section {
+    @apply py-3;
+}

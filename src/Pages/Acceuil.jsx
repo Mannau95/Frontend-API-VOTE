@@ -48,35 +48,36 @@ function Acceuil() {
     if (!user) {
       const access = localStorage.getItem("vote_access_token");
       if (!access) {
-        navigate("/Connexion");
-      } else {
-        httpAxiosClient
-          .post(
-            "/auth/user/",
-          )
-          .then((data) => {
-            console.log("User data fetched successfully:", data.data);
-
-            if (data.data.success) {
-              localStorage.setItem(
-                "vote_user",
-                JSON.stringify(data.data.data)
-              );
-            } else {
-              navigate("/Connexion");
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching user data:", error);
-            navigate("/Connexion");
-          });
+          navigate("/Connexion");
       }
+      // } else {
+      //   httpAxiosClient
+      //     .post(
+      //       "/auth/user/",
+      //     )
+      //     .then((data) => {
+      //       console.log("User data fetched successfully:", data.data);
+      //
+      //       if (data.data.success) {
+      //         localStorage.setItem(
+      //           "vote_user",
+      //           JSON.stringify(data.data.data)
+      //         );
+      //       } else {
+      //         navigate("/Connexion");
+      //       }
+      //     })
+      //     .catch((error) => {
+      //       console.log("Error fetching user data:", error);
+      //       navigate("/Connexion");
+      //     });
+      // }
     }
   }, []);
 
   return (
     <div>
-      <Navbar />
+      < Navbar />
       <div className="  items-center justify-between  flex flex-wrap gap-4 p-20">
         <div className="m-auto flex flex-col gap-3 min-h-[70dvh]  w-[55%] justify-around">
           <p className="font-bold text-3xl text-red-400 text-center" id="title">
@@ -104,10 +105,10 @@ function Acceuil() {
 
           <div className="flex justify-center gap-3">
               { user?.is_supervisor && <button
-                  className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+                  className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded font-bold">
                   <Link to="/supervision">Créer une élection</Link>
               </button>}
-            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded text-xl font-bold">
+            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded font-bold">
               <Link to="/electeur">Participer à une élection</Link>
             </button>
           </div>
