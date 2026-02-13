@@ -18,22 +18,30 @@ const SideBarToggle = ({ paths}) => {
   }, []);
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setShowNav(!showNav)}
-        className="m-4 text-3xl focus:outline-none text-black"
-      >
-        ☰
-      </button>
+    <div className="sticky top-0 bg-white m-0 overflow-auto h-screen">
+        {!showNav &&
+            <button
+                onClick={() => setShowNav(!showNav)}
+                className="m-4 text-3xl focus:outline-none text-black lg:hidden"
+            >
+                ☰
+            </button>
+        }
 
       {showNav && (
         <div
           ref={navRef}
-          className="absolute top-16 left-0 w-64 bg-white shadow-lg transition-all duration-300 animate-slide-in text-black"
+          className="flex lg-hidden w-58 transition-all duration-300 animate-slide-in"
         >
           <SideBar paths={paths}/>
         </div>
       )}
+        <div
+            // ref={navRef}
+            className="hidden lg:flex w-58 transition-all duration-300 animate-slide-in h-screen"
+        >
+            <SideBar paths={paths} />
+        </div>
     </div>
   );
 };

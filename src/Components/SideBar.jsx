@@ -1,16 +1,26 @@
 import React from "react";
-import { Link, NavLink,} from "react-router-dom";
+import {Link, NavLink, useLocation,} from "react-router-dom";
 
 export default function SideBar({ paths }) {
+  const location = useLocation();
+
+  const isActive = (path) => {
+      return location.pathname.split("/").length < 3 ?
+          location.pathname.split("/")[1] === path.split("/")[1] :
+          location.pathname.split("/")[2] === path.split("/")[0]
+  };
+
   return (
-    <div className="w-64 h-screen bg-white p-6 shadow-2xl  fixed top-0 left-0 flex flex-col justify-between">
+    <div className="p-6 flex flex-col justify-between h-screen">
       <div>
         <ul className="space-y-4">
           {
             paths.map( (path, index) => {
+                console.log(isActive(path.path))
               return (
                 <NavLink to={path.path} key={index}>
-                  <li className="flex items-center text-gray-800 hover:text-red-400 cursor-pointer font-bold">
+                  <li className={"flex items-center text-sm text-gray-700 cursor-pointer font-medium px-4 py-2 " +
+                      `${isActive(path.path) && " bg-gray-200 rounded-lg "}`}>
                     {path.pathName}
                   </li>
                 </NavLink>

@@ -22,10 +22,10 @@ export default function DashboardElector() {
     }
   }, [navigate, user]);
   return (
-    <div>
+    <div className="flex w-full">
       {/* <NavigateToggle /> */}
       <SideBarToggle paths={paths}/>
-      <div className="ml-64 min-h-[84dvh]">
+      <div className="overflow-auto flex-[4] items-center justify-center p-8 relative">
         {/* <h1 className="text-2xl text-red-500 font-bold mb-4">Participer à un Vote</h1> */}
         <Outlet />
       </div>

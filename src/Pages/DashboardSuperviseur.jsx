@@ -12,12 +12,13 @@ const DashboardSuperviseur = () => {
   ];
 
   return (
-    <div>
-      <SideBarToggle paths={paths} />
-      <div className="min-h-screen flex flex-col items-center justify-center p-8 ">
-        <Outlet />
+      <div className="flex w-full">
+          <SideBarToggle paths={paths}/>
+          <div className="overflow-auto flex-[4] items-center justify-center p-8 relative">
+              {/* <h1 className="text-2xl text-red-500 font-bold mb-4">Participer à un Vote</h1> */}
+              <Outlet />
+          </div>
       </div>
-    </div>
   );
 };
 
