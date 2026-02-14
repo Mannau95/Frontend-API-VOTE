@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { httpAxiosClient } from "../../client/httpClient.js";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchElectors} from "../../store/userSlice.js";
+import SearchBar from "../../Components/SearchBar.jsx";
+import Button from "../../Components/Button.jsx";
+import {CloudUpload} from "lucide-react";
+import AjoutElecteur from "./components/AjoutElecteur.jsx";
+import ImportElecteurs from "./components/ImportElecteurs.jsx";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,18 +26,13 @@ export default function GestionElecteurs() {
   });
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetchElects();
-  }, []);
-
-  const fetchElects = async () => {
-    dispatch(fetchElectors()).unwrap()
-      .then((data) => {
-        // console.log("User data fetched successfully:", data.data);
-        setTotal(data.length);
-        // console.log("electors", electeurs)
-      })
-  };
+  const [choice, setChoice] = useState("");
+  const CHOICES = {
+      "ADD": "ADD",
+      "EDIT": "EDIT",
+      "DELETE": "DELETE",
+      "IMPORT": "IMPORT",
+  }
 
   // const [file, setFile] = useState(null);
   // const [message, setMessage] = useState("");
@@ -85,9 +85,36 @@ export default function GestionElecteurs() {
     await httpAxiosClient.patch(`/users/${pk}/`, formData);
   };
 
+    useEffect(() => {
+        dispatch(fetchElectors()).unwrap()
+            .then((data) => {
+                // console.log("User data fetched successfully:", data.data);
+                setTotal(data.length);
+                // console.log("electors", electeurs)
+            })
+    }, []);
+
   return (
-    <div className="p-6 w-full flex flex-col items-center">
+    <div className=" w-full flex flex-col ">
       <h1 className="text-2xl font-bold mb-4">Gestion des Électeurs</h1>
+      <div className="py-2 flex justify-between items-center">
+          <div className="flex space-x-2">
+              <Button onClick={() => {
+                  setChoice(CHOICES.ADD)
+              }} >
+                  <CloudUpload size={15}/>
+                  Ajouter Electeur
+              </Button>
+
+              <Button className=" border-0 bg-blue-500 text-white" onClick={() => setChoice(CHOICES.IMPORT)} >
+                  <CloudUpload size={15}/>
+                  Importer Electeurs
+              </Button>
+          </div>
+          <div>
+            <SearchBar/>
+          </div>
+      </div>
 
       {/* Statistiques */}
       <p className="mb-4 text-gray-700">
@@ -145,6 +172,18 @@ export default function GestionElecteurs() {
           </button>
         ))}
       </div>
+
+        {
+            choice === CHOICES.ADD && (
+                <AjoutElecteur handleModalClose={() =>setChoice("")}/>
+            )
+        }
+
+        {
+            choice === CHOICES.IMPORT && (
+                <ImportElecteurs handleModalClose={() =>setChoice("")}/>
+            )
+        }
     </div>
   );
 }

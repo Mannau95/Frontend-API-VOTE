@@ -1,25 +1,26 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import "./App.css"
 import Footer from "./Components/Footer.jsx";
-import Acceuil from "./Pages/Acceuil.jsx";
-import Connexion from "./Pages/Connexion.jsx";
-import Sinscrire from "./Pages/Sinscrire.jsx";
-import DashboardSuperviseur from "./Pages/DashboardSuperviseur.jsx";
-import DashboardElector from "./Pages/DashboardElector.jsx";
-import CreerVotePage from "./Pages/CreerVotePage.jsx";
-import GestionCandidatures from "./Pages/GestionCandidatures.jsx";
-import AdminElectionPage from "./Pages/AdministrationElections.jsx";
-import AccueilElecteur from "./Pages/AccueilElecteur.jsx";
-import MesCandidatures from "./Pages/MesCandidatures.jsx";
-import ElectionsActuellesElecteur from "./Pages/ElectionsActuellesElecteur.jsx";
+import Acceuil from "./pages/Acceuil.jsx";
+import Connexion from "./pages/Connexion.jsx";
+import Sinscrire from "./pages/Sinscrire.jsx";
+import DashboardSuperviseur from "./pages/DashboardSuperviseur.jsx";
+import DashboardElector from "./pages/DashboardElector.jsx";
+import CreerVotePage from "./pages/CreerVotePage.jsx";
+import GestionCandidatures from "./pages/GestionCandidatures.jsx";
+import AdminElectionPage from "./pages/AdministrationElections.jsx";
+import AccueilElecteur from "./pages/AccueilElecteur.jsx";
+import MesCandidatures from "./pages/MesCandidatures.jsx";
+import ElectionsActuellesElecteur from "./pages/ElectionsActuellesElecteur.jsx";
 // import Ges from "./Pages/GestionElecteurs.jsx'
-import GestionElecteurs from "./Pages/GestionElecteurs.jsx";
-import StartSetPassword from "./Pages/StartSetPassword.jsx";
-import SetPassword from "./Pages/SetPassword.jsx";
-import NotFound from "./Pages/NotFound.jsx";
-import CandidatureDetail from "./Pages/CandidatureDetail.jsx";
-import ElecteurTakeCandidature from "./Pages/ElecteurTakeCandidature.jsx";
-import AccueilSuperviseur from "./Pages/AccueilSuperviseur.jsx";
+import GestionElecteurs from "./pages/gestion_electeur/GestionElecteurs.jsx";
+import StartSetPassword from "./pages/StartSetPassword.jsx";
+import SetPassword from "./pages/SetPassword.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import CandidatureDetail from "./pages/CandidatureDetail.jsx";
+import ElecteurTakeCandidature from "./pages/ElecteurTakeCandidature.jsx";
+import AccueilSuperviseur from "./pages/AccueilSuperviseur.jsx";
+
 export default function App() {
   return (
     <Router>
