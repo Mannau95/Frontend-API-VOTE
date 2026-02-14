@@ -18,7 +18,7 @@ const SideBarToggle = ({ paths}) => {
   }, []);
 
   return (
-    <div className="sticky top-0 bg-white m-0 overflow-auto h-screen">
+    <div className="sticky top-0 bg-gray-50 m-0 overflow-auto h-screen border-r border-gray-200">
         {!showNav &&
             <button
                 onClick={() => setShowNav(!showNav)}
