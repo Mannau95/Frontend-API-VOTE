@@ -3,7 +3,7 @@ import { FormatDate } from "../utils/formatDate";
 
 export default function ElectionCard({ election, btnTitle="Postuler" , hasBtn=true}) {
   return (
-    <div className="px-10 py-4 min-w-75 w-[23%] shadow-xs bg-white hover:scale-105 rounded-lg">
+    <div className="px-10 py-4 min-w-75 w-[23%] shadow-xs bg-white rounded-lg">
       <img
         src="/img/election_pict.png" //{election.image}
         alt="groupe de personnes"

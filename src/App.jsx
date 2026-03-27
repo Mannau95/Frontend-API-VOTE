@@ -7,7 +7,7 @@ import Sinscrire from "./pages/Sinscrire.jsx";
 import DashboardSuperviseur from "./pages/DashboardSuperviseur.jsx";
 import DashboardElector from "./pages/DashboardElector.jsx";
 import CreerVotePage from "./pages/CreerVotePage.jsx";
-import GestionCandidatures from "./pages/GestionCandidatures.jsx";
+import GestionCandidatures from "./pages/GestionCandidatures/GestionCandidatures.jsx";
 import AdminElectionPage from "./pages/AdministrationElections.jsx";
 import AccueilElecteur from "./pages/AccueilElecteur.jsx";
 import MesCandidatures from "./pages/MesCandidatures.jsx";
