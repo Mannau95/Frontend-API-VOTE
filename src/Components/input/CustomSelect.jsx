@@ -48,8 +48,8 @@ function CustomSelect({
                         (<div className="flex items-center justify-between w-full">
                             <ul className="flex gap-x-3 py-1.5">
                                 {value.slice(0,2).map((val, index) =>
-                                (<li key={index} className="bg-gray-200 rounded-xs px-2">{options.find(o => o.value == val).label}</li>))}
-                                { value.length >1 && <li className="bg-gray-200 rounded-xs px-2">...</li>}
+                                (<li key={index} className="bg-gray-300 rounded-xs text-black px-2 py-0.5">{options.find(o => o.value == val).label}</li>))}
+                                { value.length >1 && <li className="bg-gray-300 rounded-xs px-2 py-0.5">...</li>}
                             </ul>
                             <ChevronDown size={15}/>
                         </div>)
@@ -58,7 +58,7 @@ function CustomSelect({
 
             {/*dropdown*/}
             { open && (
-                <div className="flex absolute top-9 border border-gray-300 rounded-sm w-full text-2xs text-gray-500">
+                <div className="flex absolute top-10 border border-gray-300 rounded-sm w-full text-2xs text-black bg-white">
                     { options.length === 0 ?
                         <DefaultValue defaultValue="Aucune option" className=" h-10 " />:
                         <ul className="flex flex-col py-2 w-full">{

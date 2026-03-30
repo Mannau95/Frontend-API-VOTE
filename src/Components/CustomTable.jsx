@@ -17,6 +17,8 @@ function CustomTable({columns, rows}) {
                     <tr key={index} className="w-full border-b border-gray-300">
                         {
                             columns.map((column, index) => (
+                                column?.render?
+                                    <td>{column.render(row)}</td>:
                                 <td key={index} className="py-2 px-5">{row[column.code]}</td>
                             ))
                         }
