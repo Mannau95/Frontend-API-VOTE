@@ -170,41 +170,6 @@ export default function GestionElecteurs() {
 
             {/* Tableau des électeurs */}
             <CustomTable rows={rows} columns={columns} />
-            {/*<table className="min-w-full border mb-4">*/}
-            {/*    <thead>*/}
-            {/*    <tr className="bg-gray-100">*/}
-            {/*        <th className="border p-2">Nom</th>*/}
-            {/*        <th className="border p-2">Prénom</th>*/}
-            {/*        <th className="border p-2">Email</th>*/}
-            {/*        <th className="border p-2">sexe</th>*/}
-            {/*        <th className="border p-2">Actions</th>*/}
-            {/*    </tr>*/}
-            {/*    </thead>*/}
-            {/*    <tbody>*/}
-            {/*    {electors && electors.map((el, i) => (*/}
-            {/*        <tr key={i}>*/}
-            {/*            <td className="border p-2">{el.first_name}</td>*/}
-            {/*            <td className="border p-2">{el.last_name}</td>*/}
-            {/*            <td className="border p-2">{el.email}</td>*/}
-            {/*            <td className="border p-2">{el.sex}</td>*/}
-            {/*            <td className="border p-2">*/}
-            {/*                <button*/}
-            {/*                    onClick={() => handleDelete(el._id)}*/}
-            {/*                    className="bg-red-500 text-white px-2 py-1 mr-2"*/}
-            {/*                >*/}
-            {/*                    Supprimer*/}
-            {/*                </button>*/}
-            {/*                <button*/}
-            {/*                    onClick={() => handleEdit(el._id)}*/}
-            {/*                    className="bg-blue-500 text-white px-2 py-1 mr-2"*/}
-            {/*                >*/}
-            {/*                    Modifier*/}
-            {/*                </button>*/}
-            {/*            </td>*/}
-            {/*        </tr>*/}
-            {/*    ))}*/}
-            {/*    </tbody>*/}
-            {/*</table>*/}
 
             {/* Pagination */}
             <div className="flex gap-2 pt-6">
