@@ -120,7 +120,7 @@ const AdminElectionPage = () => {
       </div>
 
       {/* Liste des élections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
         {filtered.map((election) => (
           <div
             key={election.id}
@@ -128,13 +128,6 @@ const AdminElectionPage = () => {
             onClick={() => handleSelectElection(election)}
           >
             <ElectionCard election={election} />
-            {/* <img
-              src={election.image || "/default.jpg"}
-              alt="image"
-              className="w-full h-32 object-cover mb-3 rounded"
-            />
-            <h3 className="text-xl font-semibold">{election.titre}</h3>
-            <p className="text-sm text-gray-600">{election.description}</p> */}
           </div>
         ))}
       </div>
@@ -167,7 +160,7 @@ const AdminElectionPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {selectedElection.stats.resultats.map((c) => (
+                  {selectedElection?.stats?.resultats?.map((c) => (
                     <tr key={c.id}>
                       <td className="p-2">{c.nom}</td>
                       <td className="p-2">{c.votes}</td>
