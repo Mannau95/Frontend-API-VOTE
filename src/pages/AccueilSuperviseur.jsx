@@ -4,7 +4,7 @@ import StatisticCardList from "../Components/StatisticCardList.jsx";
 import NextElectionsGroupList from "../Components/NextElectionsGroupList.jsx";
 import {httpAxiosClient} from "../client/httpClient.js";
 import SubtitleLine from "../Components/SubtitleLine.jsx";
-import CustomTable from "../Components/CustomTable.jsx";
+import CustomTable from "../Components/table/CustomTable.jsx";
 import VoteGroupList from "../Components/VoteGroupList.jsx";
 
 function AccueilSuperviseur() {

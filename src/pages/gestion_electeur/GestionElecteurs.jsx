@@ -8,7 +8,8 @@ import {CloudUpload, Pen, Trash} from "lucide-react";
 import AjoutElecteur from "./components/AjoutElecteur.jsx";
 import ImportElecteurs from "./components/ImportElecteurs.jsx";
 import CustomSelect from "../../Components/input/CustomSelect.jsx";
-import CustomTable from "../../Components/CustomTable.jsx";
+import CustomTable from "../../Components/table/CustomTable.jsx";
+import TablePagination from "../../Components/table/TablePagination.jsx";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -24,7 +25,7 @@ export default function GestionElecteurs() {
             value: false,
         }
     ]
-    const [page, setPage] = useState(1);
+
     const {electors, loading, error} = useSelector(state => state.user);
     const [total, setTotal] = useState(0);
     const [formData, setFormData] = useState({
@@ -75,6 +76,9 @@ export default function GestionElecteurs() {
     ]
 
     const rows = electors
+    const pageSize = 10;
+    const [page, setPage] = useState(1);
+    const [paginatedRows, setPaginatedRows] = useState(rows.slice(0, pageSize - 1));
 
     // const [file, setFile] = useState(null);
     // const [message, setMessage] = useState("");
@@ -169,22 +173,23 @@ export default function GestionElecteurs() {
             </p>
 
             {/* Tableau des électeurs */}
-            <CustomTable rows={rows} columns={columns} />
+            <CustomTable rows={paginatedRows} columns={columns} />
 
             {/* Pagination */}
-            <div className="flex gap-2 pt-6">
-                {Array.from({length: Math.ceil(total / ITEMS_PER_PAGE)}, (_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => setPage(i + 1)}
-                        className={`px-3 py-1 ${
-                            page === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-                        }`}
-                    >
-                        {i + 1}
-                    </button>
-                ))}
-            </div>
+            <TablePagination rows={rows} pageSize={pageSize} currentPage={page} setPage={setPage} setPaginatedRows={setPaginatedRows} />
+            {/*<div className="flex gap-2 pt-6">*/}
+            {/*    {Array.from({length: Math.ceil(total / ITEMS_PER_PAGE)}, (_, i) => (*/}
+            {/*        <button*/}
+            {/*            key={i}*/}
+            {/*            onClick={() => setPage(i + 1)}*/}
+            {/*            className={`px-3 py-1 ${*/}
+            {/*                page === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"*/}
+            {/*            }`}*/}
+            {/*        >*/}
+            {/*            {i + 1}*/}
+            {/*        </button>*/}
+            {/*    ))}*/}
+            {/*</div>*/}
 
             {
                 choice === CHOICES.ADD && (
