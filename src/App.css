@@ -91,3 +91,7 @@ label {
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     background: rgb(156 163 175);
 }
+
+button {
+    box-shadow: 0px 0px;
+}

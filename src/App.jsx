@@ -8,7 +8,7 @@ import DashboardSuperviseur from "./pages/DashboardSuperviseur.jsx";
 import DashboardElector from "./pages/DashboardElector.jsx";
 import CreerVotePage from "./pages/CreerVotePage.jsx";
 import GestionCandidatures from "./pages/GestionCandidatures/GestionCandidatures.jsx";
-import AdminElectionPage from "./pages/AdministrationElections.jsx";
+import AdminElectionPage from "./pages/AdministrationElection/AdministrationElections.jsx";
 import AccueilElecteur from "./pages/AccueilElecteur.jsx";
 import MesCandidatures from "./pages/MesCandidatures.jsx";
 import ElectionsActuellesElecteur from "./pages/ElectionsActuellesElecteur.jsx";
@@ -17,9 +17,10 @@ import GestionElecteurs from "./pages/gestion_electeur/GestionElecteurs.jsx";
 import StartSetPassword from "./pages/StartSetPassword.jsx";
 import SetPassword from "./pages/SetPassword.jsx";
 import NotFound from "./pages/NotFound.jsx";
-import CandidatureDetail from "./pages/CandidatureDetail.jsx";
+import CandidatureDetail from "./pages/GestionCandidatures/CandidatureDetail.jsx";
 import ElecteurTakeCandidature from "./pages/ElecteurTakeCandidature.jsx";
 import AccueilSuperviseur from "./pages/AccueilSuperviseur.jsx";
+import DetailsVoteAdmin from "./pages/AdministrationElection/DetailsVoteAdmin.jsx";
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
 
               <Route path="electeurs/" element={<GestionElecteurs />} />
               <Route path="elections/" element={<AdminElectionPage />}/>
+              <Route path="elections/:id/details" element={<DetailsVoteAdmin />}/>
             </Route>
             <Route path="/electeur" element={<DashboardElector />}>
               <Route index element={<AccueilElecteur />} />

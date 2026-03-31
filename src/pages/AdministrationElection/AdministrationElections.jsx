@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {httpAxiosClient} from "../client/httpClient";
-import ElectionCard from "../Components/ElectionCard";
+import {httpAxiosClient} from "../../client/httpClient.js";
+import ElectionCard from "../../Components/ElectionCard.jsx";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchElections} from "../store/electionSlice.js";
+import {fetchElections} from "../../store/electionSlice.js";
 import {Eye, Pen, Trash} from "lucide-react";
-import CustomTable from "../Components/table/CustomTable.jsx";
-import TablePagination from "../Components/table/TablePagination.jsx";
-import {FormatDate} from "../utils/formatDate.js";
+import CustomTable from "../../Components/table/CustomTable.jsx";
+import TablePagination from "../../Components/table/TablePagination.jsx";
+import {FormatDate} from "../../utils/formatDate.js";
 
 const AdminElectionPage = () => {
     const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
@@ -16,6 +16,13 @@ const AdminElectionPage = () => {
     const [filtered, setFiltered] = useState([]);
     const [selectedElection, setSelectedElection] = useState(null);
     const dispatch = useDispatch()
+
+    const CHOICES = {
+        "ADD": "ADD",
+        "EDIT": "EDIT",
+        "DELETE": "DELETE",
+        "VIEW": "VIEW",
+    }
 
     const columns = [
         {title: "Titre", code: "name"},
@@ -32,18 +39,13 @@ const AdminElectionPage = () => {
         {title: "Actions", code: "actions",
             render: (row) => (
                 <div>
+                    <Link to={":id/details".replace(":id", row.id)}>
+                        <button onClick={() => {}} className=" text-white px-2 py-1 mr-2">
+                            <Eye size={17} color={"#305DDD"}/>
+                        </button>
+                    </Link>
                     <button
-                        onClick={() => {
-                            // handleEdit(row.id)
-                        }}
-                        className=" text-white px-2 py-1 mr-2"
-                    >
-                        <Eye size={17} color={"#305DDD"}/>
-                    </button>
-                    <button
-                        onClick={() => {
-                            // handleEdit(row.id)
-                        }}
+                        onClick={() => {}}
                         className="bg-blue-500 text-white px-2 py-1 mr-2"
                     >
                         <Pen size={16} />
