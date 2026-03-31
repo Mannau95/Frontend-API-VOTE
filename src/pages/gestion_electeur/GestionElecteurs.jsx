@@ -60,13 +60,17 @@ export default function GestionElecteurs() {
             render: (row) => (
                 <div>
                     <button
-                        onClick={() => handleEdit(row.id)}
+                        onClick={() => {
+                            // handleEdit(row.id)
+                        }}
                         className="bg-blue-500 text-white px-2 py-1 mr-2"
                     >
                         <Pen size={16} />
                     </button>
                     <button
-                        onClick={() => handleDelete(row.id)}
+                        onClick={() => {
+                            // handleDelete(row.id)
+                        }}
                         className="bg-red-500 text-white px-2 py-1 mr-2"
                     >
                         <Trash size={16} />
@@ -76,17 +80,16 @@ export default function GestionElecteurs() {
     ]
 
     const rows = electors
-    const pageSize = 10;
     const [page, setPage] = useState(1);
-    const [paginatedRows, setPaginatedRows] = useState(rows.slice(0, pageSize - 1));
+    const [paginatedRows, setPaginatedRows] = useState(rows.slice(0, ITEMS_PER_PAGE - 1));
 
     // const [file, setFile] = useState(null);
     // const [message, setMessage] = useState("");
-
+    //
     // const handleFileChange = (e) => {
     //   setFile(e.target.files[0]);
     // };
-
+    //
     // const handleSubmit = async (e) => {
     //   e.preventDefault();
     //   if (!file) {
@@ -108,7 +111,7 @@ export default function GestionElecteurs() {
     //     setMessage("Erreur lors de l'importation.", error);
     //   }
     // };
-
+    //
     // const handleAdd = async () => {
     //   await httpAxiosClient.post("/users/", formData);
     //   setFormData({
@@ -143,65 +146,55 @@ export default function GestionElecteurs() {
     return (
         <div className=" w-full flex flex-col ">
             <h1 className="text-2xl font-bold mb-4">Gestion des Électeurs</h1>
-            <div className="py-2 flex justify-between items-center mt-5">
-                <div className="flex space-x-2">
-                    <Button onClick={() => {
-                        setChoice(CHOICES.ADD)
-                    }}>
-                        <CloudUpload size={15}/>
-                        Ajouter Electeur
-                    </Button>
 
-                    <Button className=" border-0 bg-blue-500 text-white" onClick={() => setChoice(CHOICES.IMPORT)}>
-                        <CloudUpload size={15}/>
-                        Importer Electeurs
-                    </Button>
+            <div className="bg-white h-full px-4 pb-6">
+                <div className="py-2 flex justify-between items-center mt-5">
+                    <div className="flex space-x-2">
+                        <Button onClick={() => {
+                            setChoice(CHOICES.ADD)
+                        }}>
+                            <CloudUpload size={15}/>
+                            Ajouter Electeur
+                        </Button>
+
+                        <Button className=" border-0 bg-blue-500 text-white" onClick={() => setChoice(CHOICES.IMPORT)}>
+                            <CloudUpload size={15}/>
+                            Importer Electeurs
+                        </Button>
+                    </div>
+                    <div className="flex space-x-2">
+                        <SearchBar placeholder="Rechercher un électeur" className="w-full" />
+                        <CustomSelect
+                            placeholder="Filtre par statut"
+                            value={selectedStatus}
+                            onChange={(value) => setSelectedStatus(value)}
+                            options={statusList} />
+                    </div>
                 </div>
-                <div className="flex space-x-2">
-                    <SearchBar placeholder="Rechercher un électeur" className="w-full" />
-                    <CustomSelect
-                        placeholder="Filtre par statut"
-                        value={selectedStatus}
-                        onChange={(value) => setSelectedStatus(value)}
-                        options={statusList} />
-                </div>
+
+                {/* Statistiques */}
+                <p className="mb-4 text-gray-700 mt-4 mb-30">
+                    Nombre total d'électeurs : <strong>{total}</strong>
+                </p>
+
+                {/* Tableau des électeurs */}
+                <CustomTable rows={paginatedRows} columns={columns} />
+
+                {/* Pagination */}
+                <TablePagination rows={rows} pageSize={ITEMS_PER_PAGE} currentPage={page} setPage={setPage} setPaginatedRows={setPaginatedRows} />
+
+                {
+                    choice === CHOICES.ADD && (
+                        <AjoutElecteur handleModalClose={() => setChoice("")}/>
+                    )
+                }
+
+                {
+                    choice === CHOICES.IMPORT && (
+                        <ImportElecteurs handleModalClose={() => setChoice("")}/>
+                    )
+                }
             </div>
-
-            {/* Statistiques */}
-            <p className="mb-4 text-gray-700 mt-4 mb-30">
-                Nombre total d'électeurs : <strong>{total}</strong>
-            </p>
-
-            {/* Tableau des électeurs */}
-            <CustomTable rows={paginatedRows} columns={columns} />
-
-            {/* Pagination */}
-            <TablePagination rows={rows} pageSize={pageSize} currentPage={page} setPage={setPage} setPaginatedRows={setPaginatedRows} />
-            {/*<div className="flex gap-2 pt-6">*/}
-            {/*    {Array.from({length: Math.ceil(total / ITEMS_PER_PAGE)}, (_, i) => (*/}
-            {/*        <button*/}
-            {/*            key={i}*/}
-            {/*            onClick={() => setPage(i + 1)}*/}
-            {/*            className={`px-3 py-1 ${*/}
-            {/*                page === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"*/}
-            {/*            }`}*/}
-            {/*        >*/}
-            {/*            {i + 1}*/}
-            {/*        </button>*/}
-            {/*    ))}*/}
-            {/*</div>*/}
-
-            {
-                choice === CHOICES.ADD && (
-                    <AjoutElecteur handleModalClose={() => setChoice("")}/>
-                )
-            }
-
-            {
-                choice === CHOICES.IMPORT && (
-                    <ImportElecteurs handleModalClose={() => setChoice("")}/>
-                )
-            }
         </div>
     );
 }

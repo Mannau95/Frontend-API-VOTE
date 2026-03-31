@@ -31,14 +31,14 @@ function ImportElecteurs({handleModalClose}) {
             });
             setMessage("Fichier importé avec succès !");
         } catch (error) {
-            setMessage("Erreur lors de l'importation.", error);
+            setMessage(`Erreur lors de l'importation., ${error.message}`);
         }
     };
     return (
         <Modal handleModalClose = {handleModalClose}>
             {/* Import CSV */}
 
-            <div className="flex justify-center items-center mb-10 bg-gray-100">
+            <div className="flex justify-center items-center mb-10 bg-white text-black">
                 <form
                     onSubmit={handleSubmit}
                     className="bg-white p-6 rounded shadow-md w-full max-w-md"

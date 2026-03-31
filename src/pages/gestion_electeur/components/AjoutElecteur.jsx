@@ -48,7 +48,7 @@ function AjoutElecteur({handleModalClose}) {
     return (
         <Modal handleModalClose={handleModalClose}>
             {/* Formulaire d'ajout */}
-            <div className="bg-white p-6 rounded shadow-md w-full max-w-md" >
+            <div className="bg-white text-black p-6 rounded shadow-md w-full max-w-xl" >
                 <div className=" gap-2 mb-4">
                     <label htmlFor="Nom">Ajouter un Électeur:</label>
 
@@ -113,15 +113,8 @@ function AjoutElecteur({handleModalClose}) {
                                     }
                                 />
                             </div>
-                            <div className="flex gap-4 my-3">
-                                <div>
-                                    <label
-                                        required
-                                        htmlFor="is_elector"
-                                        className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                    >
-                                        Électeur
-                                    </label>
+                            <div className="flex items-center justify-between my-3 px-4">
+                                <div className="flex space-x-3 items-center ">
                                     <input
                                         type="checkbox"
                                         checked={formData.is_elector}
@@ -129,16 +122,15 @@ function AjoutElecteur({handleModalClose}) {
                                             setFormData({ ...formData, is_elector: e.target.checked })
                                         }
                                     />
-                                </div>
-                                <div>
                                     <label
                                         required
-                                        htmlFor="is_supervisor"
+                                        htmlFor="is_elector"
                                         className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     >
-                                        {" "}
-                                        Superviseur{" "}
+                                        Électeur
                                     </label>
+                                </div>
+                                <div className="flex space-x-3 items-center ">
                                     <input
                                         type="checkbox"
                                         checked={formData.is_supervisor}
@@ -149,15 +141,15 @@ function AjoutElecteur({handleModalClose}) {
                                             })
                                         }
                                     />
-                                </div>
-                                <div>
                                     <label
-                                        htmlFor="is_candidate"
+                                        required
+                                        htmlFor="is_supervisor"
                                         className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     >
-                                        {" "}
-                                        Candidat{" "}
+                                        Superviseur
                                     </label>
+                                </div>
+                                <div className="flex space-x-3 items-center ">
                                     <input
                                         type="checkbox"
                                         checked={formData.is_candidate}
@@ -165,11 +157,17 @@ function AjoutElecteur({handleModalClose}) {
                                             setFormData({ ...formData, is_candidate: e.target.checked })
                                         }
                                     />
+                                    <label
+                                        htmlFor="is_candidate"
+                                        className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        Candidat
+                                    </label>
                                 </div>
                             </div>
                             <button
                                 onClick={handleAdd}
-                                className="bg-green-500 text-white px-4 py-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                className="bg-blue-500 text-white px-4 py-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             >
                                 Ajouter
                             </button>
