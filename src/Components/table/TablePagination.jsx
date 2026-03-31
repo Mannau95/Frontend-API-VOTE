@@ -2,7 +2,7 @@ import React from 'react';
 import {ChevronLeft, ChevronRight, CloudUpload} from "lucide-react";
 import Button from "../Button.jsx";
 
-function TablePagination({currentPage = 1, rows, pageSize, setPage, setPaginatedRows}) {
+function TablePagination({currentPage = 1, rows, pageSize = 10, setPage, setPaginatedRows}) {
     const totalPages = Math.ceil(rows?.length / pageSize);
 
     return (
@@ -16,7 +16,7 @@ function TablePagination({currentPage = 1, rows, pageSize, setPage, setPaginated
                     onClick={() => {
                         if(currentPage > 1 ) {
                             setPage(currentPage - 1);
-                            setPaginatedRows(rows?.slice((currentPage - 2) * pageSize, (currentPage - 1) * pageSize - 1));
+                            setPaginatedRows(rows?.slice((currentPage - 2) * pageSize, (currentPage - 1) * pageSize));
                         }
                     }}
                     disabled={currentPage === 1}
@@ -33,7 +33,7 @@ function TablePagination({currentPage = 1, rows, pageSize, setPage, setPaginated
                     onClick={() => {
                         if( currentPage < totalPages ) {
                             setPage(currentPage + 1);
-                            setPaginatedRows(rows?.slice((currentPage - 1) * pageSize, (currentPage) * pageSize - 1));
+                            setPaginatedRows(rows?.slice((currentPage - 1) * pageSize, (currentPage) * pageSize));
                         }
                     }}
                     disabled={currentPage === totalPages}

@@ -16,7 +16,6 @@ export default function SideBar({ paths }) {
         <ul className="space-y-4">
           {
             paths.map( (path, index) => {
-                console.log(isActive(path.path))
               return (
                 <NavLink to={path.path} key={index}>
                   <li className={"flex items-center text-sm text-gray-700 cursor-pointer font-medium px-4 py-2 " +

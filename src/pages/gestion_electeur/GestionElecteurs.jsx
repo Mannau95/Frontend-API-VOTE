@@ -81,7 +81,7 @@ export default function GestionElecteurs() {
 
     const rows = electors
     const [page, setPage] = useState(1);
-    const [paginatedRows, setPaginatedRows] = useState(rows.slice(0, ITEMS_PER_PAGE - 1));
+    const [paginatedRows, setPaginatedRows] = useState(rows.slice(0, ITEMS_PER_PAGE));
 
     // const [file, setFile] = useState(null);
     // const [message, setMessage] = useState("");
