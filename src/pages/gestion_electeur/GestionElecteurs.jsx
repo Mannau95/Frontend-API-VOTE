@@ -3,7 +3,7 @@ import {httpAxiosClient} from "../../client/httpClient.js";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchElectors} from "../../store/userSlice.js";
 import SearchBar from "../../Components/SearchBar.jsx";
-import Button from "../../Components/Button.jsx";
+import Button from "../../Components/ui/Button.jsx";
 import {CloudUpload, Pen, Trash} from "lucide-react";
 import AjoutElecteur from "./components/AjoutElecteur.jsx";
 import ImportElecteurs from "./components/ImportElecteurs.jsx";

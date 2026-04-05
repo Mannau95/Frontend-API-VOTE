@@ -1,6 +1,6 @@
 import React from 'react';
 import {ChevronLeft, ChevronRight, CloudUpload} from "lucide-react";
-import Button from "../Button.jsx";
+import Button from "../ui/Button.jsx";
 
 function TablePagination({currentPage = 1, rows, pageSize = 10, setPage, setPaginatedRows}) {
     const totalPages = Math.ceil(rows?.length / pageSize);
