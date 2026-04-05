@@ -11,7 +11,7 @@ export default function SideBar({ paths }) {
   };
 
   return (
-    <div className=" pt-4 pl-2 flex flex-col justify-between h-screen">
+    <div className=" pt-4 px-3 flex flex-col justify-between h-screen w-full">
       <div>
         <ul className="space-y-4">
           {
