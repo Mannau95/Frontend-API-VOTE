@@ -14,31 +14,19 @@ export default function Connexion() {
 
   const handleConnexion = async (e) => {
     e.preventDefault();
+    const errorMessage = "Vos identifiants sont incorrects, veuillez les vérifier à nouveau."
 
     try {
-        await dispatch(login({email, password: motDePasse})).unwrap()
-      // const response = await httpAxiosClient.post("/auth/login/", {
-      //   email,
-      //   password: motDePasse,
-      // });
-      // // await axios.post(
-      // //   "http://localhost:8000/api/v2/users/<int:pk>/",
-      // //   {
-      // //     email,
-      // //     mot_de_passe: motDePasse,
-      // //   }
-      // // );
-      //
-      // console.log("Connecté avec succès", response.data);
-      //
-      // dispatch(setUser(response.data))
+        dispatch(login({email, password: motDePasse})).then((result) => {
+            if(!login.fulfilled.match(result)) {
+                setErreur(errorMessage);
+            }
+        })
 
       navigate("/");
     } catch (error) {
       console.error(error);
-      setErreur(
-        "Vos identifiants sont incorrects, veuillez les vérifier à nouveau."
-      );
+      setErreur(errorMessage);
     }
   };
 
