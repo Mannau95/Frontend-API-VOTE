@@ -65,7 +65,7 @@ export default function MesCandidatures() {
   // ]
 
   useEffect(()=>{
-    const connectedUserId = JSON.parse(localStorage.getItem('vote_user')).id
+    // const connectedUserId = user.id
     dispatch(fetchElections()).unwrap()
       .catch((error) => {
         console.error("Error fetching candidatures data:", error);
@@ -84,7 +84,7 @@ export default function MesCandidatures() {
       <section>
         <h2 className='text-xl font-semibold mb-4'>Candidatures Déposées</h2>
 
-        <div className='flex flex-wrap justify-around items-center gap-[1%] gap-y-3'>
+        <div className='grid-5  gap-y-3'>
             {
                 userCandidatures ?
                 userCandidatures.map((cand, index) =>{
@@ -103,7 +103,7 @@ export default function MesCandidatures() {
       <section>
         <h2 className='text-xl font-semibold mb-4'>Elections Actuelles ouvertes</h2>
 
-        <div className='flex flex-wrap justify-around items-center gap-[1%] gap-y-3'>
+        <div className='grid grid-cols-5 gap-3'>
           {
             elections ?
             elections.map((cand, index) =>{

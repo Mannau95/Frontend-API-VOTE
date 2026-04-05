@@ -3,14 +3,14 @@ import {FormatDate} from "../utils/formatDate";
 
 export default function ElectionCard({election, btnTitle = "Postuler", hasBtn = true}) {
     return (
-        <div className="px-10 py-4 shadow-xs bg-white rounded-xs">
+        <div className="px-6 py-4 shadow-xs bg-white rounded-xs  text-center">
             <img
                 src="/img/election_pict.png" //{election.image}
                 alt="groupe de personnes"
                 className="w-full h-35"
             />
             <div className="font-medium text-2xl">{election.name}</div>
-            <div className="text-2xs font-light">
+            <div className="text-2xs font-light text-left">
 
                 <p className="text-justify">{election.description}</p>
                 <p className="mt-2">
