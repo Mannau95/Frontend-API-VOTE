@@ -21,6 +21,7 @@ import CandidatureDetail from "./pages/GestionCandidatures/CandidatureDetail.jsx
 import ElecteurTakeCandidature from "./pages/ElecteurTakeCandidature.jsx";
 import AccueilSuperviseur from "./pages/AccueilSuperviseur.jsx";
 import DetailsVoteAdmin from "./pages/AdministrationElection/DetailsVoteAdmin.jsx";
+import ElectionDetailPage from "./pages/election/ElectionDetailPage.jsx";
 
 export default function App() {
   return (
@@ -49,7 +50,7 @@ export default function App() {
               <Route path="candidatures/" element={<MesCandidatures />} />
               <Route path="candidatures/:candidatureId" element={<CandidatureDetail />} />
               <Route path="elections/" element={<ElectionsActuellesElecteur />} />
-              <Route path="elections/:electionId/take" element={<ElecteurTakeCandidature />} />
+              <Route path="elections/:electionId/take" element={<ElectionDetailPage />} />
               <Route path="profile/" element={<div>Reglages de mon profile</div>} />
               <Route index element={<AccueilElecteur />} />
             </Route>

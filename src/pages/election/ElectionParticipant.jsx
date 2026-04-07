@@ -1,6 +1,7 @@
 import { Clock } from "lucide-react";
 import SectionTitle from "../../Components/ui/SectionTitle.jsx";
 import Card from "../../Components/ui/Card.jsx";
+import Badge from "../../Components/ui/Badge.jsx";
 
 function ParticipantRow({ name, role, status }) {
     return (

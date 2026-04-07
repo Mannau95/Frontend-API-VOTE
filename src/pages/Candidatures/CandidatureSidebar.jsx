@@ -3,6 +3,7 @@ import { Calendar, Briefcase, Building2, FileSignature, GraduationCap, MapPin } 
 import Card from "../../Components/ui/Card.jsx";
 import SectionTitle from "../../Components/ui/SectionTitle.jsx";
 import {PosteRow} from "../../Components/ui/InfoRow.jsx";
+import Badge from "../../Components/ui/Badge.jsx";
 
 const STATUS_VARIANT = {
     "Interview planifiée": "interview",
