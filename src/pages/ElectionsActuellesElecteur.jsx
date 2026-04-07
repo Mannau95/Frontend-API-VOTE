@@ -38,9 +38,9 @@ export default function ElectionsActuellesElecteur() {
 
             <div className='grid grid-cols-5 gap-3 my-4'>
                 {
-                    elections.map((cand, index) =>{
+                    elections.map((elect, index) =>{
                     return (
-                        <ElectionCard election={cand} key={index} btnTitle='Voter'/>
+                        <ElectionCard election={elect} key={index} btnTitle='Voter' onClick={() => navigate(`./${elect.id}/voter`)} />
                     )
                     })
                 }

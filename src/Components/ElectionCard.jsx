@@ -1,7 +1,7 @@
 import React from "react";
 import {FormatDate} from "../utils/formatDate";
 
-export default function ElectionCard({election, btnTitle = "Postuler", hasBtn = true}) {
+export default function ElectionCard({election, btnTitle = "Postuler", hasBtn = true, onClick = null}) {
     return (
         <div className="px-6 py-4 shadow-xs bg-white rounded-xs  text-center">
             <img
@@ -19,7 +19,7 @@ export default function ElectionCard({election, btnTitle = "Postuler", hasBtn = 
             </div>
             {
                 hasBtn ?
-                    <button className=" bg-blue-600 text-white mt-4 border-0 w-full h-10">
+                    <button className=" bg-blue-600 text-white mt-4 border-0 w-full h-10" onClick={() => {if(onClick) onClick()} }>
                         {btnTitle}
                     </button> :
                     null

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { Card } from "./components/ui";
+import Card from "../../Components/ui/Card.jsx";
 
 // ── Données ───────────────────────────────────────────────────────────────────
 const ELECTION = {
