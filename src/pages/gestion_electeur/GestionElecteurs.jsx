@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {httpAxiosClient} from "../../client/httpClient.js";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchElectors} from "../../store/userSlice.js";
@@ -79,9 +79,13 @@ export default function GestionElecteurs() {
             )},
     ]
 
-    const rows = electors
+    const rows = useMemo( () => electors, [electors])
     const [page, setPage] = useState(1);
     const [paginatedRows, setPaginatedRows] = useState(rows.slice(0, ITEMS_PER_PAGE));
+
+    useEffect(() => {
+        setPaginatedRows(electors.slice(0, ITEMS_PER_PAGE))
+    }, [electors])
 
     // const [file, setFile] = useState(null);
     // const [message, setMessage] = useState("");
