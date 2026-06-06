@@ -14,7 +14,7 @@ const DashboardSuperviseur = () => {
   return (
       <div className="flex w-full">
           <SideBarToggle paths={paths}/>
-          <div className="overflow-auto flex-[4] items-center justify-center p-8 relative bg-gray-100">
+          <div className="overflow-auto flex-[4] items-center justify-center p-8 relative bg-white">
               {/* <h1 className="text-2xl text-red-500 font-bold mb-4">Participer à un Vote</h1> */}
               <Outlet />
           </div>
