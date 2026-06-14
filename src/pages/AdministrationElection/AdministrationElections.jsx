@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {httpAxiosClient} from "../../client/httpClient.js";
-import ElectionCard from "../../Components/ElectionCard.jsx";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchElections} from "../../store/electionSlice.js";
@@ -8,6 +7,7 @@ import {Eye, Pen, Trash} from "lucide-react";
 import CustomTable from "../../Components/table/CustomTable.jsx";
 import TablePagination from "../../Components/table/TablePagination.jsx";
 import {FormatDate} from "../../utils/formatDate.js";
+import CreerVotePage from "../CreerVotePage.jsx";
 
 const AdminElectionPage = () => {
     const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
@@ -16,6 +16,9 @@ const AdminElectionPage = () => {
     const [filtered, setFiltered] = useState([]);
     const [selectedElection, setSelectedElection] = useState(null);
     const dispatch = useDispatch()
+    const [isEelectionModal, setIsEelectionModal] = useState(false);
+    const openElectionModal = () => setIsEelectionModal(true);
+    const closeElectionModal = () => setIsEelectionModal(false);
 
     const CHOICES = {
         "ADD": "ADD",
@@ -131,15 +134,14 @@ const AdminElectionPage = () => {
                     </button>
                 </div>
                 <div className="flex-end">
-                    <Link to="/supervision/">
-                        <button
-                            className={`px-4 py-2 rounded cursor-pointer ${
-                                tab === 0 ? "bg-green-600 text-white" : "bg-gray-200"
-                            }`}
-                        >
-                            Créer une Election
-                        </button>
-                    </Link>
+                    <button
+                        className={`px-4 py-2 rounded cursor-pointer ${
+                            tab === 0 ? "bg-green-600 text-white" : "bg-gray-200"
+                        }`}
+                        onClick={() => openElectionModal()}
+                    >
+                        Créer une Election
+                    </button>
                 </div>
             </div>
 
@@ -160,7 +162,7 @@ const AdminElectionPage = () => {
             </div>
 
             {/* Liste des élections */}
-            <div className="bg-white px-4 py-6" >
+            <div className="bg-white px-4 py-6">
                 {/* Message */}
                 <div className="bg-blue-50 p-6 rounded shadow text-center text-gray-700 mb-6">
                     Merci d'utiliser notre plateforme de vote en ligne. Continuez à
@@ -234,6 +236,12 @@ const AdminElectionPage = () => {
                     </button>
                 </div>
             )}
+
+            {
+                isEelectionModal && (
+                    <CreerVotePage handleModalClose={closeElectionModal}/>
+                )
+            }
         </div>
     );
 };
