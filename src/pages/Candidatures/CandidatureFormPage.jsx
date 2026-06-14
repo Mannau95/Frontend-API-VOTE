@@ -58,7 +58,7 @@ export default function CandidatureFormPage() {
                         />
                         <TextInput
                             label="Numéro de Téléphone"
-                            placeholder="+33 6 00 00 00 00"
+                            placeholder="+229 01 00 00 00 00"
                             hint="Votre numéro de téléphone, y compris l'indicatif du pays, pour toute communication urgente."
                             error={errors.telephone?.message}
                             registration={register("telephone", { required: "Le numéro de téléphone est requis." })}

@@ -23,6 +23,7 @@ import AccueilSuperviseur from "./pages/AccueilSuperviseur.jsx";
 import DetailsVoteAdmin from "./pages/AdministrationElection/DetailsVoteAdmin.jsx";
 import ElectionDetailPage from "./pages/election/ElectionDetailPage.jsx";
 import VotePage from "./pages/vote/VotePage.jsx";
+import CandidatureFormPage from "./pages/Candidatures/CandidatureFormPage.jsx";
 
 export default function App() {
   return (
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="/electeur" element={<DashboardElector />}>
               <Route index element={<AccueilElecteur />} />
               <Route path="candidatures/" element={<MesCandidatures />} />
+              <Route path="candidatures/postuler" element={<CandidatureFormPage />} />
               <Route path="candidatures/:candidatureId" element={<CandidatureDetail />} />
               <Route path="elections/" element={<ElectionsActuellesElecteur />} />
               <Route path="elections/:electionId/take" element={<ElectionDetailPage />} />

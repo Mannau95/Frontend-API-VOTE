@@ -3,6 +3,10 @@ import { Settings } from "lucide-react";
 import {ElectionOverview, VotingRules} from "./ElectionOverview.jsx";
 import {ActivityLog, ParticipantsTable} from "./ElectionParticipant.jsx";
 import {StatusSidebar} from "./StatusSidebar.jsx";
+import Button from "../../Components/ui/Button.jsx";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {CANDIDATE_TO_ELECTION} from "../../constants/urls.js";
 
 // ── Données de démonstration ──────────────────────────────────────────────────
 const ELECTION = {
@@ -43,15 +47,28 @@ const ACTIVITIES = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function ElectionDetailPage() {
+    const navigate = useNavigate();
+    const [isCandidateModal, setIsCandidateModal] = useState(false);
+    const openCandidateModal = () => {
+        // setIsCandidateModal(true)
+        navigate(CANDIDATE_TO_ELECTION)
+    };
+    const closeCandidateModal = () => setIsCandidateModal(false);
+
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
             {/* Header */}
             <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
                 <h1 className="text-xl font-bold text-gray-900">Détails de l'Élection</h1>
-                <button className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-                    <Settings size={15} />
-                    Modifier l'Élection
-                </button>
+                <div className="flex items-center gap-2">
+                    <Button className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white " onClick={() => openCandidateModal()}>
+                        Candidater l'Élection
+                    </Button>
+                    <Button className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+                        <Settings size={15} />
+                        Modifier l'Élection
+                    </Button>
+                </div>
             </div>
 
             {/* Body */}
@@ -81,6 +98,8 @@ export default function ElectionDetailPage() {
                 </div>
 
             </div>
+
+            {/*MODAL*/}
         </div>
     );
 }
