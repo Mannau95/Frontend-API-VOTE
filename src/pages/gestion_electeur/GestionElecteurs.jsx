@@ -154,14 +154,14 @@ export default function GestionElecteurs() {
             <div className="bg-white h-full px-4 pb-6">
                 <div className="py-2 flex justify-between items-center mt-5">
                     <div className="flex space-x-2">
-                        <Button onClick={() => {
+                        <Button variant="primary" onClick={() => {
                             setChoice(CHOICES.ADD)
                         }}>
                             <CloudUpload size={15}/>
                             Ajouter Electeur
                         </Button>
 
-                        <Button className=" border-0 bg-blue-500 text-white" onClick={() => setChoice(CHOICES.IMPORT)}>
+                        <Button variant="secondary" onClick={() => setChoice(CHOICES.IMPORT)}>
                             <CloudUpload size={15}/>
                             Importer Electeurs
                         </Button>

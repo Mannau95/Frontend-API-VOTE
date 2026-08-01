@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {httpAxiosClient} from "../../client/httpClient.js";
-import ElectionCard from "../../Components/ElectionCard.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchElections} from "../../store/electionSlice.js";
-import SearchBar from "../../Components/SearchBar.jsx";
 import CandidaturesFilterBar from "./CandidaturesFilterBar.jsx";
 
 function GestionCandidatures() {
@@ -183,7 +181,7 @@ function GestionCandidatures() {
                                                 key={i}
                                                 onClick={() => setCurrentPage(i + 1)}
                                                 className={`px-3 py-1 border rounded ${
-                                                    currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+                                                    currentPage === i + 1 ? "bg-indigo-600 text-white" : ""
                                                 }`}
                                             >
                                                 {i + 1}

@@ -18,36 +18,26 @@ export default function SideBar({ paths }) {
             paths.map( (path, index) => {
               return (
                 <NavLink to={path.path} key={index}>
-                  <li className={"flex items-center text-sm text-gray-700 cursor-pointer font-medium px-4 py-2 " +
-                      `${isActive(path.path) && " bg-gray-200 rounded-lg "}`}>
+                  <li className={"flex items-center text-sm cursor-pointer px-4 py-2 rounded-lg " +
+                      (isActive(path.path)
+                        ? "font-medium bg-indigo-50 text-indigo-700"
+                        : "text-slate-600 hover:bg-slate-100")}>
                     {path.pathName}
                   </li>
                 </NavLink>
               )
             })
           }
-          {/* <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <NavLink to="/supervision">Tableau de bord</NavLink>
-          </li>
-          <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <NavLink to="candidatures/">Gestion des Candidatures</NavLink>
-          </li>
-          <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <NavLink to="electeurs/">Gestion des Électeurs</NavLink>
-          </li>
-          <li className="flex items-center text-gray-800 hover:text-blue-600 cursor-pointer">
-            <NavLink to="elections/">Élections Actuelles</NavLink>
-          </li> */}
         </ul>
       </div>
 
       <div className="mb-4">
         <Link to={'/'} >
-          <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 my-4">
-            Acceuil
+          <button className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors my-4">
+            Accueil
           </button>
         </Link>
-        <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+        <button className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
           onClick={()=>{
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");

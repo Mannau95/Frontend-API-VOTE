@@ -5,8 +5,8 @@ export default function SubmitButton({isSubmitting, loadingText = 'En cours...',
         <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-[2] py-2.5 text-sm font-medium text-white bg-blue-600
-                  rounded-lg hover:bg-blue-700 active:scale-[0.98] transition-all
+            className="flex-[2] py-2.5 text-sm font-medium text-white bg-indigo-600
+                  rounded-lg hover:bg-indigo-700 active:scale-[0.98] transition-all
                   disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
             {isSubmitting ? (

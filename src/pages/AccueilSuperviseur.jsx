@@ -80,7 +80,7 @@ function AccueilSuperviseur() {
     return (
         <div className="space-y-6 w-full">
             <section>
-                <div className="flex items-center gap-x-4 w-full bg-blue-50 p-4 rounded-lg">
+                <div className="flex items-center gap-x-4 w-full bg-indigo-50 p-4 rounded-lg">
                     {/*Image*/}
                     <div className="w-25 rounded-full avatar">
                         <img

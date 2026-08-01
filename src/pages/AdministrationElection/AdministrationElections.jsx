@@ -8,6 +8,7 @@ import CustomTable from "../../Components/table/CustomTable.jsx";
 import TablePagination from "../../Components/table/TablePagination.jsx";
 import {FormatDate} from "../../utils/formatDate.js";
 import CreerVotePage from "../CreerVotePage.jsx";
+import Card from "../../Components/ui/Card.jsx";
 
 const AdminElectionPage = () => {
     const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
@@ -43,13 +44,13 @@ const AdminElectionPage = () => {
             render: (row) => (
                 <div>
                     <Link to={":id/details".replace(":id", row.id)}>
-                        <button onClick={() => {}} className=" text-white px-2 py-1 mr-2">
-                            <Eye size={17} color={"#305DDD"}/>
+                        <button onClick={() => {}} className="text-indigo-600 hover:text-indigo-700 p-1.5 mr-1">
+                            <Eye size={16}/>
                         </button>
                     </Link>
                     <button
                         onClick={() => {}}
-                        className="bg-blue-500 text-white px-2 py-1 mr-2"
+                        className="text-slate-500 hover:text-slate-700 p-1.5 mr-1"
                     >
                         <Pen size={16} />
                     </button>
@@ -57,7 +58,7 @@ const AdminElectionPage = () => {
                         onClick={() => {
                             // handleDelete(row.id)
                         }}
-                        className="bg-red-500 text-white px-2 py-1 mr-2"
+                        className="text-red-600 hover:text-red-700 p-1.5"
                     >
                         <Trash size={16} />
                     </button>
@@ -112,12 +113,12 @@ const AdminElectionPage = () => {
     };
 
     return (
-        <div className="p-6 space-y-8">
+        <div className="space-y-8 w-full">
             <div className="flex justify-between items-center">
-                <div className="flex gap-4">
+                <div className="flex gap-2">
                     <button
-                        className={`px-4 py-2 rounded cursor-pointer ${
-                            tab === 0 ? "bg-blue-600 text-white" : "bg-gray-200"
+                        className={`px-4 py-2 text-sm font-medium rounded-lg cursor-pointer transition-colors ${
+                            tab === 0 ? "bg-indigo-600 text-white" : "text-slate-600 bg-slate-100 hover:bg-slate-200"
                         }`}
                         onClick={() => setTab(0)}
                     >
@@ -125,8 +126,8 @@ const AdminElectionPage = () => {
                     </button>
 
                     <button
-                        className={`px-4 py-2 rounded cursor-pointer ${
-                            tab === 1 ? "bg-green-600 text-white" : "bg-gray-200"
+                        className={`px-4 py-2 text-sm font-medium rounded-lg cursor-pointer transition-colors ${
+                            tab === 1 ? "bg-indigo-600 text-white" : "text-slate-600 bg-slate-100 hover:bg-slate-200"
                         }`}
                         onClick={() => setTab(1)}
                     >
@@ -135,9 +136,7 @@ const AdminElectionPage = () => {
                 </div>
                 <div className="flex-end">
                     <button
-                        className={`px-4 py-2 rounded cursor-pointer ${
-                            tab === 0 ? "bg-green-600 text-white" : "bg-gray-200"
-                        }`}
+                        className="px-4 py-2 text-sm font-medium rounded-lg cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
                         onClick={() => openElectionModal()}
                     >
                         Créer une Election
@@ -147,24 +146,24 @@ const AdminElectionPage = () => {
 
             {/* Statistiques */}
             <div className="grid grid-cols-3 gap-6">
-                <div className="bg-white p-4 shadow rounded">
-                    <p className="text-gray-500">Total Élections Créées</p>
-                    <p className="text-2xl font-bold">{stats.totalElections || 0}</p>
-                </div>
-                <div className="bg-white p-4 shadow rounded">
-                    <p className="text-gray-500">Total Inscrits</p>
-                    <p className="text-2xl font-bold">{stats.totalInscrits || 0}</p>
-                </div>
-                <div className="bg-white p-4 shadow rounded">
-                    <p className="text-gray-500">Taux de participation moyen</p>
-                    <p className="text-2xl font-bold">{stats.tauxParticipation || 0}%</p>
-                </div>
+                <Card className="p-4">
+                    <p className="text-slate-500 text-sm">Total Élections Créées</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.totalElections || 0}</p>
+                </Card>
+                <Card className="p-4">
+                    <p className="text-slate-500 text-sm">Total Inscrits</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.totalInscrits || 0}</p>
+                </Card>
+                <Card className="p-4">
+                    <p className="text-slate-500 text-sm">Taux de participation moyen</p>
+                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.tauxParticipation || 0}%</p>
+                </Card>
             </div>
 
             {/* Liste des élections */}
-            <div className="bg-white px-4 py-6">
+            <div className="bg-white px-4 py-6 rounded-2xl ring-1 ring-slate-200 shadow-sm">
                 {/* Message */}
-                <div className="bg-blue-50 p-6 rounded shadow text-center text-gray-700 mb-6">
+                <div className="bg-indigo-50 p-6 rounded-2xl text-center text-slate-700 mb-6">
                     Merci d'utiliser notre plateforme de vote en ligne. Continuez à
                     organiser des élections sécurisées, transparentes et simples. Revenez
                     souvent !
@@ -190,8 +189,8 @@ const AdminElectionPage = () => {
 
             {/* Détails sélectionnés */}
             {selectedElection && (
-                <div className="mt-10 p-6 bg-white shadow rounded space-y-4">
-                    <h2 className="text-2xl font-bold">{selectedElection.titre}</h2>
+                <div className="mt-10 p-6 bg-white rounded-2xl ring-1 ring-slate-200 shadow-sm space-y-4">
+                    <h2 className="text-xl font-bold text-slate-900">{selectedElection.titre}</h2>
                     {tab === "enCours" ? (
                         <>
                             <p>Nombre d'inscrits: {selectedElection.stats.inscrits}</p>
@@ -207,20 +206,20 @@ const AdminElectionPage = () => {
                                 {/* Graphique de répartition fictif */}
                                 <p>Graphique de répartition des votes (placeholder)</p>
                             </div>
-                            <table className="w-full mt-4 border">
-                                <thead>
-                                <tr className="bg-gray-200">
-                                    <th className="p-2">Candidat</th>
-                                    <th className="p-2">Votes</th>
-                                    <th className="p-2">%</th>
+                            <table className="w-full mt-4 text-sm">
+                                <thead className="bg-slate-50 text-slate-500">
+                                <tr>
+                                    <th className="p-2 text-left font-medium">Candidat</th>
+                                    <th className="p-2 text-left font-medium">Votes</th>
+                                    <th className="p-2 text-left font-medium">%</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {selectedElection?.stats?.resultats?.map((c) => (
-                                    <tr key={c.id}>
-                                        <td className="p-2">{c.nom}</td>
-                                        <td className="p-2">{c.votes}</td>
-                                        <td className="p-2">{c.pourcentage}%</td>
+                                    <tr key={c.id} className="border-t border-slate-100">
+                                        <td className="p-2 text-slate-700">{c.nom}</td>
+                                        <td className="p-2 text-slate-700">{c.votes}</td>
+                                        <td className="p-2 text-slate-700">{c.pourcentage}%</td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -230,7 +229,7 @@ const AdminElectionPage = () => {
 
                     <button
                         onClick={envoyerResultatsParMail}
-                        className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                        className="mt-4 px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                     >
                         Envoyer les résultats par mail
                     </button>

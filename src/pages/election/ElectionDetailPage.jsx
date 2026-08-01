@@ -61,10 +61,10 @@ export default function ElectionDetailPage() {
             <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
                 <h1 className="text-xl font-bold text-gray-900">Détails de l'Élection</h1>
                 <div className="flex items-center gap-2">
-                    <Button className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white " onClick={() => openCandidateModal()}>
+                    <Button variant="primary" onClick={() => openCandidateModal()}>
                         Candidater l'Élection
                     </Button>
-                    <Button className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+                    <Button variant="secondary">
                         <Settings size={15} />
                         Modifier l'Élection
                     </Button>
