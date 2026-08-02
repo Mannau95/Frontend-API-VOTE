@@ -16,9 +16,9 @@ export const fetchElectors = createAsyncThunk(
 export const fetchUserCandidatures = createAsyncThunk(
     'user/fetchUserCandidatures',
     async () => {
-        const response = await httpAxiosClient.get('users/me/candidatures/')
+        const response = await httpAxiosClient.get('users/candidatures/')
         localStorage.setItem('vote_user_candidatures', JSON.stringify(response.data?.data))
-        return response.data.candidatures
+        return response.data.data
     }
 )
 

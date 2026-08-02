@@ -14,11 +14,16 @@ export const fetchCandidatures = createAsyncThunk(
 
 export const createCandidature = createAsyncThunk(
   'candidature/createCandidature',
-  async (candidatureData) => {
-    const response = await httpAxiosClient.post('/candidatures', candidatureData)
-    const prods = JSON.parse(localStorage.getItem('vote_candidature')) ?? []
-    prods.push(response.data)
-    return response.data
+  async (candidatureData, thunkApi) => {
+    try {
+      const response = await httpAxiosClient.post('/users/candidatures/', candidatureData)
+      const prods = JSON.parse(localStorage.getItem('vote_candidature')) ?? []
+      prods.push(response.data)
+      localStorage.setItem('vote_candidature', JSON.stringify(prods))
+      return response.data
+    } catch (error) {
+      return thunkApi.rejectWithValue(error)
+    }
   }
 )
 
@@ -85,7 +90,7 @@ const candidatureSlice = createSlice({
       })
       .addCase(createCandidature.rejected, (state, action) => {
         state.loading = false
-        state.error = action.error.data.message
+        state.error = action.payload?.message
       })
       // update Candidature
       .addCase(updateCandidature.pending, (state) => {

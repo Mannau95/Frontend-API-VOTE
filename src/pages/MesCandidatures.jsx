@@ -1,5 +1,6 @@
 import React from 'react'
 import ElectionCard from '../Components/ElectionCard'
+import CandidatureCard from '../Components/CandidatureCard.jsx'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { httpAxiosClient } from '../client/httpClient'
@@ -11,7 +12,7 @@ import { Info, CheckCircle2, CalendarDays } from "lucide-react";
 
 export default function MesCandidatures() {
     const {elections, loading, error} = useSelector(state => state.elections)
-    const {userCandidatures} = useSelector(state => state.elections)
+    const {userCandidatures} = useSelector(state => state.user)
     const dispatch = useDispatch()
 
     useEffect(()=>{
@@ -59,14 +60,17 @@ export default function MesCandidatures() {
                     </div>
 
                     {userCandidatures && userCandidatures.length > 0 ? (
-                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
-                            {userCandidatures.map((cand, index) => (
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4'>
+                            {userCandidatures.map((cand) => (
                                 <Link
-                                    to={`${index}`}
-                                    key={index}
+                                    to={`${cand.id}`}
+                                    key={cand.id}
                                     className='block transition-transform duration-200 hover:-translate-y-1'
                                 >
-                                    <ElectionCard election={cand} key={index}/>
+                                    <CandidatureCard
+                                        candidature={cand}
+                                        election={elections.find((e) => String(e.id) === String(cand.election))}
+                                    />
                                 </Link>
                             ))}
                         </div>
