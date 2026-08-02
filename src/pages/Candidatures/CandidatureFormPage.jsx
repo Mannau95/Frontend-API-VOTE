@@ -1,8 +1,9 @@
 // CandidatureFormPage.jsx
 import { useForm } from "react-hook-form";
 import {FormSection, Textarea, TextInput} from "../../Components/ui/Form.jsx";
+import Modal from "../../Components/Modal.jsx";
 
-export default function CandidatureFormPage() {
+export default function CandidatureFormPage({ electionId, handleModalClose }) {
     const {
         register,
         handleSubmit,
@@ -11,12 +12,17 @@ export default function CandidatureFormPage() {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log("Candidature soumise :", data);
+        console.log("Candidature soumise :", { ...data, election: electionId });
+        reset();
+        handleModalClose();
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans">
-            <div className="max-w-2xl mx-auto px-4 py-8">
+        <Modal handleModalClose={() => {
+            handleModalClose();
+            reset();
+        }}>
+            <div className="bg-white text-gray-900 rounded-xl shadow-sm border border-gray-100 w-full max-w-3xl p-10 max-h-[90vh] overflow-y-auto">
                 {/* En-tête */}
                 <div className="mb-6">
                     <h1 className="text-2xl font-bold text-gray-900">Formulaire de Candidature</h1>
@@ -103,6 +109,6 @@ export default function CandidatureFormPage() {
                     </div>
                 </form>
             </div>
-        </div>
+        </Modal>
     );
 }

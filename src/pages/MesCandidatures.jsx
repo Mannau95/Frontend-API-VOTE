@@ -93,13 +93,13 @@ export default function MesCandidatures() {
 
                     {elections && elections.length > 0 ? (
                         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-$ gap-4'>
-                            {elections.map((cand, index) => (
+                            {elections.map((election) => (
                                 <Link
-                                    to={`../elections/${index}/take`}
-                                    key={index}
+                                    to={`../elections/${election.id}/take`}
+                                    key={election.id}
                                     className='block transition-transform duration-200 hover:-translate-y-1'
                                 >
-                                    <ElectionCard election={cand} key={index}/>
+                                    <ElectionCard election={election} key={election.id}/>
                                 </Link>
                             ))}
                         </div>

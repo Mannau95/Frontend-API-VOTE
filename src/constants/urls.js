@@ -5,4 +5,3 @@ export const SUPERVISOR_DASHBOARD = '/supervision'
 
 //electeur
 export const ELECTEUR_DASHBOARD = '/electeur'
-export const CANDIDATE_TO_ELECTION = ELECTEUR_DASHBOARD + '/candidatures/postuler'

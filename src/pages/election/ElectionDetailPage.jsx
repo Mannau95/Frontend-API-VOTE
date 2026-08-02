@@ -4,12 +4,16 @@ import {ElectionOverview, VotingRules} from "./ElectionOverview.jsx";
 import {ActivityLog, ParticipantsTable} from "./ElectionParticipant.jsx";
 import {StatusSidebar} from "./StatusSidebar.jsx";
 import Button from "../../Components/ui/Button.jsx";
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {CANDIDATE_TO_ELECTION} from "../../constants/urls.js";
+import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchElections} from "../../store/electionSlice.js";
+import {FormatDate} from "../../utils/formatDate.js";
+import {computeElectionStatusLabel} from "../../utils/electionStatus.js";
+import CandidatureFormPage from "../Candidatures/CandidatureFormPage.jsx";
 
-// ── Données de démonstration ──────────────────────────────────────────────────
-const ELECTION = {
+// ── Données de démonstration (utilisées pour les infos non fournies par le back) ──
+const MOCK_ELECTION = {
     name: "Élection Annuelle des Délégués Syndicaux",
     description:
         "Cette élection vise à nommer les représentants des employés au conseil syndical pour l'année 2024-2025. Les délégués joueront un rôle crucial dans la défense des droits des travailleurs et la négociation des conditions de travail avec la direction. Le processus est ouvert à tous les employés permanents ayant au moins un an d'ancienneté. La transparence et l'équité sont les principes fondamentaux de cette élection.",
@@ -24,7 +28,7 @@ const RULES = [
     "Procédure : Vote électronique via la plateforme VotePro.",
 ];
 
-const STATUS = {
+const MOCK_STATUS = {
     label: "En cours",
     startDate: "01 Janvier 2024, 09:00",
     endDate: "15 Janvier 2024, 17:00",
@@ -47,13 +51,36 @@ const ACTIVITIES = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function ElectionDetailPage() {
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { electionId } = useParams();
+    const { elections } = useSelector((state) => state.elections);
     const [isCandidateModal, setIsCandidateModal] = useState(false);
-    const openCandidateModal = () => {
-        // setIsCandidateModal(true)
-        navigate(CANDIDATE_TO_ELECTION)
-    };
+
+    useEffect(() => {
+        if (!elections.length) {
+            dispatch(fetchElections());
+        }
+    }, []);
+
+    const election = elections.find((e) => String(e.id) === String(electionId));
+
+    const openCandidateModal = () => setIsCandidateModal(true);
     const closeCandidateModal = () => setIsCandidateModal(false);
+
+    const electionData = {
+        name: election?.name ?? MOCK_ELECTION.name,
+        description: election?.description ?? MOCK_ELECTION.description,
+        // Le back n'envoie pas encore de catégorie
+        category: MOCK_ELECTION.category,
+    };
+
+    const status = election
+        ? {
+            label: computeElectionStatusLabel(election.begin_date, election.end_date),
+            startDate: FormatDate.fromIsoToString(election.begin_date),
+            endDate: FormatDate.fromIsoToString(election.end_date),
+        }
+        : MOCK_STATUS;
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
@@ -62,7 +89,7 @@ export default function ElectionDetailPage() {
                 <h1 className="text-xl font-bold text-gray-900">Détails de l'Élection</h1>
                 <div className="flex items-center gap-2">
                     <Button variant="primary" onClick={() => openCandidateModal()}>
-                        Candidater l'Élection
+                        Candidater à l'Élection
                     </Button>
                     <Button variant="secondary">
                         <Settings size={15} />
@@ -76,7 +103,7 @@ export default function ElectionDetailPage() {
 
                 {/* Colonne principale */}
                 <div className="lg:col-span-2 flex flex-col gap-5">
-                    <ElectionOverview election={ELECTION} />
+                    <ElectionOverview election={electionData} />
                     <VotingRules rules={RULES} />
                     <ParticipantsTable
                         voters={1200}
@@ -90,16 +117,21 @@ export default function ElectionDetailPage() {
                 {/* Sidebar */}
                 <div className="lg:col-span-1">
                     <StatusSidebar
-                        status={STATUS.label}
-                        startDate={STATUS.startDate}
-                        endDate={STATUS.endDate}
+                        status={status.label}
+                        startDate={status.startDate}
+                        endDate={status.endDate}
                         onViewCalendar={() => console.log("Voir le calendrier")}
                     />
                 </div>
 
             </div>
 
-            {/*MODAL*/}
+            {isCandidateModal && (
+                <CandidatureFormPage
+                    electionId={electionId}
+                    handleModalClose={closeCandidateModal}
+                />
+            )}
         </div>
     );
 }
