@@ -6,9 +6,9 @@ import { httpAxiosClient } from '../client/httpClient'
 export const fetchCandidatures = createAsyncThunk(
   'candidature/fetchCandidatures',
   async () => {
-    const response = await httpAxiosClient.get('/candidatures')
-    localStorage.setItem('vote_candidature', JSON.stringify(response.data.candidatures))
-    return response.data.candidatures
+    const response = await httpAxiosClient.get('/candidatures/')
+    localStorage.setItem('vote_candidature', JSON.stringify(response.data?.data))
+    return response.data.data
   }
 )
 
@@ -52,6 +52,22 @@ export const deleteCandidature = createAsyncThunk(
   }
 )
 
+export const reviewCandidature = createAsyncThunk(
+  'candidature/reviewCandidature',
+  async (reviewData, thunkApi) => {
+    const { candidatureId, is_accepted, reject_message } = reviewData
+    try {
+      const response = await httpAxiosClient.put(`/candidatures/${candidatureId}/approuve/`, {
+        is_accepted,
+        reject_message,
+      })
+      return { ...response.data, id: candidatureId }
+    } catch (error) {
+      return thunkApi.rejectWithValue(error)
+    }
+  }
+)
+
 const candidatureSlice = createSlice({
   name: 'candidature',
   initialState: {
@@ -77,7 +93,7 @@ const candidatureSlice = createSlice({
       })
       .addCase(fetchCandidatures.rejected, (state, action) => {
         state.loading = false
-        state.error = action.error.data.message
+        state.error = action.error.message
       })
       // Create Candidature
       .addCase(createCandidature.pending, (state) => {
@@ -119,6 +135,21 @@ const candidatureSlice = createSlice({
       .addCase(deleteCandidature.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message
+      })
+      // Review (approuver / rejeter) Candidature
+      .addCase(reviewCandidature.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(reviewCandidature.fulfilled, (state, action) => {
+        state.loading = false
+        state.candidatures = state.candidatures.map((item) =>
+          item.id === action.payload.id ? { ...item, ...action.payload } : item
+        )
+      })
+      .addCase(reviewCandidature.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message
       })
   },
 })

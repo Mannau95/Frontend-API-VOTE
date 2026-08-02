@@ -41,6 +41,7 @@ export default function App() {
               <Route index element={<AccueilSuperviseur />} />
 
               <Route path="candidats/" element={<GestionCandidatures />}/>
+              <Route path="candidats/:candidatureId" element={<CandidatureDetail />}/>
 
               <Route path="electeurs/" element={<GestionElecteurs />} />
               <Route path="elections/" element={<AdminElectionPage />}/>

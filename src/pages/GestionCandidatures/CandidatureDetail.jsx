@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactMarkdown from "react-markdown";
-import { ArrowLeft, Calendar, Landmark, Mail, User, AlertCircle } from "lucide-react";
+import { ArrowLeft, Calendar, Landmark, Mail, User, AlertCircle, Check, X } from "lucide-react";
 import Card from "../../Components/ui/Card.jsx";
 import SectionTitle from "../../Components/ui/SectionTitle.jsx";
 import Badge from "../../Components/ui/Badge.jsx";
+import Button from "../../Components/ui/Button.jsx";
+import Modal from "../../Components/Modal.jsx";
 import { InfoRow } from "../../Components/ui/InfoRow.jsx";
-import { fetchUserCandidatures } from "../../store/userSlice.js";
+import { fetchUserCandidatures, fetchElectors } from "../../store/userSlice.js";
 import { fetchElections } from "../../store/electionSlice.js";
+import { fetchCandidatures, reviewCandidature } from "../../store/candidatureSlice.js";
 import { FormatDate } from "../../utils/formatDate.js";
 import { getCandidatureStatus } from "../../utils/candidatureStatus.js";
 
@@ -17,23 +20,127 @@ const MARKDOWN_CLASSES = "text-sm text-gray-600 leading-relaxed " +
     "[&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 " +
     "[&_blockquote]:border-l-2 [&_blockquote]:border-indigo-200 [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:text-gray-500";
 
+function ReviewConfirmModal({ action, rejectMessage, onRejectMessageChange, onConfirm, onCancel, loading, error }) {
+    const isApprove = action === "approve";
+
+    return (
+        <Modal handleModalClose={onCancel}>
+            <div className="bg-white text-gray-900 rounded-xl shadow-sm border border-gray-100 w-full max-w-md p-6">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                        isApprove ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-500"
+                    }`}>
+                        {isApprove ? <Check size={18} /> : <X size={18} />}
+                    </div>
+                    <div>
+                        <h2 className="text-base font-semibold text-gray-900">
+                            {isApprove ? "Approuver la candidature" : "Rejeter la candidature"}
+                        </h2>
+                        <p className="text-xs text-gray-400">Cette action est irréversible.</p>
+                    </div>
+                </div>
+
+                <p className="text-sm text-gray-600 mb-4">
+                    {isApprove
+                        ? "Êtes-vous sûr de vouloir approuver cette candidature ?"
+                        : "Êtes-vous sûr de vouloir rejeter cette candidature ? Veuillez préciser le motif ci-dessous."}
+                </p>
+
+                {!isApprove && (
+                    <textarea
+                        value={rejectMessage}
+                        onChange={(e) => onRejectMessageChange(e.target.value)}
+                        placeholder="Motif du rejet…"
+                        rows={3}
+                        autoFocus
+                        className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg p-2.5 resize-none mb-4 focus:outline-none focus:ring-2 focus:ring-red-300"
+                    />
+                )}
+
+                {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4 text-xs text-red-600">
+                        {error}
+                    </div>
+                )}
+
+                <div className="flex justify-end gap-3">
+                    <Button variant="secondary" onClick={onCancel} disabled={loading}>
+                        Annuler
+                    </Button>
+                    <Button
+                        variant={isApprove ? "primary" : "danger"}
+                        className={isApprove ? "bg-emerald-600 hover:bg-emerald-700 border-transparent" : ""}
+                        onClick={onConfirm}
+                        disabled={loading || (!isApprove && !rejectMessage.trim())}
+                    >
+                        {loading ? "Envoi en cours…" : isApprove ? "Confirmer l'approbation" : "Confirmer le rejet"}
+                    </Button>
+                </div>
+            </div>
+        </Modal>
+    );
+}
+
 function CandidatureDetail() {
     const { candidatureId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { userCandidatures } = useSelector((state) => state.user);
+    const { userCandidatures, electors, user: connectedUser } = useSelector((state) => state.user);
     const { elections } = useSelector((state) => state.elections);
-    const connectedUser = useSelector((state) => state.user.user);
+    const { candidatures, loading: reviewLoading, error: reviewError } = useSelector((state) => state.candidatures);
+
+    const isAdmin = !!connectedUser?.is_supervisor;
+
+    const [confirmAction, setConfirmAction] = useState(null); // null | "approve" | "reject"
+    const [rejectMessage, setRejectMessage] = useState("");
 
     useEffect(() => {
-        if (!userCandidatures.length) dispatch(fetchUserCandidatures());
         if (!elections.length) dispatch(fetchElections());
-    }, []);
+        if (isAdmin) {
+            if (!candidatures.length) dispatch(fetchCandidatures());
+            if (!electors.length) dispatch(fetchElectors());
+        } else if (!userCandidatures.length) {
+            dispatch(fetchUserCandidatures());
+        }
+    }, [isAdmin]);
 
-    const candidature = userCandidatures.find((c) => String(c.id) === String(candidatureId));
+    const candidature = isAdmin
+        ? candidatures.find((c) => String(c.id) === String(candidatureId))
+        : userCandidatures.find((c) => String(c.id) === String(candidatureId));
+
     const election = elections.find((e) => String(e.id) === String(candidature?.election));
     const status = getCandidatureStatus(candidature);
+
+    const candidateUser = isAdmin
+        ? electors.find((u) => u.id === candidature?.candidate)
+        : connectedUser;
+
+    const backPath = isAdmin ? "/supervision/candidats/" : "/electeur/candidatures/";
+    const backLabel = isAdmin ? "Gestion des candidatures" : "Mes candidatures";
+
+    const closeConfirmModal = () => {
+        setConfirmAction(null);
+        setRejectMessage("");
+    };
+
+    const handleConfirmReview = async () => {
+        try {
+            if (confirmAction === "approve") {
+                await dispatch(reviewCandidature({ candidatureId, is_accepted: true, reject_message: "" })).unwrap();
+            } else if (confirmAction === "reject") {
+                if (!rejectMessage.trim()) return;
+                await dispatch(reviewCandidature({
+                    candidatureId,
+                    is_accepted: false,
+                    reject_message: rejectMessage.trim(),
+                })).unwrap();
+            }
+            closeConfirmModal();
+        } catch (err) {
+            console.error("Erreur lors de la mise à jour du statut de la candidature.", err);
+        }
+    };
 
     if (!candidature) {
         return (
@@ -49,10 +156,10 @@ function CandidatureDetail() {
             <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
                 <div>
                     <button
-                        onClick={() => navigate("/electeur/candidatures/")}
+                        onClick={() => navigate(backPath)}
                         className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-indigo-600 transition-colors mb-1"
                     >
-                        <ArrowLeft size={14} /> Mes candidatures
+                        <ArrowLeft size={14} /> {backLabel}
                     </button>
                     <h1 className="text-lg font-bold text-gray-900">Détails de la candidature</h1>
                     <p className="text-sm text-gray-500">
@@ -98,6 +205,27 @@ function CandidatureDetail() {
                             label="Déposée le :"
                             value={FormatDate.fromIsoToString(candidature.date_candidature)}
                         />
+
+                        {isAdmin && (
+                            <div className="mt-4 pt-4 border-t border-gray-100 flex gap-2">
+                                <Button
+                                    variant="primary"
+                                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 border-transparent"
+                                    onClick={() => setConfirmAction("approve")}
+                                    disabled={reviewLoading}
+                                >
+                                    <Check size={14} /> Approuver
+                                </Button>
+                                <Button
+                                    variant="danger"
+                                    className="flex-1"
+                                    onClick={() => setConfirmAction("reject")}
+                                    disabled={reviewLoading}
+                                >
+                                    <X size={14} /> Rejeter
+                                </Button>
+                            </div>
+                        )}
                     </Card>
 
                     <Card className="p-5">
@@ -105,9 +233,9 @@ function CandidatureDetail() {
                         <InfoRow
                             icon={User}
                             label="Nom :"
-                            value={`${connectedUser?.first_name ?? ""} ${connectedUser?.last_name ?? ""}`.trim() || "—"}
+                            value={`${candidateUser?.first_name ?? ""} ${candidateUser?.last_name ?? ""}`.trim() || "—"}
                         />
-                        <InfoRow icon={Mail} label="Email :" value={connectedUser?.email ?? "—"} />
+                        <InfoRow icon={Mail} label="Email :" value={candidateUser?.email ?? "—"} />
                     </Card>
 
                     <Card className="p-5">
@@ -127,6 +255,18 @@ function CandidatureDetail() {
                 </div>
 
             </div>
+
+            {confirmAction && (
+                <ReviewConfirmModal
+                    action={confirmAction}
+                    rejectMessage={rejectMessage}
+                    onRejectMessageChange={setRejectMessage}
+                    onConfirm={handleConfirmReview}
+                    onCancel={closeConfirmModal}
+                    loading={reviewLoading}
+                    error={reviewError}
+                />
+            )}
         </div>
     );
 }

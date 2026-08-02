@@ -5,7 +5,7 @@ import { FormatDate } from "../utils/formatDate.js";
 import { getCandidatureStatus } from "../utils/candidatureStatus.js";
 import { excerpt } from "../utils/markdown.js";
 
-export default function CandidatureCard({ candidature, election }) {
+export default function CandidatureCard({ candidature, election, candidateName }) {
     const status = getCandidatureStatus(candidature);
     const electionName = election?.name ?? `Élection #${candidature.election}`;
 
@@ -16,12 +16,19 @@ export default function CandidatureCard({ candidature, election }) {
                 {status.label}
             </Badge>
 
-            <h3
-                className="font-semibold text-slate-900 leading-snug line-clamp-2 py-4"
-                title={electionName}
-            >
-                {electionName}
-            </h3>
+            <div className="py-4">
+                <h3
+                    className="font-semibold text-slate-900 leading-snug line-clamp-2"
+                    title={electionName}
+                >
+                    {electionName}
+                </h3>
+                {candidateName && (
+                    <p className="text-xs text-slate-400 mt-0.5 truncate" title={candidateName}>
+                        {candidateName}
+                    </p>
+                )}
+            </div>
 
             <p className="text-sm text-slate-500 line-clamp-3 h-[3.75rem]">
                 {candidature.description
