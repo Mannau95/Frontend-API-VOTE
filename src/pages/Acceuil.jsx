@@ -25,7 +25,7 @@ function Acceuil() {
       < Navbar />
       <div className="  items-center justify-between  flex flex-wrap gap-4 p-20">
         <div className="m-auto flex flex-col gap-3 min-h-[70dvh]  w-[55%] justify-around">
-          <p className="font-bold text-3xl text-red-400 text-center" id="title">
+          <p className="font-bold text-3xl text-indigo-600 text-center" id="title">
             La solution de vote en ligne simple et fiable
           </p>
           <div
@@ -50,10 +50,10 @@ function Acceuil() {
 
           <div className="flex justify-center gap-3">
               { user?.is_supervisor && <button
-                  className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded font-bold">
+                  className="bg-indigo-600 hover:bg-indigo-700 transition text-white py-2 px-4 rounded font-bold">
                   <Link to="/supervision">Créer une élection</Link>
               </button>}
-            <button className="bg-red-400 hover:bg-red-500 transition text-white py-2 px-4 rounded font-bold">
+            <button className="bg-indigo-600 hover:bg-indigo-700 transition text-white py-2 px-4 rounded font-bold">
               <Link to="/electeur">Participer à une élection</Link>
             </button>
           </div>
