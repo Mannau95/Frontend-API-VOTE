@@ -55,10 +55,10 @@ export const deleteCandidature = createAsyncThunk(
 export const reviewCandidature = createAsyncThunk(
   'candidature/reviewCandidature',
   async (reviewData, thunkApi) => {
-    const { candidatureId, is_accepted, reject_message } = reviewData
+    const { candidatureId, status, reject_message } = reviewData
     try {
       const response = await httpAxiosClient.put(`/candidatures/${candidatureId}/approuve/`, {
-        is_accepted,
+        status,
         reject_message,
       })
       return { ...response.data, id: candidatureId }

@@ -127,12 +127,12 @@ function CandidatureDetail() {
     const handleConfirmReview = async () => {
         try {
             if (confirmAction === "approve") {
-                await dispatch(reviewCandidature({ candidatureId, is_accepted: true, reject_message: "" })).unwrap();
+                await dispatch(reviewCandidature({ candidatureId, status: "accepte", reject_message: "" })).unwrap();
             } else if (confirmAction === "reject") {
                 if (!rejectMessage.trim()) return;
                 await dispatch(reviewCandidature({
                     candidatureId,
-                    is_accepted: false,
+                    status: "rejete",
                     reject_message: rejectMessage.trim(),
                 })).unwrap();
             }
