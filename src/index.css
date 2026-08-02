@@ -6,6 +6,15 @@ body {
   margin: 0;
 }
 
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 section {
   padding: 2rem 1rem;
 }
