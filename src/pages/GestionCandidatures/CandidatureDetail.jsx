@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Calendar, Landmark, Mail, User, AlertCircle, Check, X } from "lucide-react";
@@ -85,12 +85,15 @@ function CandidatureDetail() {
     const { candidatureId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { userCandidatures, electors, user: connectedUser } = useSelector((state) => state.user);
     const { elections } = useSelector((state) => state.elections);
     const { candidatures, loading: reviewLoading, error: reviewError } = useSelector((state) => state.candidatures);
 
     const isAdmin = !!connectedUser?.is_supervisor;
+    const isElecteurPath = location.pathname.includes("electeur/candidatures");
+    const canReview = isAdmin && !isElecteurPath;
 
     const [confirmAction, setConfirmAction] = useState(null); // null | "approve" | "reject"
     const [rejectMessage, setRejectMessage] = useState("");
@@ -206,7 +209,7 @@ function CandidatureDetail() {
                             value={FormatDate.fromIsoToString(candidature.date_candidature)}
                         />
 
-                        {isAdmin && (
+                        {canReview && candidature.status === "en_attente" && (
                             <div className="mt-4 pt-4 border-t border-gray-100 flex gap-2">
                                 <Button
                                     variant="primary"
