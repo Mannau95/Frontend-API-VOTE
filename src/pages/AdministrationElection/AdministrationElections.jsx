@@ -13,20 +13,12 @@ import Card from "../../Components/ui/Card.jsx";
 const AdminElectionPage = () => {
     const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
     const [stats, setStats] = useState({});
-    const {elections, loading, error} = useSelector(state => state.elections);
+    const {elections} = useSelector(state => state.elections);
     const [filtered, setFiltered] = useState([]);
-    const [selectedElection, setSelectedElection] = useState(null);
     const dispatch = useDispatch()
     const [isEelectionModal, setIsEelectionModal] = useState(false);
     const openElectionModal = () => setIsEelectionModal(true);
     const closeElectionModal = () => setIsEelectionModal(false);
-
-    const CHOICES = {
-        "ADD": "ADD",
-        "EDIT": "EDIT",
-        "DELETE": "DELETE",
-        "VIEW": "VIEW",
-    }
 
     const columns = [
         {title: "Titre", code: "name"},
@@ -68,11 +60,26 @@ const AdminElectionPage = () => {
 
     const rows = filtered
     const [page, setPage] = useState(1);
-    const [paginatedRows, setPaginatedRows] = useState(rows.slice(0, 9));
+    // setPaginatedRows is wired to TablePagination below; the value itself
+    // isn't read here (CustomTable renders `rows` directly).
+    const [, setPaginatedRows] = useState(rows.slice(0, 9));
 
     useEffect(() => {
         // Récupérer élections en cours ou terminées
         fetchElects();
+        httpAxiosClient
+            .get("/organisations/me/stats/")
+            .then((res) => {
+                if (res.data?.succes) {
+                    setStats((prev) => ({
+                        ...prev,
+                        totalElections: res.data.data.totalElections,
+                        totalInscrits: res.data.data.totalInscrits,
+                        tauxParticipation: res.data.data.tauxParticipation,
+                    }));
+                }
+            })
+            .catch((error) => console.error("Error fetching organisation stats:", error));
     }, []);
 
     useEffect(() => {
@@ -81,35 +88,13 @@ const AdminElectionPage = () => {
             setFiltered(data);
         }
 
-    }, [tab])
+    }, [tab, elections])
 
     const fetchElects = () => {
         dispatch(fetchElections()).unwrap()
             .then((res) => {
                 setFiltered(res)
-                setSelectedElection(null);
-                setStats({
-                    "totalElections": res.length,
-                })
             });
-    };
-
-    const handleSelectElection = (election) => {
-        httpAxiosClient
-            .get(`elections/${election.id}/`)
-            .then((res) => {
-                setSelectedElection({...election, stats: res.data});
-            });
-    };
-
-    const envoyerResultatsParMail = () => {
-        if (!selectedElection) return;
-        httpAxiosClient
-            .post(
-                `elections/${selectedElection.id}`
-            )
-            .then(() => alert("Emails envoyés avec succès"))
-            .catch(() => alert("Échec de l'envoi des mails"));
     };
 
     return (
@@ -169,72 +154,10 @@ const AdminElectionPage = () => {
                     souvent !
                 </div>
 
-                <CustomTable rows={rows} columns={columns} />
+                <CustomTable columns={columns} rows={rows} />
 
                 <TablePagination rows={rows} currentPage={page} setPage={setPage} setPaginatedRows={setPaginatedRows} />
             </div>
-
-
-            {/*<div className="grid grid-cols-2 md:grid-cols-5 gap-x-3 space-y-3">*/}
-            {/*    {filtered.map((election) => (*/}
-            {/*        <div*/}
-            {/*            key={election.id}*/}
-            {/*            // className="border p-4 rounded shadow cursor-pointer hover:bg-gray-50"*/}
-            {/*            onClick={() => handleSelectElection(election)}*/}
-            {/*        >*/}
-            {/*            <ElectionCard election={election} btnTitle="Voir détails"/>*/}
-            {/*        </div>*/}
-            {/*    ))}*/}
-            {/*</div>*/}
-
-            {/* Détails sélectionnés */}
-            {selectedElection && (
-                <div className="mt-10 p-6 bg-white rounded-2xl ring-1 ring-slate-200 shadow-sm space-y-4">
-                    <h2 className="text-xl font-bold text-slate-900">{selectedElection.titre}</h2>
-                    {tab === "enCours" ? (
-                        <>
-                            <p>Nombre d'inscrits: {selectedElection.stats.inscrits}</p>
-                            <p>Nombre de votes: {selectedElection.stats.votants}</p>
-                            <p>
-                                Taux de participation: {selectedElection.stats.participation}%
-                            </p>
-                            <p>Marge gagnant: {selectedElection.stats.marge}%</p>
-                        </>
-                    ) : (
-                        <>
-                            <div className="w-full h-40 bg-gray-100 flex items-center justify-center">
-                                {/* Graphique de répartition fictif */}
-                                <p>Graphique de répartition des votes (placeholder)</p>
-                            </div>
-                            <table className="w-full mt-4 text-sm">
-                                <thead className="bg-slate-50 text-slate-500">
-                                <tr>
-                                    <th className="p-2 text-left font-medium">Candidat</th>
-                                    <th className="p-2 text-left font-medium">Votes</th>
-                                    <th className="p-2 text-left font-medium">%</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {selectedElection?.stats?.resultats?.map((c) => (
-                                    <tr key={c.id} className="border-t border-slate-100">
-                                        <td className="p-2 text-slate-700">{c.nom}</td>
-                                        <td className="p-2 text-slate-700">{c.votes}</td>
-                                        <td className="p-2 text-slate-700">{c.pourcentage}%</td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </>
-                    )}
-
-                    <button
-                        onClick={envoyerResultatsParMail}
-                        className="mt-4 px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                    >
-                        Envoyer les résultats par mail
-                    </button>
-                </div>
-            )}
 
             {
                 isEelectionModal && (

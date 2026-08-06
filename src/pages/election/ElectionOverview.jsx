@@ -10,7 +10,6 @@ export function ElectionOverview({ election }) {
                 Nom de l'Élection : {election.name}
             </p>
             <p className="text-sm text-gray-600 leading-relaxed mb-4">{election.description}</p>
-            <p className="text-xs text-gray-400">Catégorie : {election.category}</p>
         </Card>
     );
 }

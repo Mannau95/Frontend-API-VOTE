@@ -138,8 +138,6 @@
 import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-// const baseUrl = 'http://localhost:3000/api'
-const env = import.meta.env
 
 export const httpAxiosClient = axios.create({
     headers: {
@@ -265,9 +263,15 @@ httpAxiosClient.interceptors.response.use(
 
         // Gestion des autres erreurs
         if (error.response) {
+            // The backend's own convention is {"errors": "..." | [...]}, not
+            // "message" - that key was never read here, so real API error
+            // text (validation messages, etc.) was silently dropped in favor
+            // of a generic status text everywhere in the app.
+            const apiErrors = error.response.data?.errors;
+            const errorMessage = Array.isArray(apiErrors) ? apiErrors.join(' ') : apiErrors;
             return Promise.reject({
                 status: error.response.data?.statusCode || error.response.status,
-                message: error.response.data?.message || error.response.statusText || 'Une erreur est survenue. Veuillez réessayer.'
+                message: error.response.data?.message || errorMessage || error.response.statusText || 'Une erreur est survenue. Veuillez réessayer.'
             });
         } else {
             return Promise.reject(error);
