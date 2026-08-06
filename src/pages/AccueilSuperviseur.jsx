@@ -1,39 +1,75 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import StatisticCardList from "../Components/StatisticCardList.jsx";
 import NextElectionsGroupList from "../Components/NextElectionsGroupList.jsx";
 import {httpAxiosClient} from "../client/httpClient.js";
 import SubtitleLine from "../Components/SubtitleLine.jsx";
 import CustomTable from "../Components/table/CustomTable.jsx";
 import VoteGroupList from "../Components/VoteGroupList.jsx";
+import {fetchElections} from "../store/electionSlice.js";
+import {fetchElectors} from "../store/userSlice.js";
+import {fetchCandidatures} from "../store/candidatureSlice.js";
+import {FormatDate} from "../utils/formatDate.js";
 
 function AccueilSuperviseur() {
     const {user} = useSelector((state) => state.user);
+    const {elections} = useSelector((state) => state.elections);
+    const {electors} = useSelector((state) => state.user);
+    const {candidatures} = useSelector((state) => state.candidatures);
+    const dispatch = useDispatch();
+
+    const [orgStats, setOrgStats] = useState(null);
+
+    useEffect(() => {
+        dispatch(fetchElections());
+        dispatch(fetchElectors());
+        dispatch(fetchCandidatures());
+        httpAxiosClient
+            .get("/organisations/me/stats/")
+            .then((res) => {
+                if (res.data?.succes) setOrgStats(res.data.data);
+            })
+            .catch((error) => console.error("Error fetching organisation stats:", error));
+    }, []);
 
     const stats = [
         {
             title: "Elections Actuelles",
-            value: 20,
-            description: "A description of Supervise",
+            value: orgStats?.activeElections ?? "—",
+            description: "Élections en cours dans votre organisation",
         },
         {
             title: "Candidatures En Attente",
-            value: 2,
-            description: "A description of Supervise",
+            value: orgStats?.pendingCandidatures ?? "—",
+            description: "En attente de votre validation",
         },
         {
             title: "Candidats Actifs",
-            value: 300,
-            description: "A description of Supervise",
+            value: orgStats?.activeCandidates ?? "—",
+            description: "Candidatures approuvées",
         },
     ]
 
-    const [prochainesElections, setProchainesElections] = useState([])
+    const candidateName = (candidature) => {
+        const candidate = electors.find((u) => u.id === candidature.candidate);
+        return candidate ? `${candidate.first_name} ${candidate.last_name}`.trim() : `Candidat #${candidature.candidate}`;
+    };
+
+    const electionName = (candidature) => {
+        const election = elections.find((e) => String(e.id) === String(candidature.election));
+        return election?.name ?? `Élection #${candidature.election}`;
+    };
 
     const candidaturesColumns = [
         {
+            title: "Candidat",
+            code: "candidate",
+            render: (row) => candidateName(row),
+        },
+        {
             title: "Elections",
-            code: "election_title",
+            code: "election",
+            render: (row) => electionName(row),
         },
         {
             title: "Statut",
@@ -42,40 +78,11 @@ function AccueilSuperviseur() {
         {
             title: "Date de soumission",
             code: "date_candidature",
-        },
-    ]
-    const candidatures = [
-        {
-            "election_title": "Election du Conseil Administratif 2026",
-            "date_candidature": "2026-05-02",
-            "status": "En attente",
-        },
-        {
-            "election_title": "Vote de la Nouvelle Politique de Télétravail",
-            "date_candidature": "2026-05-20",
-            "status": "Approuvée",
-        },
-        {
-            "election_title": "Mise à jour des statuts de l'Association",
-            "date_candidature": "2026-02-20",
-            "status": "Approuvée",
+            render: (row) => FormatDate.fromIsoToString(row.date_candidature),
         },
     ]
 
-    useEffect(() => {
-        httpAxiosClient
-            .get("/elections/",)
-            .then((data) => {
-                // console.log("User data fetched successfully:", data.data);
-                if(data.data.succes){
-                    setProchainesElections(data.data.data)
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching user data:", error);
-            });
-        // }
-    }, []);
+    const candidaturesEnAttente = candidatures.filter((c) => c.status === "en_attente");
 
     return (
         <div className="space-y-6 w-full">
@@ -101,7 +108,7 @@ function AccueilSuperviseur() {
             </section>
             <section>
                 <div className="shadow-sm rounded-lg px-5">
-                    <NextElectionsGroupList title="Prochaines Elections" items={prochainesElections.slice(0,3)}
+                    <NextElectionsGroupList title="Prochaines Elections" items={elections.slice(0,3)}
                         actionTitle="Voir tout" actionRoute="elections" />
                 </div>
             </section>
@@ -109,13 +116,13 @@ function AccueilSuperviseur() {
             <section>
                 <div className="shadow-sm rounded-lg px-5">
                     <SubtitleLine title="Candidatures en attente" actionTitle="Gérer les candidatures" actionRoute="candidats" />
-                    <CustomTable columns={candidaturesColumns} rows={candidatures} />
+                    <CustomTable columns={candidaturesColumns} rows={candidaturesEnAttente} />
                 </div>
             </section>
 
             <section>
                 <div className="shadow-sm rounded-lg px-5">
-                    <VoteGroupList title="Résultats récents" items={prochainesElections.slice(0,3)}
+                    <VoteGroupList title="Résultats récents" items={elections.filter((e) => new Date(e.end_date) < new Date()).slice(0,3)}
                         actionTitle="Voir tous les résultats" actionRoute="elections" />
                 </div>
             </section>

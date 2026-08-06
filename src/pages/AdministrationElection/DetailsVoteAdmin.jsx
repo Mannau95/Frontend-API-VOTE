@@ -1,8 +1,9 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Settings} from "lucide-react";
 import {useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {FormatDate} from "../../utils/formatDate.js";
+import {computeElectionStatusLabel} from "../../utils/electionStatus.js";
 
 function DetailsVoteAdmin() {
     const {id} = useParams();
@@ -39,7 +40,7 @@ function DetailsVoteAdmin() {
                     <div className="flex-1/3">
                         <div className="my-5 mx-2 px-8 py-5 border border-gray-100 rounded-lg">
                             <h3>Statut & Dates</h3>
-                            <div className="text-blue-500">Statut courant: <span>En cours</span></div>
+                            <div className="text-blue-500">Statut courant: <span>{election?.begin_date && computeElectionStatusLabel(election.begin_date, election.end_date)}</span></div>
                             <div>Date: {FormatDate.fromIsoToString(election.begin_date)}</div>
                             <div>Fin: {FormatDate.fromIsoToString(election.end_date)}</div>
                         </div>

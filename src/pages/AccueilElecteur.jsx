@@ -1,109 +1,52 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { httpAxiosClient } from '../client/httpClient'
 import { FormatDate } from '../utils/formatDate'
+import { getCandidatureStatus } from '../utils/candidatureStatus'
 import Card from '../Components/ui/Card.jsx'
+import Badge from '../Components/ui/Badge.jsx'
+import { fetchElections } from '../store/electionSlice.js'
+import { fetchUserCandidatures } from '../store/userSlice.js'
 import { Timer, Mail, CheckCircle2, CalendarDays, Award } from 'lucide-react'
 
-const STATUS_STYLES = {
-    "En attente": "bg-amber-100 text-amber-700",
-    "Approuvée": "bg-emerald-100 text-emerald-700",
-    "Rejetée": "bg-red-100 text-red-600",
-    "Validé": "bg-emerald-100 text-emerald-700",
-}
-
 export default function AccueilElecteur() {
-    const [prochainesElections, setProchainesElections] = useState([])
-    const prochaines_elections = [
-        {
-            "name": "Election du Conseil d'Administration 2024",
-            "begin_date" : "15 juillet 2024",
-            "end_date": "20 juillet 2024"
-
-        },
-        {
-            "name": "Vote pour la Nouvelle Politique de Télétravail",
-            "begin_date" : "01 août 2024",
-            "end_date": "05 août 2024"
-
-        },
-        {
-            "name": "Election du Comité d'Entreprise",
-            "begin_date" : "10 septembre 2024",
-            "end_date": "12 septembre 2024"
-
-        },
-    ]
-
-    const candidatures = [
-        {
-            "election": "Election du Conseil d'Administration 2025",
-            "status": "En attente",
-            "date": "01 juillet 2025",
-        },
-        {
-            "election": "Vote pour la Nouvelle Politique de Télétravail",
-            "status": "Approuvée",
-            "date" : "01 août 2025",
-        },
-        {
-            "election": "Election de responsable",
-            "status": "Rejetée",
-            "date": "01 juillet 2025",
-        },
-    ]
-
-    const resultats = [
-        {
-            "name": "Vote pour la Président du Syncicat",
-            "date" : "01 septembre 2025",
-            "status": "Validé"
-        },
-
-        {
-            "name": "Vote pour la Président du Syncicat",
-            "date" : "01 septembre 2025",
-            "status": "Validé"
-        },
-    ]
+    const dispatch = useDispatch()
+    const { user, userCandidatures } = useSelector((state) => state.user)
+    const { elections } = useSelector((state) => state.elections)
+    const [electorStats, setElectorStats] = useState(null)
 
     useEffect(() => {
-        //const user = JSON.parse(localStorage.getItem("vote_user"));
-        // if (!user) {
-          // const access = localStorage.getItem("access_token");
-          // console.log(`Bearer ${access}`)
-          httpAxiosClient
-            .get("/elections/",)
-            .then((data) => {
-              // console.log("User data fetched successfully:", data.data);
-              if(data.data.succes){
-                setProchainesElections(data.data.data)
-              }
-    
-              // if(data.data.success){
-              //   localStorage.setItem("vote_user", JSON.stringify(data.data.data));
-              // } else{
-              //   navigate('/Connexion')
-              // }
+        dispatch(fetchElections())
+        dispatch(fetchUserCandidatures())
+        httpAxiosClient
+            .get('/electeur/stats/')
+            .then((res) => {
+                if (res.data?.succes) setElectorStats(res.data.data)
             })
-            .catch((error) => {
-              console.error("Error fetching user data:", error);
-            });
-        // }
-      }, []);
+            .catch((error) => console.error('Error fetching elector stats:', error))
+    }, [])
+
+    const prochainesElections = elections.filter((e) => new Date(e.begin_date) >= new Date()).slice(0, 3)
+    const electionsTerminees = elections.filter((e) => new Date(e.end_date) < new Date()).slice(0, 3)
+
+    const electionName = (candidature) => {
+        const election = elections.find((e) => String(e.id) === String(candidature.election))
+        return election?.name ?? `Élection #${candidature.election}`
+    }
 
     return (
         <div className='space-y-8 w-full'>
             {/* Bandeau de bienvenue */}
             <section className='relative overflow-hidden rounded-2xl bg-indigo-50 px-6 py-8 flex items-center gap-4'>
                 <div className='shrink-0 w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl font-semibold'>
-                    JD
+                    {user?.first_name?.charAt(0)}{user?.last_name?.charAt(0)}
                 </div>
 
                 <div>
                     <h1 className='text-2xl font-bold text-slate-900'>
-                        Bonjour, Jean Doe !
+                        Bonjour, {user?.first_name} {user?.last_name} !
                     </h1>
 
                     <p className='text-slate-500 mt-1'>
@@ -122,19 +65,19 @@ export default function AccueilElecteur() {
                 <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
                     <Card className='px-5 py-6 relative'>
                         <p className='text-sm text-slate-500'>Élections actives</p>
-                        <p className='font-bold text-2xl text-slate-900 mt-2'>3</p>
+                        <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.activeElections ?? '—'}</p>
                         <Timer className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
                     </Card>
 
                     <Card className='px-5 py-6 relative'>
                         <p className='text-sm text-slate-500'>Candidatures en attente</p>
-                        <p className='font-bold text-2xl text-slate-900 mt-2'>2</p>
+                        <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.pendingCandidatures ?? '—'}</p>
                         <Mail className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
                     </Card>
 
                     <Card className='px-5 py-6 relative'>
                         <p className='text-sm text-slate-500'>Élections participées</p>
-                        <p className='font-bold text-2xl text-slate-900 mt-2'>8</p>
+                        <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.participatedElections ?? '—'}</p>
                         <Award className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
                     </Card>
                 </div>
@@ -176,50 +119,63 @@ export default function AccueilElecteur() {
             <section>
                 <h2 className='text-lg font-semibold text-slate-900 mb-4'>Mes candidatures</h2>
 
-                <Card className='overflow-hidden'>
-                    <table className='w-full text-sm'>
-                        <thead className='bg-slate-50 text-slate-500'>
-                            <tr>
-                                <th className='py-3 text-left px-4 font-medium'>Élection</th>
-                                <th className='text-left px-4 font-medium'>Statut</th>
-                                <th className='text-left px-4 font-medium'>Date de soumission</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {candidatures.map((candidature, index) => (
-                                <tr key={index} className='border-t border-slate-100'>
-                                    <td className='py-3 px-4 text-slate-700'>{candidature.election}</td>
-                                    <td className='py-3 px-4'>
-                                        <span className={`text-xs font-medium rounded-full px-2.5 py-1 ${STATUS_STYLES[candidature.status] ?? "bg-slate-100 text-slate-500"}`}>
-                                            {candidature.status}
-                                        </span>
-                                    </td>
-                                    <td className='py-3 px-4 text-slate-500'>{candidature.date}</td>
+                {userCandidatures && userCandidatures.length > 0 ? (
+                    <Card className='overflow-hidden'>
+                        <table className='w-full text-sm'>
+                            <thead className='bg-slate-50 text-slate-500'>
+                                <tr>
+                                    <th className='py-3 text-left px-4 font-medium'>Élection</th>
+                                    <th className='text-left px-4 font-medium'>Statut</th>
+                                    <th className='text-left px-4 font-medium'>Date de soumission</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </Card>
+                            </thead>
+
+                            <tbody>
+                                {userCandidatures.map((candidature, index) => {
+                                    const { label, variant } = getCandidatureStatus(candidature)
+                                    return (
+                                        <tr key={index} className='border-t border-slate-100'>
+                                            <td className='py-3 px-4 text-slate-700'>{electionName(candidature)}</td>
+                                            <td className='py-3 px-4'>
+                                                <Badge variant={variant}>{label}</Badge>
+                                            </td>
+                                            <td className='py-3 px-4 text-slate-500'>{FormatDate.fromIsoToString(candidature.date_candidature)}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </Card>
+                ) : (
+                    <div className='rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center'>
+                        <p className='text-slate-500 text-sm'>Aucune candidature déposée pour le moment.</p>
+                    </div>
+                )}
             </section>
 
             {/* RESULTATAS RECENTS  */}
             <section>
                 <h2 className='text-lg font-semibold text-slate-900 mb-4'>Résultats récents</h2>
 
-                <ul className='flex flex-col gap-3'>
-                    {resultats.map((res, index) => (
-                        <li key={index} className='bg-white rounded-2xl ring-1 ring-slate-200 shadow-sm p-4 flex items-center gap-3'>
-                            <div className='shrink-0 w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center'>
-                                <CheckCircle2 className='w-4 h-4 text-emerald-700' strokeWidth={2}/>
-                            </div>
-                            <div>
-                                <p className='text-sm font-semibold text-slate-900 mb-1'>{res.name}</p>
-                                <p className='text-sm text-slate-500'>{"Conclut le " + res.date + " - " + res.status}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                {electionsTerminees.length > 0 ? (
+                    <ul className='flex flex-col gap-3'>
+                        {electionsTerminees.map((election, index) => (
+                            <li key={index} className='bg-white rounded-2xl ring-1 ring-slate-200 shadow-sm p-4 flex items-center gap-3'>
+                                <div className='shrink-0 w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center'>
+                                    <CheckCircle2 className='w-4 h-4 text-emerald-700' strokeWidth={2}/>
+                                </div>
+                                <div>
+                                    <p className='text-sm font-semibold text-slate-900 mb-1'>{election.name}</p>
+                                    <p className='text-sm text-slate-500'>{"Conclue le " + FormatDate.fromIsoToString(election.end_date)}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div className='rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center'>
+                        <p className='text-slate-500 text-sm'>Aucun résultat disponible pour le moment.</p>
+                    </div>
+                )}
             </section>
 
         </div>
