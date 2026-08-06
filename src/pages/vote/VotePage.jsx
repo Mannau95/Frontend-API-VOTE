@@ -1,53 +1,12 @@
 // VotePage.jsx
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { ChevronDown, ChevronUp, CheckCircle2, Loader2 } from "lucide-react";
 import Card from "../../Components/ui/Card.jsx";
-
-// ── Données ───────────────────────────────────────────────────────────────────
-const ELECTION = {
-    titre: "Élection des Délégués du Personnel 2024",
-    description:
-        "Votez pour élire les représentants du personnel qui défendront vos intérêts au sein de l'entreprise. Votre participation est essentielle pour garantir une représentation équitable.",
-    instructions:
-        "Veuillez lire attentivement les programmes des candidats avant de faire votre choix. Sélectionnez un seul candidat en cliquant sur le bouton radio correspondant. Vous pourrez confirmer votre vote avant la soumission finale. Une fois confirmé, votre vote sera définitif et ne pourra pas être modifié.",
-};
-
-const CANDIDATS = [
-    {
-        id: "emilie",
-        nom: "Émilie Dubois",
-        role: "Délégué Principal",
-        avatar: "https://i.pravatar.cc/150?img=47",
-        programme:
-            "Je m'engage à défendre les conditions de travail, améliorer le dialogue social et représenter chaque employé avec transparence et équité.",
-    },
-    {
-        id: "marc",
-        nom: "Marc Laurent",
-        role: "Délégué Suppléant",
-        avatar: "https://i.pravatar.cc/150?img=12",
-        programme:
-            "Mon objectif est de renforcer la communication entre la direction et les équipes, et d'œuvrer pour un environnement de travail sain et inclusif.",
-    },
-    {
-        id: "sophie",
-        nom: "Sophie Lefevre",
-        role: "Délégué Principal",
-        avatar: "https://i.pravatar.cc/150?img=32",
-        programme:
-            "Forte de 8 ans d'expérience syndicale, je porterai vos préoccupations avec détermination et ferai valoir vos droits auprès de la direction.",
-    },
-    {
-        id: "thomas",
-        nom: "Thomas Bernard",
-        role: "Délégué Suppléant",
-        avatar: "https://i.pravatar.cc/150?img=57",
-        programme:
-            "Engagé pour la justice sociale et l'égalité au travail, je travaillerai à améliorer les conditions pour tous les collaborateurs.",
-    },
-];
-// ─────────────────────────────────────────────────────────────────────────────
+import Button from "../../Components/ui/Button.jsx";
+import { httpAxiosClient } from "../../client/httpClient.js";
+import { fetchElections } from "../../store/electionSlice.js";
 
 function CandidatCard({ candidat, selected, onSelect }) {
     const [open, setOpen] = useState(false);
@@ -61,38 +20,35 @@ function CandidatCard({ candidat, selected, onSelect }) {
             }`}
             onClick={onSelect}
         >
-            {/* Avatar */}
-            <img
-                src={candidat.avatar}
-                alt={candidat.nom}
-                className="w-20 h-20 rounded-full object-cover border-2 border-white shadow"
-            />
-
-            {/* Nom & rôle */}
-            <div className="text-center">
-                <p className={`text-sm font-semibold ${selected ? "text-indigo-700" : "text-gray-900"}`}>
-                    {candidat.nom}
-                </p>
-                <p className="text-xs text-gray-400">{candidat.role}</p>
+            <div className="w-20 h-20 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl font-semibold border-2 border-white shadow">
+                {candidat.candidate_name?.charAt(0) ?? "?"}
             </div>
 
-            {/* Programme toggle */}
-            <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
-                className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 transition-colors"
-            >
-                Programme du candidat
-                {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-            </button>
-
-            {open && (
-                <p className="text-xs text-gray-600 text-center leading-relaxed border-t border-gray-100 pt-3 w-full">
-                    {candidat.programme}
+            <div className="text-center">
+                <p className={`text-sm font-semibold ${selected ? "text-indigo-700" : "text-gray-900"}`}>
+                    {candidat.candidate_name}
                 </p>
+            </div>
+
+            {candidat.description && (
+                <>
+                    <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+                        className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 transition-colors"
+                    >
+                        Programme du candidat
+                        {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                    </button>
+
+                    {open && (
+                        <p className="text-xs text-gray-600 text-center leading-relaxed border-t border-gray-100 pt-3 w-full">
+                            {candidat.description}
+                        </p>
+                    )}
+                </>
             )}
 
-            {/* Radio */}
             <label
                 className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer mt-1"
                 onClick={(e) => e.stopPropagation()}
@@ -111,66 +67,136 @@ function CandidatCard({ candidat, selected, onSelect }) {
     );
 }
 
+// Fetches every page of the candidates list (backend paginates a handful per page).
+async function fetchAllCandidates(electionId) {
+    let url = `/elections/${electionId}/candidates/`;
+    let rows = [];
+    while (url) {
+        const res = await httpAxiosClient.get(url);
+        rows = rows.concat(res.data?.data?.data ?? []);
+        url = res.data?.data?.next ?? null;
+    }
+    return rows;
+}
+
 export default function VotePage() {
-    const { handleSubmit, formState: { errors } } = useForm();
+    const { electionId } = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { elections } = useSelector((state) => state.elections);
+    const election = elections.find((e) => String(e.id) === String(electionId));
+
+    const [candidats, setCandidats] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState("");
     const [selected, setSelected] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+    const [submitted, setSubmitted] = useState(false);
+
+    useEffect(() => {
+        if (!elections.length) dispatch(fetchElections());
+    }, []);
+
+    useEffect(() => {
+        setLoading(true);
+        setLoadError("");
+        fetchAllCandidates(electionId)
+            .then(setCandidats)
+            .catch((error) => setLoadError(error.message || "Impossible de charger les candidats."))
+            .finally(() => setLoading(false));
+    }, [electionId]);
 
     const onSubmit = () => {
         if (!selected) return;
-        console.log("Vote soumis pour :", selected);
+        setSubmitting(true);
+        setSubmitError("");
+        httpAxiosClient
+            .post("/votes/", { election: electionId, candidate: selected, date_vote: new Date().toISOString() })
+            .then(() => setSubmitted(true))
+            .catch((error) => setSubmitError(error.message || "Le vote n'a pas pu être enregistré."))
+            .finally(() => setSubmitting(false));
     };
+
+    if (submitted) {
+        return (
+            <div className="min-h-screen bg-gray-50 font-sans flex items-center justify-center">
+                <Card className="p-8 max-w-md text-center flex flex-col items-center gap-3">
+                    <CheckCircle2 className="w-12 h-12 text-emerald-600" />
+                    <h1 className="text-lg font-bold text-gray-900">Votre vote a bien été enregistré</h1>
+                    <p className="text-sm text-gray-500">Merci pour votre participation. Votre vote est définitif et ne peut plus être modifié.</p>
+                    <Button variant="primary" onClick={() => navigate("../../elections")}>
+                        Retour aux élections
+                    </Button>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
             <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col gap-6">
 
-                {/* Titre */}
                 <h1 className="text-2xl font-bold text-gray-900">
-                    Voter pour : {ELECTION.titre}
+                    Voter pour : {election?.name ?? "Élection"}
                 </h1>
 
-                {/* Détails élection */}
-                <Card className="p-5 flex flex-col gap-3">
-                    <h2 className="text-sm font-semibold text-gray-800">Détails de l'Élection</h2>
-                    <p className="text-sm text-gray-600 leading-relaxed">{ELECTION.description}</p>
-                    <div>
-                        <p className="text-sm font-semibold text-gray-800 mb-1">Instructions de Vote :</p>
-                        <p className="text-sm text-gray-600 leading-relaxed">{ELECTION.instructions}</p>
-                    </div>
-                </Card>
+                {election?.description && (
+                    <Card className="p-5 flex flex-col gap-3">
+                        <h2 className="text-sm font-semibold text-gray-800">Détails de l'Élection</h2>
+                        <p className="text-sm text-gray-600 leading-relaxed">{election.description}</p>
+                    </Card>
+                )}
 
-                {/* Candidats */}
                 <div>
                     <h2 className="text-base font-semibold text-gray-900 mb-4">Candidats</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {CANDIDATS.map((c) => (
-                            <CandidatCard
-                                key={c.id}
-                                candidat={c}
-                                selected={selected === c.id}
-                                onSelect={() => setSelected(c.id)}
-                            />
-                        ))}
-                    </div>
-                    {!selected && errors.candidat && (
-                        <p className="text-xs text-red-500 mt-2">Veuillez sélectionner un candidat.</p>
+
+                    {loading && (
+                        <div className="flex items-center gap-2 text-sm text-slate-500 py-10 justify-center">
+                            <Loader2 className="w-4 h-4 animate-spin" /> Chargement des candidats...
+                        </div>
+                    )}
+
+                    {!loading && loadError && (
+                        <p className="text-sm text-red-600 text-center py-10">{loadError}</p>
+                    )}
+
+                    {!loading && !loadError && candidats.length === 0 && (
+                        <p className="text-sm text-slate-500 text-center py-10">
+                            Aucun candidat n'a encore été validé pour cette élection.
+                        </p>
+                    )}
+
+                    {!loading && !loadError && candidats.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {candidats.map((c) => (
+                                <CandidatCard
+                                    key={c.id}
+                                    candidat={c}
+                                    selected={selected === c.id}
+                                    onSelect={() => setSelected(c.id)}
+                                />
+                            ))}
+                        </div>
                     )}
                 </div>
 
-                {/* Bouton soumettre */}
-                <div className="flex justify-center pb-4">
-                    <button
-                        onClick={handleSubmit(onSubmit)}
-                        disabled={!selected}
-                        className={`px-8 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                            selected
-                                ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                                : "bg-indigo-200 text-indigo-400 cursor-not-allowed"
-                        }`}
-                    >
-                        Soumettre mon vote
-                    </button>
-                </div>
+                {submitError && (
+                    <p className="text-sm text-red-600 text-center">{submitError}</p>
+                )}
+
+                {!loading && !loadError && candidats.length > 0 && (
+                    <div className="flex justify-center pb-4">
+                        <Button
+                            variant="primary"
+                            disabled={!selected || submitting}
+                            onClick={onSubmit}
+                            className="px-8 py-2.5"
+                        >
+                            {submitting ? "Envoi en cours..." : "Soumettre mon vote"}
+                        </Button>
+                    </div>
+                )}
 
             </div>
         </div>
