@@ -26,6 +26,9 @@ import VotePage from "./pages/vote/VotePage.jsx";
 import ModifyElectionPage from "./pages/election/ModifyElectionPage.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import AbonnementPage from "./pages/AbonnementPage.jsx";
+import OrganisationPage from "./pages/OrganisationPage.jsx";
+import PaiementPage from "./pages/PaiementPage.jsx";
 
 export default function App() {
   return (
@@ -36,6 +39,9 @@ export default function App() {
             <Route path="/" element={<Acceuil />} />
             <Route path="/Connexion" element={<Connexion />} />
             <Route path="/Sinscrire" element={<Sinscrire />} />
+            <Route path="/abonnement" element={<ProtectedRoute role="is_supervisor"><AbonnementPage /></ProtectedRoute>} />
+            <Route path="/paiement" element={<ProtectedRoute role="is_supervisor"><PaiementPage /></ProtectedRoute>} />
+            <Route path="/organisation" element={<ProtectedRoute role="is_supervisor"><OrganisationPage /></ProtectedRoute>} />
             {/*<Route path="/MotDePasse" element={<MotDePasse />} />*/}
             <Route path="/startSetPassword" element={<StartSetPassword />} />
             <Route path="/setPassword/:token" element={<SetPassword />} />

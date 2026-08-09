@@ -28,7 +28,7 @@ export default function Sinscrire() {
             await httpAxiosClient.post("/auth/signup/", form);
             const result = await dispatch(login({ email: form.email, password: form.password }));
             if (login.fulfilled.match(result)) {
-                navigate(SUPERVISOR_DASHBOARD);
+                navigate("/abonnement");
             } else {
                 // Le compte a bien été créé, mais la connexion automatique a échoué : on
                 // renvoie l'utilisateur se connecter manuellement plutôt que de bloquer.
