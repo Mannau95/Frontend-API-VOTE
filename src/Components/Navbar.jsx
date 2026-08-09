@@ -29,9 +29,14 @@ const Navbar = () => {
             <NavLink to="/" className={linkClass}>Accueil</NavLink>
           </li>
           {user?.is_supervisor && (
-            <li>
-              <NavLink to="/supervision" className={linkClass}>Créer une élection</NavLink>
-            </li>
+            <>
+              <li>
+                <NavLink to="/supervision" className={linkClass}>Créer une élection</NavLink>
+              </li>
+              <li>
+                <NavLink to="/organisation" className={linkClass}>Mon organisation</NavLink>
+              </li>
+            </>
           )}
           <li>
             <NavLink to="/electeur" className={linkClass}>Participer à une élection</NavLink>
@@ -54,6 +59,9 @@ const Navbar = () => {
 
             {isMenuOpen && (
               <ul className="absolute right-0 mt-2 w-44 rounded-lg bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 py-1 z-10">
+                <li>
+                  <a onClick={() => navigate('/organisation')} className="block px-4 py-2 text-sm hover:bg-slate-50 cursor-pointer">Mon organisation</a>
+                </li>
                 <li>
                   <a className="block px-4 py-2 text-sm hover:bg-slate-50 cursor-pointer">Profil</a>
                 </li>
