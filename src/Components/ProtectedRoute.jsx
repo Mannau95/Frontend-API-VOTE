@@ -1,22 +1,17 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export default function ProtectedRoute({children, role= '*'}) {
-    const navigate = useNavigate()
-    useEffect(
-        ()=>{
-            if(!localStorage){
-                alert('No localStorage on this browser! Call tech team')
-            }else{
-                const user = JSON.parse(localStorage.getItem('vote_user'))
-                if(!(user && (user[role] || role === '*' ) ) ){
-                    navigate('/Connexion')
-                }
-            }
-        }, []
-    )
-    
-  return (
-    <>{children}</>
-  )
+export default function ProtectedRoute({ children, role = "*" }) {
+    const { user } = useSelector((state) => state.user);
+    const location = useLocation();
+
+    if (!user) {
+        return <Navigate to="/Connexion" replace state={{ from: location }} />;
+    }
+
+    if (role !== "*" && !user[role]) {
+        return <Navigate to="/" replace />;
+    }
+
+    return children ? children : <Outlet />;
 }

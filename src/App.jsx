@@ -24,6 +24,7 @@ import DetailsVoteAdmin from "./pages/AdministrationElection/DetailsVoteAdmin.js
 import ElectionDetailPage from "./pages/election/ElectionDetailPage.jsx";
 import VotePage from "./pages/vote/VotePage.jsx";
 import ModifyElectionPage from "./pages/election/ModifyElectionPage.jsx";
+import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 
 export default function App() {
   return (
@@ -38,7 +39,7 @@ export default function App() {
             <Route path="/startSetPassword" element={<StartSetPassword />} />
             <Route path="/setPassword/:token" element={<SetPassword />} />
 
-            <Route path="/supervision" element={<DashboardSuperviseur />}>
+            <Route path="/supervision" element={<ProtectedRoute role="is_supervisor"><DashboardSuperviseur /></ProtectedRoute>}>
               <Route index element={<AccueilSuperviseur />} />
 
               <Route path="candidats/" element={<GestionCandidatures />}/>
@@ -49,7 +50,7 @@ export default function App() {
               <Route path="elections/:id/details" element={<DetailsVoteAdmin />}/>
               <Route path="elections/:id/edit" element={<ModifyElectionPage />} />
             </Route>
-            <Route path="/electeur" element={<DashboardElector />}>
+            <Route path="/electeur" element={<ProtectedRoute role="is_elector"><DashboardElector /></ProtectedRoute>}>
               <Route index element={<AccueilElecteur />} />
               <Route path="candidatures/" element={<MesCandidatures />} />
               <Route path="candidatures/:candidatureId" element={<CandidatureDetail />} />
