@@ -29,11 +29,11 @@ export function TextInput({ label, hint, error, registration, ...props }) {
     );
 }
 
-export function DateInput({ label, hint, error, registration, ...props }) {
+export function DateInput({ label, hint, error, registration, type = "date", ...props }) {
     return (
         <FieldWrapper label={label} hint={hint} error={error}>
             <input
-                type="date"
+                type={type}
                 className={`w-full border rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition ${
                     error ? "border-red-400 bg-red-50" : "border-gray-300 bg-white"
                 }`}

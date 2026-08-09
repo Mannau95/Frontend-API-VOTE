@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {httpAxiosClient} from "../../client/httpClient.js";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchElections} from "../../store/electionSlice.js";
+import {deleteElection, fetchElections} from "../../store/electionSlice.js";
 import {Eye, Pen, Trash} from "lucide-react";
 import CustomTable from "../../Components/table/CustomTable.jsx";
 import TablePagination from "../../Components/table/TablePagination.jsx";
@@ -16,6 +16,7 @@ const AdminElectionPage = () => {
     const {elections} = useSelector(state => state.elections);
     const [filtered, setFiltered] = useState([]);
     const dispatch = useDispatch()
+    const navigate = useNavigate();
     const [isEelectionModal, setIsEelectionModal] = useState(false);
     const openElectionModal = () => setIsEelectionModal(true);
     const closeElectionModal = () => setIsEelectionModal(false);
@@ -35,20 +36,20 @@ const AdminElectionPage = () => {
         {title: "Actions", code: "actions",
             render: (row) => (
                 <div>
-                    <Link to={":id/details".replace(":id", row.id)}>
-                        <button onClick={() => {}} className="text-indigo-600 hover:text-indigo-700 p-1.5 mr-1">
+                    <Link to={`/supervision/elections/${row.id}/details`}>
+                        <button className="text-indigo-600 hover:text-indigo-700 p-1.5 mr-1">
                             <Eye size={16}/>
                         </button>
                     </Link>
                     <button
-                        onClick={() => {}}
+                        onClick={() => navigate(`/supervision/elections/${row.id}/edit`)}
                         className="text-slate-500 hover:text-slate-700 p-1.5 mr-1"
                     >
                         <Pen size={16} />
                     </button>
                     <button
                         onClick={() => {
-                            // handleDelete(row.id)
+                            dispatch(deleteElection(row.id));
                         }}
                         className="text-red-600 hover:text-red-700 p-1.5"
                     >

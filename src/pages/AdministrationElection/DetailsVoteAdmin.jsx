@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Settings, Loader2} from "lucide-react";
-import {useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {httpAxiosClient} from "../../client/httpClient.js";
 import {FormatDate} from "../../utils/formatDate.js";
@@ -12,6 +12,7 @@ import Button from "../../Components/ui/Button.jsx";
 
 function DetailsVoteAdmin() {
     const {id} = useParams();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { elections } = useSelector( state => state.elections);
     const [election, setElection] = useState(null);
@@ -61,7 +62,7 @@ function DetailsVoteAdmin() {
             <div className="flex justify-between mb-8">
                 <h2>Détails de l'Election</h2>
 
-                <button className="btn bg-blue-500" onClick={() => {}}>
+                <button className="btn bg-blue-500" onClick={() => navigate(`/supervision/elections/${id}/edit`)}>
                     <Settings size={16}/>
                     Modifier l'élection
                 </button>
