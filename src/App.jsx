@@ -25,6 +25,7 @@ import ElectionDetailPage from "./pages/election/ElectionDetailPage.jsx";
 import VotePage from "./pages/vote/VotePage.jsx";
 import ModifyElectionPage from "./pages/election/ModifyElectionPage.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 export default function App() {
   return (
@@ -57,7 +58,7 @@ export default function App() {
               <Route path="elections/" element={<ElectionsActuellesElecteur />} />
               <Route path="elections/:electionId/take" element={<ElectionDetailPage />} />
               <Route path="elections/:electionId/voter" element={<VotePage />} />
-              <Route path="profile/" element={<div>Reglages de mon profile</div>} />
+              <Route path="profile/" element={<ProfilePage />} />
               <Route index element={<AccueilElecteur />} />
             </Route>
             <Route path="/*" element={< NotFound/>}/>

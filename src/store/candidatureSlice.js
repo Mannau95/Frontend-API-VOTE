@@ -61,7 +61,8 @@ export const reviewCandidature = createAsyncThunk(
         status,
         reject_message,
       })
-      return { ...response.data, id: candidatureId }
+      const payload = response.data?.data ?? response.data
+      return { ...(payload ?? {}), id: candidatureId }
     } catch (error) {
       return thunkApi.rejectWithValue(error)
     }

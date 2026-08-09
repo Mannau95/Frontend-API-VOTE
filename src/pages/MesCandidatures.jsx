@@ -1,27 +1,28 @@
-import React from 'react'
-import ElectionCard from '../Components/ElectionCard'
-import CandidatureCard from '../Components/CandidatureCard.jsx'
-import { useEffect } from 'react'
-import { useState } from 'react'
-import { httpAxiosClient } from '../client/httpClient'
-import {useDispatch, useSelector} from "react-redux";
-import {fetchElections} from "../store/electionSlice.js";
-import {fetchUserCandidatures} from "../store/userSlice.js";
-import {Link} from "react-router-dom";
+import React, { useEffect } from 'react';
+import ElectionCard from '../Components/ElectionCard';
+import CandidatureCard from '../Components/CandidatureCard.jsx';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchElections } from "../store/electionSlice.js";
+import { fetchUserCandidatures } from "../store/userSlice.js";
+import { Link } from "react-router-dom";
 import { Info, CheckCircle2, CalendarDays } from "lucide-react";
 
 export default function MesCandidatures() {
-    const {elections, loading, error} = useSelector(state => state.elections)
-    const {userCandidatures} = useSelector(state => state.user)
-    const dispatch = useDispatch()
+    const { elections, loading: electionsLoading, error: electionsError } = useSelector((state) => state.elections);
+    const { userCandidatures, loading: userCandidaturesLoading, error: userCandidaturesError } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
-    useEffect(()=>{
-        dispatch(fetchElections()).unwrap()
+    useEffect(() => {
+        dispatch(fetchElections())
+            .unwrap()
             .catch((error) => {
                 console.error("Error fetching candidatures data:", error);
             });
-        dispatch(fetchUserCandidatures()).unwrap()
-    }, [])
+        dispatch(fetchUserCandidatures()).unwrap();
+    }, [dispatch]);
+
+    const isLoading = electionsLoading || userCandidaturesLoading;
+    const hasError = Boolean(electionsError || userCandidaturesError);
 
     return (
         <div className='min-h-screen bg-slate-50'>
@@ -59,7 +60,15 @@ export default function MesCandidatures() {
                         )}
                     </div>
 
-                    {userCandidatures && userCandidatures.length > 0 ? (
+                    {isLoading ? (
+                        <div className='rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center text-sm text-slate-500'>
+                            Chargement de vos candidatures…
+                        </div>
+                    ) : hasError ? (
+                        <div className='rounded-2xl border border-red-200 bg-red-50 px-6 py-10 text-center text-sm text-red-600'>
+                            Impossible de charger vos candidatures pour le moment.
+                        </div>
+                    ) : userCandidatures && userCandidatures.length > 0 ? (
                         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4'>
                             {userCandidatures.map((cand) => (
                                 <Link
@@ -96,7 +105,7 @@ export default function MesCandidatures() {
                     </div>
 
                     {elections && elections.length > 0 ? (
-                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-$ gap-4'>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
                             {elections.map((election) => (
                                 <Link
                                     to={`../elections/${election.id}/take`}

@@ -1,24 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import StatisticCardList from "../Components/StatisticCardList.jsx";
 import NextElectionsGroupList from "../Components/NextElectionsGroupList.jsx";
-import {httpAxiosClient} from "../client/httpClient.js";
+import { httpAxiosClient } from "../client/httpClient.js";
 import SubtitleLine from "../Components/SubtitleLine.jsx";
 import CustomTable from "../Components/table/CustomTable.jsx";
 import VoteGroupList from "../Components/VoteGroupList.jsx";
-import {fetchElections} from "../store/electionSlice.js";
-import {fetchElectors} from "../store/userSlice.js";
-import {fetchCandidatures} from "../store/candidatureSlice.js";
-import {FormatDate} from "../utils/formatDate.js";
+import { fetchElections } from "../store/electionSlice.js";
+import { fetchElectors } from "../store/userSlice.js";
+import { fetchCandidatures } from "../store/candidatureSlice.js";
+import { FormatDate } from "../utils/formatDate.js";
 
 function AccueilSuperviseur() {
-    const {user} = useSelector((state) => state.user);
-    const {elections} = useSelector((state) => state.elections);
+    const {user, loading: userLoading, error: userError} = useSelector((state) => state.user);
+    const {elections, loading: electionsLoading, error: electionsError} = useSelector((state) => state.elections);
     const {electors} = useSelector((state) => state.user);
-    const {candidatures} = useSelector((state) => state.candidatures);
+    const {candidatures, loading: candidaturesLoading, error: candidaturesError} = useSelector((state) => state.candidatures);
     const dispatch = useDispatch();
 
     const [orgStats, setOrgStats] = useState(null);
+    const [statsLoading, setStatsLoading] = useState(true);
+    const [statsError, setStatsError] = useState(null);
 
     useEffect(() => {
         dispatch(fetchElections());
@@ -27,28 +29,36 @@ function AccueilSuperviseur() {
         httpAxiosClient
             .get("/organisations/me/stats/")
             .then((res) => {
-                if (res.data?.succes) setOrgStats(res.data.data);
+                if (res.data?.succes) {
+                    setOrgStats(res.data.data);
+                } else {
+                    setStatsError(res.data?.details || "Impossible de charger les statistiques.");
+                }
             })
-            .catch((error) => console.error("Error fetching organisation stats:", error));
-    }, []);
+            .catch((error) => {
+                console.error("Error fetching organisation stats:", error);
+                setStatsError("Impossible de charger les statistiques pour le moment.");
+            })
+            .finally(() => setStatsLoading(false));
+    }, [dispatch]);
 
     const stats = [
         {
-            title: "Elections Actuelles",
+            title: "Élections actives",
             value: orgStats?.activeElections ?? "—",
             description: "Élections en cours dans votre organisation",
         },
         {
-            title: "Candidatures En Attente",
+            title: "Candidatures en attente",
             value: orgStats?.pendingCandidatures ?? "—",
             description: "En attente de votre validation",
         },
         {
-            title: "Candidats Actifs",
+            title: "Candidats actifs",
             value: orgStats?.activeCandidates ?? "—",
             description: "Candidatures approuvées",
         },
-    ]
+    ];
 
     const candidateName = (candidature) => {
         const candidate = electors.find((u) => u.id === candidature.candidate);
@@ -83,28 +93,35 @@ function AccueilSuperviseur() {
     ]
 
     const candidaturesEnAttente = candidatures.filter((c) => c.status === "en_attente");
+    const isLoading = userLoading || electionsLoading || candidaturesLoading || statsLoading;
+    const hasError = Boolean(userError || electionsError || candidaturesError || statsError);
 
     return (
         <div className="space-y-6 w-full">
             <section>
                 <div className="flex items-center gap-x-4 w-full bg-indigo-50 p-4 rounded-lg">
-                    {/*Image*/}
-                    <div className="w-25 rounded-full avatar">
-                        <img
-                            alt="Profil image" className='w-20 rounded-full'
-                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                        />
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+                        <span className="text-lg font-semibold">{(user?.first_name?.[0] || "U")}{(user?.last_name?.[0] || "")}</span>
                     </div>
                     <div className="w-full">
-                        <h2>Bonjour, {user?.first_name} {user?.last_name}</h2>
-                        <p className="text-lg text-gray-600">
-                            Bienvenue sur votre tableau de bord Super Vote. <br />
-                            Gérez vos candidatures, suivez les élections en cours et consultez les résultats récents.
+                        <h2 className="text-lg font-semibold text-slate-900">Bonjour, {user?.first_name} {user?.last_name}</h2>
+                        <p className="text-sm text-gray-600">
+                            Bienvenue sur votre tableau de bord Super Vote. Gérez vos candidatures, suivez les élections en cours et consultez les résultats récents.
                         </p>
                     </div>
                 </div>
 
-                <StatisticCardList title="Statistiques clés" items={stats} />
+                {isLoading ? (
+                    <div className="rounded-lg border border-slate-200 bg-white px-6 py-10 text-center text-sm text-slate-500">
+                        Chargement de votre tableau de bord…
+                    </div>
+                ) : hasError ? (
+                    <div className="rounded-lg border border-red-200 bg-red-50 px-6 py-10 text-center text-sm text-red-600">
+                        Impossible de charger certaines informations de votre tableau de bord.
+                    </div>
+                ) : (
+                    <StatisticCardList title="Statistiques clés" items={stats} />
+                )}
             </section>
             <section>
                 <div className="shadow-sm rounded-lg px-5">
@@ -116,7 +133,21 @@ function AccueilSuperviseur() {
             <section>
                 <div className="shadow-sm rounded-lg px-5">
                     <SubtitleLine title="Candidatures en attente" actionTitle="Gérer les candidatures" actionRoute="candidats" />
-                    <CustomTable columns={candidaturesColumns} rows={candidaturesEnAttente} />
+                    {isLoading ? (
+                        <div className="rounded-lg border border-slate-200 bg-white px-6 py-8 text-center text-sm text-slate-500">
+                            Chargement des candidatures…
+                        </div>
+                    ) : hasError ? (
+                        <div className="rounded-lg border border-red-200 bg-red-50 px-6 py-8 text-center text-sm text-red-600">
+                            Impossible de charger les candidatures pour le moment.
+                        </div>
+                    ) : candidaturesEnAttente.length > 0 ? (
+                        <CustomTable columns={candidaturesColumns} rows={candidaturesEnAttente} />
+                    ) : (
+                        <div className="rounded-lg border border-dashed border-slate-300 bg-white px-6 py-8 text-center text-sm text-slate-500">
+                            Aucune candidature en attente pour le moment.
+                        </div>
+                    )}
                 </div>
             </section>
 

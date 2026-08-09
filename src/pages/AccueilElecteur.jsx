@@ -13,9 +13,11 @@ import { Timer, Mail, CheckCircle2, CalendarDays, Award } from 'lucide-react'
 
 export default function AccueilElecteur() {
     const dispatch = useDispatch()
-    const { user, userCandidatures } = useSelector((state) => state.user)
-    const { elections } = useSelector((state) => state.elections)
+    const { user, userCandidatures, loading: userLoading, error: userError } = useSelector((state) => state.user)
+    const { elections, loading: electionsLoading, error: electionsError } = useSelector((state) => state.elections)
     const [electorStats, setElectorStats] = useState(null)
+    const [statsLoading, setStatsLoading] = useState(true)
+    const [statsError, setStatsError] = useState(null)
 
     useEffect(() => {
         dispatch(fetchElections())
@@ -23,13 +25,23 @@ export default function AccueilElecteur() {
         httpAxiosClient
             .get('/electeur/stats/')
             .then((res) => {
-                if (res.data?.succes) setElectorStats(res.data.data)
+                if (res.data?.succes) {
+                    setElectorStats(res.data.data)
+                } else {
+                    setStatsError(res.data?.details || 'Impossible de charger les statistiques.')
+                }
             })
-            .catch((error) => console.error('Error fetching elector stats:', error))
-    }, [])
+            .catch((error) => {
+                console.error('Error fetching elector stats:', error)
+                setStatsError('Impossible de charger les statistiques pour le moment.')
+            })
+            .finally(() => setStatsLoading(false))
+    }, [dispatch])
 
     const prochainesElections = elections.filter((e) => new Date(e.begin_date) >= new Date()).slice(0, 3)
     const electionsTerminees = elections.filter((e) => new Date(e.end_date) < new Date()).slice(0, 3)
+    const isLoading = userLoading || electionsLoading || statsLoading
+    const hasError = Boolean(userError || electionsError || statsError)
 
     const electionName = (candidature) => {
         const election = elections.find((e) => String(e.id) === String(candidature.election))
@@ -62,25 +74,35 @@ export default function AccueilElecteur() {
                 <h2 className='text-lg font-semibold text-slate-900 mb-4'>
                     Statistiques phares
                 </h2>
-                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-                    <Card className='px-5 py-6 relative'>
-                        <p className='text-sm text-slate-500'>Élections actives</p>
-                        <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.activeElections ?? '—'}</p>
-                        <Timer className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
-                    </Card>
+                {isLoading ? (
+                    <div className='rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center text-sm text-slate-500'>
+                        Chargement de votre tableau de bord…
+                    </div>
+                ) : hasError ? (
+                    <div className='rounded-2xl border border-red-200 bg-red-50 px-6 py-10 text-center text-sm text-red-600'>
+                        Impossible de charger certaines informations de votre tableau de bord.
+                    </div>
+                ) : (
+                    <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+                        <Card className='px-5 py-6 relative'>
+                            <p className='text-sm text-slate-500'>Élections actives</p>
+                            <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.activeElections ?? '—'}</p>
+                            <Timer className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
+                        </Card>
 
-                    <Card className='px-5 py-6 relative'>
-                        <p className='text-sm text-slate-500'>Candidatures en attente</p>
-                        <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.pendingCandidatures ?? '—'}</p>
-                        <Mail className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
-                    </Card>
+                        <Card className='px-5 py-6 relative'>
+                            <p className='text-sm text-slate-500'>Candidatures en attente</p>
+                            <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.pendingCandidatures ?? '—'}</p>
+                            <Mail className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
+                        </Card>
 
-                    <Card className='px-5 py-6 relative'>
-                        <p className='text-sm text-slate-500'>Élections participées</p>
-                        <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.participatedElections ?? '—'}</p>
-                        <Award className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
-                    </Card>
-                </div>
+                        <Card className='px-5 py-6 relative'>
+                            <p className='text-sm text-slate-500'>Élections participées</p>
+                            <p className='font-bold text-2xl text-slate-900 mt-2'>{electorStats?.participatedElections ?? '—'}</p>
+                            <Award className='w-6 h-6 text-indigo-600 absolute top-6 right-5' strokeWidth={2}/>
+                        </Card>
+                    </div>
+                )}
             </section>
 
             {/* PROCHAINES ELECTIONS */}

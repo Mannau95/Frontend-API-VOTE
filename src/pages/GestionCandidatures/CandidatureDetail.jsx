@@ -139,6 +139,12 @@ function CandidatureDetail() {
                     reject_message: rejectMessage.trim(),
                 })).unwrap();
             }
+
+            if (isAdmin) {
+                await dispatch(fetchCandidatures());
+            } else {
+                await dispatch(fetchUserCandidatures());
+            }
             closeConfirmModal();
         } catch (err) {
             console.error("Erreur lors de la mise à jour du statut de la candidature.", err);

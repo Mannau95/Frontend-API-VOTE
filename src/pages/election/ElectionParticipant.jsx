@@ -18,6 +18,15 @@ function ParticipantRow({ name, role, status }) {
 }
 
 export function ParticipantsTable({ voters, candidates, participants, onManage }) {
+    const handleManage = () => {
+        if (typeof onManage === "function") {
+            onManage();
+            return;
+        }
+
+        window.alert("La gestion des participants sera disponible prochainement.");
+    };
+
     return (
         <Card className="p-6">
             <SectionTitle>Participants</SectionTitle>
@@ -42,7 +51,7 @@ export function ParticipantsTable({ voters, candidates, participants, onManage }
                 </table>
             </div>
             <button
-                onClick={onManage}
+                onClick={handleManage}
                 className="mt-4 w-full border border-gray-200 rounded-lg py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
             >
                 Gérer les Participants
