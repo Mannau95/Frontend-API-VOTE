@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Card from "../Components/ui/Card.jsx";
 import Button from "../Components/ui/Button.jsx";
-import { Building2, ArrowRight, Crown, CreditCard, RefreshCw, XCircle } from "lucide-react";
+import { Building2, ArrowRight, Crown, CreditCard } from "lucide-react";
 
 const PLAN_DETAILS = {
     starter: {
@@ -47,7 +47,10 @@ export default function OrganisationPage() {
                             Gérez votre plan, les limites d’usage et les prochaines étapes d’onboarding.
                         </p>
                     </div>
-                    <Button variant="secondary" onClick={() => navigate("/abonnement")}>Modifier le plan</Button>
+                    <div className="flex gap-2">
+                        <Button variant="secondary" onClick={() => navigate("/abonnement")}>Modifier le plan</Button>
+                        <Button variant="secondary" onClick={() => navigate("/organisation/equipe")}>Gérer l’équipe</Button>
+                    </div>
                 </div>
 
                 <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">

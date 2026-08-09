@@ -29,6 +29,7 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import AbonnementPage from "./pages/AbonnementPage.jsx";
 import OrganisationPage from "./pages/OrganisationPage.jsx";
 import PaiementPage from "./pages/PaiementPage.jsx";
+import EquipePage from "./pages/EquipePage.jsx";
 
 export default function App() {
   return (
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="/abonnement" element={<ProtectedRoute role="is_supervisor"><AbonnementPage /></ProtectedRoute>} />
             <Route path="/paiement" element={<ProtectedRoute role="is_supervisor"><PaiementPage /></ProtectedRoute>} />
             <Route path="/organisation" element={<ProtectedRoute role="is_supervisor"><OrganisationPage /></ProtectedRoute>} />
+            <Route path="/organisation/equipe" element={<ProtectedRoute role="is_supervisor"><EquipePage /></ProtectedRoute>} />
             {/*<Route path="/MotDePasse" element={<MotDePasse />} />*/}
             <Route path="/startSetPassword" element={<StartSetPassword />} />
             <Route path="/setPassword/:token" element={<SetPassword />} />
