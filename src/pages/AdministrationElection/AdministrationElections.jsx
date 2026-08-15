@@ -9,6 +9,7 @@ import TablePagination from "../../Components/table/TablePagination.jsx";
 import {FormatDate} from "../../utils/formatDate.js";
 import CreerVotePage from "../CreerVotePage.jsx";
 import Card from "../../Components/ui/Card.jsx";
+import ParticipationBarChart from "../../Components/charts/ParticipationBarChart.jsx";
 
 const AdminElectionPage = () => {
     const [tab, setTab] = useState(0); // enCours = 0 | terminees = 1
@@ -20,6 +21,8 @@ const AdminElectionPage = () => {
     const [isEelectionModal, setIsEelectionModal] = useState(false);
     const openElectionModal = () => setIsEelectionModal(true);
     const closeElectionModal = () => setIsEelectionModal(false);
+    const [participationData, setParticipationData] = useState([]);
+    const [participationLoading, setParticipationLoading] = useState(true);
 
     const columns = [
         {title: "Titre", code: "name"},
@@ -91,6 +94,27 @@ const AdminElectionPage = () => {
 
     }, [tab, elections])
 
+    // "Participation par élection" comparison chart : pas d'endpoint bulk
+    // pour ça côté back, un GET /elections/:id/stats/ par élection (déjà
+    // utilisé par DetailsVoteAdmin.jsx pour une seule élection à la fois).
+    useEffect(() => {
+        if (!elections?.length) {
+            setParticipationLoading(false);
+            return;
+        }
+        setParticipationLoading(true);
+        Promise.all(
+            elections.map((el) =>
+                httpAxiosClient
+                    .get(`/elections/${el.id}/stats/`)
+                    .then((res) => ({ name: el.name, participation: res.data?.data?.participation ?? 0 }))
+                    .catch(() => null)
+            )
+        )
+            .then((rows) => setParticipationData(rows.filter(Boolean)))
+            .finally(() => setParticipationLoading(false));
+    }, [elections])
+
     const fetchElects = () => {
         dispatch(fetchElections()).unwrap()
             .then((res) => {
@@ -145,6 +169,16 @@ const AdminElectionPage = () => {
                     <p className="text-2xl font-bold text-slate-900 mt-1">{stats.tauxParticipation || 0}%</p>
                 </Card>
             </div>
+
+            {/* Participation par élection */}
+            <Card className="p-5">
+                <h2 className="text-sm font-semibold text-slate-800 mb-3">Participation par élection</h2>
+                {participationLoading ? (
+                    <p className="text-sm text-slate-500 text-center py-8">Chargement…</p>
+                ) : (
+                    <ParticipationBarChart data={participationData} />
+                )}
+            </Card>
 
             {/* Liste des élections */}
             <div className="bg-white px-4 py-6 rounded-2xl ring-1 ring-slate-200 shadow-sm">
