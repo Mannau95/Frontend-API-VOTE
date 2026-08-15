@@ -1,5 +1,5 @@
 // store/slices/electionsSlice.js
-import { createSlice, createAsyncThunk, isRejectedWithValue } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { httpAxiosClient } from '../client/httpClient'
 
 // Async thunks pour les opérations catégories
@@ -90,7 +90,11 @@ const electionsSlice = createSlice({
       })
       .addCase(createElection.rejected, (state, action) => {
         state.loading = false
-        state.error = action?.error.message
+        // createElection uses rejectWithValue(error), so the real API
+        // message (e.g. "Limite du plan atteinte...") is on action.payload,
+        // not action.error (RTK's own generic "Rejected" wrapper) — same
+        // bug shape as the httpClient interceptor fixed earlier.
+        state.error = action.payload?.message || action.error.message
       })
       // update Product
       .addCase(updateElection.pending, (state) => {
@@ -119,7 +123,11 @@ const electionsSlice = createSlice({
       })
       .addCase(deleteElection.rejected, (state, action) => {
         state.loading = false
-        state.error = action.error.data.message
+        // Bug found in passing: action.error.data doesn't exist on RTK's
+        // serialized error (no rejectWithValue used in this thunk), so this
+        // threw a TypeError on any failed delete instead of surfacing a
+        // message.
+        state.error = action.error.message
       })
   },
 })

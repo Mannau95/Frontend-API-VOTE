@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createElection } from "../store/electionSlice.js";
 import Modal from "../Components/Modal.jsx";
+import QuotaBanner from "../Components/QuotaBanner.jsx";
+import { isQuotaAtLimit } from "../utils/quota.js";
+import useSubscriptionUsage from "../hooks/useSubscriptionUsage.js";
 
 const defaultValues = {
     name: "",
@@ -34,6 +37,8 @@ export default function CreerVotePage({handleModalClose}) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { error } = useSelector((state) => state.elections);
+    const { usage } = useSubscriptionUsage();
+    const electionsAtLimit = isQuotaAtLimit(usage, "elections_used", "elections_limit");
 
     const {
         reset,
@@ -43,6 +48,7 @@ export default function CreerVotePage({handleModalClose}) {
     } = useForm({ defaultValues });
 
     const onSubmit = async (data) => {
+        if (electionsAtLimit) return;
         try {
             const response = await dispatch(createElection(data)).unwrap();
             if (response) {
@@ -150,6 +156,13 @@ export default function CreerVotePage({handleModalClose}) {
                             <FieldError message={errors.description?.message} />
                         </div>
 
+                        {/* Garde-fou de quota, proactif (avant soumission) */}
+                        <QuotaBanner
+                            used={usage?.elections_used}
+                            limit={usage?.elections_limit}
+                            resourceLabel="élections"
+                        />
+
                         {/* API / Redux error */}
                         {error && (
                             <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-start gap-2 text-sm text-red-600">
@@ -171,7 +184,8 @@ export default function CreerVotePage({handleModalClose}) {
 
                             <button
                                 type="submit"
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || electionsAtLimit}
+                                title={electionsAtLimit ? "Limite du plan atteinte" : undefined}
                                 className="px-5 py-2 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white
                   font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                             >

@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function SubmitButton({isSubmitting, loadingText = 'En cours...', label="Valider" }) {
+export default function SubmitButton({isSubmitting, disabled = false, loadingText = 'En cours...', label="Valider" }) {
     return (
         <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || disabled}
             className="flex-[2] py-2.5 text-sm font-medium text-white bg-indigo-600
                   rounded-lg hover:bg-indigo-700 active:scale-[0.98] transition-all
                   disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"

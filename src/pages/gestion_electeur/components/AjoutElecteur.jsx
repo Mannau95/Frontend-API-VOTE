@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from "../../../Components/Modal.jsx";
 import { useForm, Controller } from "react-hook-form";
 import { httpAxiosClient } from "../../../client/httpClient.js";
 import CheckBox from "../../../Components/ui/CheckBox.jsx";
 import CancelButton from "../../../Components/ui/CancelButton.jsx";
 import SubmitButton from "../../../Components/ui/SubmitButton.jsx";
+import QuotaBanner from "../../../Components/QuotaBanner.jsx";
+import { isQuotaAtLimit } from "../../../utils/quota.js";
+import useSubscriptionUsage from "../../../hooks/useSubscriptionUsage.js";
 
 const defaultValues = {
     first_name: "",
@@ -40,13 +43,21 @@ function AjoutElecteur({ handleModalClose }) {
         { name: "is_candidate", label: "Candidat" },
     ];
 
+    const [submitError, setSubmitError] = useState(null);
+    const { usage } = useSubscriptionUsage();
+    const electorsAtLimit = isQuotaAtLimit(usage, "electors_used", "electors_limit");
+
     const onSubmit = async (data) => {
+        if (electorsAtLimit) return;
+        setSubmitError(null);
         try {
             await httpAxiosClient.post("/users/", data);
             reset(defaultValues);
             handleModalClose();
         } catch (error) {
-            console.error("Erreur lors de l'ajout de l'électeur.", error);
+            // Was silently swallowed (console.error only) before: a quota
+            // 403 or any other validation error never reached the user.
+            setSubmitError(error.message || "Erreur lors de l'ajout de l'électeur.");
         }
     };
 
@@ -210,10 +221,28 @@ function AjoutElecteur({ handleModalClose }) {
                             </div>
                         </div>
 
+                        {/* Garde-fou de quota, proactif (avant soumission) */}
+                        <QuotaBanner
+                            used={usage?.electors_used}
+                            limit={usage?.electors_limit}
+                            resourceLabel="électeurs"
+                        />
+
+                        {submitError && (
+                            <p className="text-xs text-red-500 flex items-center gap-1">
+                                <span>⚠</span> {submitError}
+                            </p>
+                        )}
+
                         {/* Boutons */}
                         <div className="flex gap-3 pt-1">
                             <CancelButton handleModalClose={handleModalClose} />
-                            <SubmitButton isSubmitting={isSubmitting} loadingText="Ajout en cours..." label="Ajouter l'électeur"/>
+                            <SubmitButton
+                                isSubmitting={isSubmitting}
+                                disabled={electorsAtLimit}
+                                loadingText="Ajout en cours..."
+                                label="Ajouter l'électeur"
+                            />
                         </div>
 
                     </div>

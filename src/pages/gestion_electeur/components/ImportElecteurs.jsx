@@ -6,15 +6,21 @@ import { httpAxiosClient } from "../../../client/httpClient.js";
 import CancelButton from "../../../Components/ui/CancelButton.jsx";
 import SubmitButton from "../../../Components/ui/SubmitButton.jsx";
 import DropZone from "../../../Components/input/DropZone.jsx";
+import QuotaBanner from "../../../Components/QuotaBanner.jsx";
+import { isQuotaAtLimit } from "../../../utils/quota.js";
+import useSubscriptionUsage from "../../../hooks/useSubscriptionUsage.js";
 
 function ImportElecteurs({ handleModalClose }) {
     const [file, setFile] = useState(null);
     const [status, setStatus] = useState(null); // { type: "success"|"error", message: string }
     const [submitting, setSubmitting] = useState(false);
     const { loading } = useSelector((state) => state.user);
+    const { usage } = useSubscriptionUsage();
+    const electorsAtLimit = isQuotaAtLimit(usage, "electors_used", "electors_limit");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (electorsAtLimit) return;
         if (!file) {
             setStatus({ type: "error", message: "Veuillez sélectionner un fichier." });
             return;
@@ -84,11 +90,19 @@ function ImportElecteurs({ handleModalClose }) {
                             </div>
                         )}
 
+                        {/* Garde-fou de quota, proactif (avant soumission) */}
+                        <QuotaBanner
+                            used={usage?.electors_used}
+                            limit={usage?.electors_limit}
+                            resourceLabel="électeurs"
+                        />
+
                         {/* Actions */}
                         <div className="flex gap-3 pt-1">
                             <CancelButton handleModalClose={handleModalClose} />
                             <SubmitButton
                                 isSubmitting={isLoading}
+                                disabled={electorsAtLimit}
                                 loadingText="Importation en cours..."
                                 label="Importer"
                             />
