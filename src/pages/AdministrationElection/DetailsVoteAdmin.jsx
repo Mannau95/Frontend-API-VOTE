@@ -9,6 +9,7 @@ import {fetchElections} from "../../store/electionSlice.js";
 import ResultsBarChart from "../../Components/charts/ResultsBarChart.jsx";
 import Card from "../../Components/ui/Card.jsx";
 import Button from "../../Components/ui/Button.jsx";
+import { resultsToCsv, downloadCsv } from "../../utils/exportCsv.js";
 
 function DetailsVoteAdmin() {
     const {id} = useParams();
@@ -56,6 +57,12 @@ function DetailsVoteAdmin() {
     const winner = stats?.resultats?.length
         ? stats.resultats.reduce((a, b) => (b.votes > a.votes ? b : a))
         : null;
+
+    const exporterResultatsCsv = () => {
+        const csv = resultsToCsv(stats.resultats);
+        const nomFichier = `resultats-${(election?.name || "election").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.csv`;
+        downloadCsv(nomFichier, csv);
+    };
 
     return (
         <div>
@@ -147,9 +154,14 @@ function DetailsVoteAdmin() {
                                 </tbody>
                             </table>
 
-                            <Button variant="primary" className="mt-4" disabled={sending} onClick={envoyerResultatsParMail}>
-                                {sending ? "Envoi en cours..." : "Envoyer les résultats par mail"}
-                            </Button>
+                            <div className="flex gap-3 mt-4">
+                                <Button variant="primary" disabled={sending} onClick={envoyerResultatsParMail}>
+                                    {sending ? "Envoi en cours..." : "Envoyer les résultats par mail"}
+                                </Button>
+                                <Button variant="secondary" disabled={!stats.resultats?.length} onClick={exporterResultatsCsv}>
+                                    Exporter en CSV
+                                </Button>
+                            </div>
                             {sendMessage && <p className="text-sm text-slate-600 mt-2">{sendMessage}</p>}
                         </>
                     )}

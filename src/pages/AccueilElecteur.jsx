@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { httpAxiosClient } from '../client/httpClient'
 import { FormatDate } from '../utils/formatDate'
 import { getCandidatureStatus } from '../utils/candidatureStatus'
@@ -13,6 +14,7 @@ import { Timer, Mail, CheckCircle2, CalendarDays, Award } from 'lucide-react'
 
 export default function AccueilElecteur() {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { user, userCandidatures, loading: userLoading, error: userError } = useSelector((state) => state.user)
     const { elections, loading: electionsLoading, error: electionsError } = useSelector((state) => state.elections)
     const [electorStats, setElectorStats] = useState(null)
@@ -182,7 +184,11 @@ export default function AccueilElecteur() {
                 {electionsTerminees.length > 0 ? (
                     <ul className='flex flex-col gap-3'>
                         {electionsTerminees.map((election, index) => (
-                            <li key={index} className='bg-white rounded-2xl ring-1 ring-slate-200 shadow-sm p-4 flex items-center gap-3'>
+                            <li
+                                key={index}
+                                className='bg-white rounded-2xl ring-1 ring-slate-200 shadow-sm p-4 flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow'
+                                onClick={() => navigate(`/electeur/elections/${election.id}/resultats`)}
+                            >
                                 <div className='shrink-0 w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center'>
                                     <CheckCircle2 className='w-4 h-4 text-emerald-700' strokeWidth={2}/>
                                 </div>

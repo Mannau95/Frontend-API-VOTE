@@ -38,11 +38,26 @@ export default function ElectionsActuellesElecteur() {
 
             <div className='grid grid-cols-5 gap-3 my-4'>
                 {
-                    elections.map((elect, index) =>{
-                    return (
-                        <ElectionCard election={elect} key={index} btnTitle='Voter' onClick={() => navigate(`./${elect.id}/voter`)} />
-                    )
-                    })
+                    elections
+                        .filter((elect) => {
+                            const now = new Date();
+                            const begin = new Date(elect.begin_date);
+                            const end = new Date(elect.end_date);
+                            if (isActive === 0) return begin <= now && now <= end; // Actives
+                            if (isActive === 1) return begin > now; // A venir
+                            return end < now; // Terminées
+                        })
+                        .map((elect, index) => {
+                            const terminee = isActive === 2;
+                            return (
+                                <ElectionCard
+                                    election={elect}
+                                    key={index}
+                                    btnTitle={terminee ? 'Voir les résultats' : 'Voter'}
+                                    onClick={() => navigate(`./${elect.id}/${terminee ? 'resultats' : 'voter'}`)}
+                                />
+                            )
+                        })
                 }
             </div>
         </div>

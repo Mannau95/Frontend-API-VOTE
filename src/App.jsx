@@ -22,6 +22,7 @@ import ElecteurTakeCandidature from "./pages/ElecteurTakeCandidature.jsx";
 import AccueilSuperviseur from "./pages/AccueilSuperviseur.jsx";
 import DetailsVoteAdmin from "./pages/AdministrationElection/DetailsVoteAdmin.jsx";
 import ElectionDetailPage from "./pages/election/ElectionDetailPage.jsx";
+import ElectionResultsElecteur from "./pages/election/ElectionResultsElecteur.jsx";
 import VotePage from "./pages/vote/VotePage.jsx";
 import ModifyElectionPage from "./pages/election/ModifyElectionPage.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
@@ -66,6 +67,7 @@ export default function App() {
               <Route path="elections/" element={<ElectionsActuellesElecteur />} />
               <Route path="elections/:electionId/take" element={<ElectionDetailPage />} />
               <Route path="elections/:electionId/voter" element={<VotePage />} />
+              <Route path="elections/:electionId/resultats" element={<ElectionResultsElecteur />} />
               <Route path="profile/" element={<ProfilePage />} />
               <Route index element={<AccueilElecteur />} />
             </Route>
